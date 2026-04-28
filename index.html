@@ -450,7 +450,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     /* leave room for bottom bars */
     padding-bottom:calc(56px + env(safe-area-inset-bottom) + 60px);
   }
-  .add-panel{width:100%;order:-1;} /* show add panel ABOVE moves on mobile */
+  #addPanel{display:none !important;} /* replaced by per-block sheet on mobile */
 
   /* Add panel: compact horizontal layout */
   .add-panel-hdr{display:none;}
@@ -598,6 +598,21 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .teach-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
 .teach-nav-btn:disabled{opacity:0.35;cursor:default;}
 .teach-block-counter{font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text2);}
+
+/* ── ADD MOVE SHEET ── */
+.add-move-sheet{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);display:none;align-items:flex-end;}
+.add-move-sheet.open{display:flex;}
+.sheet-inner{background:var(--surface);border-radius:18px 18px 0 0;width:100%;max-height:85dvh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom);animation:sheetUp 0.22s ease;}
+@keyframes sheetUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.sheet-drag{width:40px;height:4px;border-radius:2px;background:var(--border2);margin:10px auto 0;flex-shrink:0;}
+.sheet-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 10px;flex-shrink:0;}
+.sheet-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;}
+.sheet-close{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:6px 14px;font-family:inherit;cursor:pointer;font-size:0.8rem;min-height:36px;}
+.sheet-close:hover{border-color:var(--accent3);color:var(--accent3);}
+.sheet-controls{padding:0 12px 10px;display:flex;gap:6px;flex-shrink:0;border-bottom:1px solid var(--border);}
+.sheet-list{flex:1;overflow-y:auto;padding:8px;-webkit-overflow-scrolling:touch;}
+.add-move-block-btn{display:none;}
+@media(max-width:768px){.add-move-block-btn{display:block;width:100%;margin-top:10px;padding:12px;font-size:0.82rem;border-radius:var(--radius-md);}}
 </style>
 </head>
 <body>
@@ -700,7 +715,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     </div>
     <div class="builder">
       <div class="moves-list" id="movesArea">
-        <div class="empty-st"><div class="e">🟩</div><p><strong>Block Builder</strong><br><br>Tap <strong>New Class →</strong> to choose your workout style and start planning.<br><br>Not affiliated with any specific fitness brand.</p></div>
+        <div class="empty-st"><div class="e">🟩</div><p><strong>Block Builder</strong><br><br>Choose your workout style and start planning.</p><button class="btn" style="margin-top:16px;padding:10px 28px;font-size:0.82rem" onclick="openWizard()">New Class →</button><p style="margin-top:16px;font-size:0.65rem;color:var(--text3)">Not affiliated with any specific fitness brand.</p></div>
       </div>
       <div class="add-panel" id="addPanel" style="display:none">
         <div class="add-panel-hdr">Add Move</div>
@@ -921,6 +936,22 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   <div id="varMenuItems"></div>
   <div class="var-divider"></div>
   <div class="var-ci"><input type="text" id="varCustomIn" placeholder="Custom variation..." onkeydown="if(event.key==='Enter')addCustomVar()"></div>
+</div>
+
+<!-- ADD MOVE SHEET (mobile) -->
+<div class="add-move-sheet" id="addMoveSheet" onclick="if(event.target===this)closeAddMoveSheet()">
+  <div class="sheet-inner">
+    <div class="sheet-drag"></div>
+    <div class="sheet-header">
+      <span class="sheet-title" id="sheetTitle">Add Move to Block</span>
+      <button class="sheet-close" onclick="closeAddMoveSheet()">✕ Done</button>
+    </div>
+    <div class="sheet-controls">
+      <div class="sw" style="flex:1;margin:0"><span class="si">🔍</span><input type="text" id="sheetSearch" placeholder="Search moves..." oninput="renderSheetOpts()" style="font-size:16px!important"></div>
+      <select id="sheetCat" onchange="renderSheetOpts()" style="width:auto;font-size:16px!important"><option value="">All</option><option value="core">Core</option><option value="oblique">Obliques</option><option value="lower">Lower</option><option value="upper">Upper</option><option value="full">Full</option></select>
+    </div>
+    <div class="sheet-list" id="sheetOpts"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2103,7 +2134,7 @@ function renderMoves(){
     <button class="btn sec sm" onclick="openBlockModal(${S.activeIdx})">Edit</button>
   </div>${mirrorHTML}${alertHTML}`;
 
-  if(!block.moves.length){h+=`<div class="empty-st"><div class="e">✨</div><p>No moves yet — add from the panel →</p></div>`;}
+  if(!block.moves.length){h+=`<div class="empty-st"><div class="e">✨</div><p>No moves yet.</p><button class="btn add-move-block-btn" onclick="openAddMoveSheet()">+ Add Move to Block</button></div>`;}
   else{
     block.moves.forEach((m,i)=>{
       const prev=i>0?block.moves[i-1]:null;
@@ -2152,6 +2183,7 @@ function renderMoves(){
       </div>`;
     });
   }
+  h+=`<button class="btn add-move-block-btn" onclick="openAddMoveSheet()">+ Add Move to Block</button>`;
   area.innerHTML=h;
 }
 
@@ -2196,6 +2228,58 @@ function moHTML(m,top){
   return`<div class="mo${top?" top":""}" onclick="addMove(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${cableBadge}${springTxt}</div></div><span class="plus">+</span></div>`;
 }
 function addMove(id){const m=getMoveById(id);if(!m)return;const nm={...m,dur:3,variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+moveName(m));}
+
+// ════════════════════════════════════════════════
+// ADD MOVE SHEET (mobile)
+// ════════════════════════════════════════════════
+function openAddMoveSheet(){
+  const block=S.blocks[S.activeIdx];
+  document.getElementById("sheetTitle").textContent="Add to: "+(block?block.name:"Block");
+  document.getElementById("sheetSearch").value="";
+  document.getElementById("sheetCat").value="";
+  document.getElementById("addMoveSheet").classList.add("open");
+  renderSheetOpts();
+  setTimeout(()=>document.getElementById("sheetSearch").focus(),200);
+}
+function closeAddMoveSheet(){document.getElementById("addMoveSheet").classList.remove("open");}
+function renderSheetOpts(){
+  const search=document.getElementById("sheetSearch").value.toLowerCase();
+  const cat=document.getElementById("sheetCat").value;
+  const block=S.blocks[S.activeIdx];
+  const last=block&&block.moves.length?block.moves[block.moves.length-1]:null;
+  let ms=allMoves().filter(m=>S.approved.includes(m.id));
+  if(search)ms=ms.filter(m=>m.name.toLowerCase().includes(search));
+  if(cat)ms=ms.filter(m=>m.cat===cat);
+  if(!search&&S._blockSide)ms=ms.filter(m=>m.side===S._blockSide||m.side==="bilateral");
+  ms=ms.map(m=>({...m,sc:score(last,m)}));
+  const sug=ms.filter(m=>last&&m.sc>=4).sort((a,b)=>b.sc-a.sc);
+  const oth=ms.filter(m=>!(last&&m.sc>=4)).sort((a,b)=>a.name.localeCompare(b.name));
+  const c=document.getElementById("sheetOpts");
+  if(!ms.length){c.innerHTML=`<p style="color:var(--text3);font-size:0.78rem;padding:20px;text-align:center">No moves found.</p>`;return;}
+  let html="";
+  if(last&&sug.length){
+    html+=`<div class="opts-lbl sug">✦ Suggested</div>`;
+    html+=sug.map(m=>sheetMoHTML(m,true)).join("");
+    if(oth.length){html+=`<div class="opts-lbl">Others</div>`;html+=oth.map(m=>sheetMoHTML(m,false)).join("");}
+  }else{
+    html+=oth.map(m=>sheetMoHTML(m,false)).join("");
+  }
+  c.innerHTML=html;
+}
+function sheetMoHTML(m,top){
+  const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
+  const pos=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆":"⬇"}</span>`:"";
+  const springTxt=m.springDesc?`<span style="font-size:0.64rem;color:var(--text2)">${m.springDesc}</span>`:springDisplay(spToSprings(m.sp||"medium"),9);
+  return`<div class="mo${top?" top":""}" onclick="addMoveFromSheet(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${springTxt}</div></div><span class="plus">+</span></div>`;
+}
+function addMoveFromSheet(id){
+  const m=getMoveById(id);if(!m)return;
+  const nm={...m,dur:3,variations:[]};if(m.facing)nm.facingDir="left";
+  S.blocks[S.activeIdx].moves.push(nm);
+  renderMoves();renderOpts();renderTabs();updateBar();
+  toast("Added: "+moveName(m));
+  renderSheetOpts(); // refresh suggestions with new last move
+}
 
 // ════════════════════════════════════════════════
 // TIME BAR
