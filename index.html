@@ -2570,13 +2570,13 @@ function exportCopyText(){
 }
 function exportSendToNotes(){
   const text=buildNotes();
-  const openNotes=()=>{try{window.location.href='mobilenotes://';}catch(e){}};
-  navigator.clipboard.writeText(text)
-    .then(()=>{closeExportSheet();toast("Copied! Opening Notes…");setTimeout(openNotes,300);})
-    .catch(()=>{
-      // clipboard failed — still try to open Notes
-      closeExportSheet();openNotes();toast("Open Notes and paste your plan");
-    });
+  if(navigator.share){
+    navigator.share({text}).then(()=>closeExportSheet()).catch(err=>{if(err.name!=='AbortError')toast("Share failed");});
+  }else{
+    navigator.clipboard.writeText(text)
+      .then(()=>{toast("Copied — paste into Notes");closeExportSheet();})
+      .catch(()=>{toast("Copy not supported — use Copy as Text");});
+  }
 }
 function exportSavePDF(){closeExportSheet();setTimeout(()=>window.print(),300);}
 
