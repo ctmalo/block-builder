@@ -540,16 +540,30 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   font-size:clamp(1rem,4vw,1.25rem);margin-bottom:6px;color:var(--text);
 }
 .teach-move-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;}
-.teach-spring{font-size:0.8rem;color:var(--text2);font-weight:500;}
+.teach-spring{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:0.8rem;color:var(--text2);font-weight:500;}
+.teach-spring .slabel{font-size:0.75rem;color:var(--text2);}
+.teach-spring .sdot{width:14px!important;height:14px!important;}
 .teach-time{font-size:0.8rem;color:var(--text2);}
 .teach-vars{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
 .teach-var-tag{font-size:0.7rem;padding:3px 9px;border-radius:5px;
   background:var(--accent-light);border:1px solid rgba(90,158,58,0.22);color:var(--accent-text);}
-.teach-spring-change{
-  font-size:0.72rem;color:var(--warn);
-  padding:4px 8px;margin-bottom:6px;border-radius:5px;
-  background:rgba(200,125,16,0.08);border:1px solid rgba(200,125,16,0.2);
+.teach-change-banner{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:9px 12px;margin-bottom:4px;border-radius:8px;
+  font-weight:800;font-size:0.8rem;font-family:'Syne',sans-serif;
+  border-left-width:4px;border-left-style:solid;
 }
+.teach-spring-banner{
+  background:rgba(255,155,0,0.14);border:1.5px solid rgba(255,155,0,0.45);
+  border-left-color:#ff9500;color:#e88a00;
+}
+[data-theme="dark"] .teach-spring-banner{color:#ffb340;}
+.teach-pos-banner{
+  background:rgba(80,168,224,0.12);border:1.5px solid rgba(80,168,224,0.38);
+  border-left-color:var(--accent2);color:var(--accent2);
+}
+.teach-spring-banner .sdot{width:13px!important;height:13px!important;}
+.teach-change-banner .slabel{font-size:0.75rem;}
 
 /* Teach nav dots */
 .teach-dots{
@@ -2914,19 +2928,38 @@ function renderTeachMode(){
     const movesHTML = block.moves.map((m, mi) => {
       const base = getMoveById(m.id);
       const springs = effectiveSprings(m);
-      const springTxt = base&&base.springDesc ? base.springDesc : springLabel(springs);
       const prev = mi > 0 ? block.moves[mi-1] : null;
+
+      // Spring change
       const springChanged = prev && springLabel(effectiveSprings(prev)) !== springLabel(springs);
-      const springChangeBadge = springChanged
-        ? `<div class="teach-spring-change">⚙ Spring change → ${springTxt}</div>` : "";
+      // Platform/position change (front vs back; skip "both" since it's flexible)
+      const mPos = m.pos || "both";
+      const prevPos = prev ? (prev.pos || "both") : null;
+      const posChanged = prev && prevPos !== "both" && mPos !== "both" && mPos !== prevPos;
+
+      // Spring display: colored dots + label
+      const springHTML = base && base.springDesc
+        ? `<span style="font-size:0.78rem">${base.springDesc}</span>`
+        : springDisplay(springs, 14);
+
+      // Change banners
+      let banners = "";
+      if(springChanged){
+        banners += `<div class="teach-change-banner teach-spring-banner">⚙ Spring → ${springDisplay(effectiveSprings(m), 13)}</div>`;
+      }
+      if(posChanged){
+        const posLabel = mPos === "front" ? "⬆ Front platform" : mPos === "back" ? "⬇ Back platform" : mPos;
+        banners += `<div class="teach-change-banner teach-pos-banner">📍 Position → ${posLabel}</div>`;
+      }
+
       const varHTML = (m.variations||[]).length
         ? `<div class="teach-vars">${m.variations.map(v=>`<span class="teach-var-tag">${v}</span>`).join("")}</div>` : "";
       const cableBadge = base&&base.cables&&base.cables!=="none"
         ? `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:${base.cables==="red"?"#c0392b":"#1a1a2a"};color:#fff">${base.cables==="red"?"🔴":"⚫"}</span>` : "";
-      return `${springChangeBadge}<div class="teach-move">
+      return `${banners}<div class="teach-move">
         <div class="teach-move-name">${moveName(m)}</div>
         <div class="teach-move-meta">
-          <span class="teach-spring">${springTxt}</span>
+          <span class="teach-spring">${springHTML}</span>
           ${cableBadge}
           <span class="teach-time">⏱ ${m.dur||3} min</span>
         </div>${varHTML}</div>`;
