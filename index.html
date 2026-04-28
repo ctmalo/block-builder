@@ -651,6 +651,14 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .export-opt-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.87rem;margin-bottom:2px;}
 .export-opt-sub{font-size:0.72rem;color:var(--text2);}
 
+/* ── BLOCK REORDER BUTTONS (mobile only) ── */
+.block-reorder-btns{display:none;gap:3px;}
+@media(max-width:768px),(max-height:500px) and (orientation:landscape){
+  .block-reorder-btns{display:flex;}
+  .block-reorder-btns button{min-width:36px;min-height:36px;padding:4px 8px;font-size:0.85rem;}
+  .block-reorder-btns button:disabled{opacity:0.25;cursor:default;}
+}
+
 /* ── ADD MOVE SHEET ── */
 .add-move-sheet{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);display:none;align-items:flex-end;}
 .add-move-sheet.open{display:flex;}
@@ -2095,6 +2103,14 @@ function deleteRoutine(){
 // DRAG — BLOCKS
 // ════════════════════════════════════════════════
 let dragBI=null;
+function moveBlock(dir){
+  const i=S.activeIdx,ni=i+dir;
+  if(ni<0||ni>=S.blocks.length)return;
+  const t=S.blocks.splice(i,1)[0];
+  S.blocks.splice(ni,0,t);
+  S.activeIdx=ni;
+  renderTabs();renderMoves();renderOpts();
+}
 function onBDragStart(e,i){dragBI=i;e.currentTarget.classList.add("dragging");e.dataTransfer.effectAllowed="move";}
 function onBDragOver(e,i){e.preventDefault();if(dragBI===null||dragBI===i)return;document.querySelectorAll(".block-tab").forEach(t=>t.classList.remove("drag-over-tab"));document.querySelectorAll(".block-tab")[i]?.classList.add("drag-over-tab");}
 function onBDrop(e,i){e.preventDefault();if(dragBI===null||dragBI===i){dragBI=null;renderTabs();return;}const t=S.blocks.splice(dragBI,1)[0];S.blocks.splice(i,0,t);if(S.activeIdx===dragBI)S.activeIdx=i;dragBI=null;renderTabs();renderMoves();renderOpts();}
@@ -2263,6 +2279,10 @@ function renderMoves(){
       <span class="bdur-label">min</span>
     </div>
     <button class="btn sec sm" onclick="openBlockModal(${S.activeIdx})">Edit</button>
+    <div class="block-reorder-btns">
+      <button class="btn sec sm" onclick="moveBlock(-1)" ${S.activeIdx===0?"disabled":""} title="Move block left">←</button>
+      <button class="btn sec sm" onclick="moveBlock(1)" ${S.activeIdx===S.blocks.length-1?"disabled":""} title="Move block right">→</button>
+    </div>
   </div>${mirrorHTML}${alertHTML}`;
 
   if(!block.moves.length){h+=`<div class="empty-st"><div class="e">✨</div><p>No moves yet.</p><button class="btn add-move-block-btn" onclick="openAddMoveSheet()">+ Add Move to Block</button></div>`;}
