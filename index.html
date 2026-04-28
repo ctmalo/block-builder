@@ -2499,16 +2499,17 @@ function openStudentsSheet(){
   openOv("studentsOv");
   setTimeout(()=>document.getElementById("stuSheetInput").focus(),300);
 }
-function closeStudentsSheet(){closeOv("studentsOv");}
+function closeStudentsSheet(){renderStus();closeOv("studentsOv");}
 function addStuFromSheet(){
   const inp=document.getElementById("stuSheetInput"),name=inp.value.trim();
   if(!name||S.students.includes(name))return;
-  S.students.push(name);inp.value="";
-  renderStudentsSheet();renderStus();
+  inp.value="";inp.focus();   // clear and refocus before any DOM work
+  S.students.push(name);
+  renderStudentsSheet();
 }
 function rmStuFromSheet(i){
   S.students.splice(i,1);
-  renderStudentsSheet();renderStus();
+  renderStudentsSheet();
 }
 function renderStudentsSheet(){
   const el=document.getElementById("stuSheetList");if(!el)return;
