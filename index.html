@@ -634,6 +634,20 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .mmd-foot-btn{flex:1;background:var(--card2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--radius-sm);padding:8px 4px;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;text-align:center;}
 .mmd-foot-btn:hover{border-color:var(--accent);color:var(--accent);}
 
+/* ── EXPORT SHEET ── */
+.export-option{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:15px 16px;border:none;background:none;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:0.92rem;
+  cursor:pointer;text-align:left;border-bottom:1px solid var(--border);
+  transition:background 0.13s;
+}
+.export-option:last-child{border-bottom:none;}
+.export-option:hover,.export-option:active{background:var(--card2);}
+.export-opt-icon{font-size:1.5rem;width:40px;text-align:center;flex-shrink:0;}
+.export-opt-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.87rem;margin-bottom:2px;}
+.export-opt-sub{font-size:0.72rem;color:var(--text2);}
+
 /* ── ADD MOVE SHEET ── */
 .add-move-sheet{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);display:none;align-items:flex-end;}
 .add-move-sheet.open{display:flex;}
@@ -681,9 +695,13 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     <span class="mbn-icon">☰</span>
     <span class="mbn-label">Menu</span>
   </button>
-  <button class="mbn-btn primary" onclick="openSaveRoutine()">
+  <button class="mbn-btn" onclick="openSaveRoutine()">
     <span class="mbn-icon">💾</span>
     <span class="mbn-label">Save</span>
+  </button>
+  <button class="mbn-btn" onclick="openExportSheet()">
+    <span class="mbn-icon">📤</span>
+    <span class="mbn-label">Export</span>
   </button>
   <button class="mbn-btn" id="mbnTeach" onclick="openTeachMode()">
     <span class="mbn-icon">▶</span>
@@ -724,6 +742,40 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     <button class="mmd-foot-btn" onclick="openStudio();closeMobileMenu()">⚙️ Studio</button>
     <button class="mmd-foot-btn" onclick="toggleTheme()">☀️ Theme</button>
     <button class="mmd-foot-btn" onclick="doPrint();closeMobileMenu()">🖨 Print</button>
+  </div>
+</div>
+
+<!-- EXPORT SHEET -->
+<div class="add-move-sheet" id="exportSheet" onclick="if(event.target===this)closeExportSheet()">
+  <div class="sheet-inner">
+    <div class="sheet-drag"></div>
+    <div class="sheet-header">
+      <span class="sheet-title">Export Class Plan</span>
+      <button class="sheet-close" onclick="closeExportSheet()">✕ Close</button>
+    </div>
+    <div>
+      <button class="export-option" onclick="exportCopyText()">
+        <span class="export-opt-icon">📋</span>
+        <div>
+          <div class="export-opt-title">Copy as Text</div>
+          <div class="export-opt-sub">Copy the full class plan to clipboard</div>
+        </div>
+      </button>
+      <button class="export-option" onclick="exportSendToNotes()">
+        <span class="export-opt-icon">📝</span>
+        <div>
+          <div class="export-opt-title">Send to Notes</div>
+          <div class="export-opt-sub">Share to iPhone Notes, Messages, or any app</div>
+        </div>
+      </button>
+      <button class="export-option" onclick="exportSavePDF()">
+        <span class="export-opt-icon">🖨️</span>
+        <div>
+          <div class="export-opt-title">Save as PDF</div>
+          <div class="export-opt-sub">Print or save as PDF via browser</div>
+        </div>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -2491,6 +2543,38 @@ function buildNotes(){
   return o;
 }
 function copyNotes(){const t=document.getElementById("notesOut").textContent;navigator.clipboard.writeText(t).then(()=>toast("Copied!")).catch(()=>{const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Copied!");});}
+
+// ════════════════════════════════════════════════
+// EXPORT SHEET
+// ════════════════════════════════════════════════
+function openExportSheet(){
+  if(!S.started&&!S.loadedRoutineId){toast("Build or load a class first!");return;}
+  document.getElementById("exportSheet").classList.add("open");
+}
+function closeExportSheet(){document.getElementById("exportSheet").classList.remove("open");}
+function exportCopyText(){
+  const text=buildNotes();
+  navigator.clipboard.writeText(text)
+    .then(()=>{toast("Copied!");closeExportSheet();})
+    .catch(()=>{
+      const ta=document.createElement("textarea");ta.value=text;
+      document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
+      toast("Copied!");closeExportSheet();
+    });
+}
+function exportSendToNotes(){
+  const text=buildNotes();
+  if(navigator.share){
+    navigator.share({text}).then(()=>closeExportSheet()).catch(()=>{});
+  }else{
+    // Desktop fallback: copy and prompt
+    navigator.clipboard.writeText(text)
+      .then(()=>{toast("Copied — paste into Notes");closeExportSheet();})
+      .catch(()=>{toast("Copy not supported — use Copy as Text");});
+  }
+}
+function exportSavePDF(){closeExportSheet();setTimeout(doPrint,250);}
+
 function doPrint(){
   if(!S.started&&!S.loadedRoutineId){toast("Build or load a class first!");return;}
   const date=document.getElementById("classDate").value||"—";
