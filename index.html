@@ -49,13 +49,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 /* ── PRINT ── */
 @media print{
   body{background:white!important;color:black!important;}
-  .nav,.sidebar,#addPanel,.move-actions,.nav-right,.var-btn,.add-var-btn,.blocks-bar,.ib,.block-dur-edit,.btn-row{display:none!important;}
+  .nav,.sidebar,#addPanel,.move-actions,.nav-right,.var-btn,.add-var-btn,.blocks-bar,.ib,.block-dur-edit,.btn-row,
+  .mobile-bottom-nav,.mobile-menu-drawer,.mobile-menu-backdrop,.add-move-sheet,.teach-fab,.teach-overlay,
+  .add-move-block-btn,.block-dur-input,.bdur-label{display:none!important;}
   .app-shell,.page,.page.active,#page-planner.active{display:block!important;height:auto!important;overflow:visible!important;}
   .builder{display:block!important;padding:0!important;}
   .moves-list{width:100%!important;}
   .print-header{display:block!important;}
   .move-card{break-inside:avoid;border:1px solid #ccc!important;background:white!important;margin-bottom:5px!important;color:black!important;}
   .callout,.side-alert{color:#555!important;background:#f9f9f9!important;border:1px solid #ddd!important;}
+  .block-header{margin-bottom:8px!important;}
 }
 
 /* ── NAV ── */
@@ -2528,8 +2531,11 @@ function buildNotes(){
     o+=`╔ ${block.name.toUpperCase()} — ${block.mins} min${uc?" ⚠️ "+uc+" UNMATCHED":""} ╗\n`;
     if(!block.moves.length){o+=`  (empty)\n`;}
     else block.moves.forEach((m,i)=>{
-      const prev=i>0?block.moves[i-1]:null;const lvl=getLvl(m.sp);
-      if(springChanged2)o+=`  ⚙️  SPRING CHANGE → ${springLabel(mSpr)}\n`;
+      const prev=i>0?block.moves[i-1]:null;
+      const mSpr=effectiveSprings(m);
+      const prevSpr=prev?effectiveSprings(prev):null;
+      const springChanged=prev&&springLabel(mSpr)!==springLabel(prevSpr);
+      if(springChanged)o+=`  ⚙️  SPRING CHANGE → ${springLabel(mSpr)}\n`;
       if(prev&&prev.side!==m.side&&m.side!=="bilateral"&&prev.side!=="bilateral")o+=`  ↔  SIDE CHANGE → ${m.side}\n`;
       const pos=m.pos&&m.pos!=="both"?` [${m.pos}]`:"";
       const fac=m.facing&&m.facingDir?` [facing ${m.facingDir}]`:"";
@@ -2564,16 +2570,15 @@ function exportCopyText(){
 }
 function exportSendToNotes(){
   const text=buildNotes();
-  if(navigator.share){
-    navigator.share({text}).then(()=>closeExportSheet()).catch(()=>{});
-  }else{
-    // Desktop fallback: copy and prompt
-    navigator.clipboard.writeText(text)
-      .then(()=>{toast("Copied — paste into Notes");closeExportSheet();})
-      .catch(()=>{toast("Copy not supported — use Copy as Text");});
-  }
+  const openNotes=()=>{try{window.location.href='mobilenotes://';}catch(e){}};
+  navigator.clipboard.writeText(text)
+    .then(()=>{closeExportSheet();toast("Copied! Opening Notes…");setTimeout(openNotes,300);})
+    .catch(()=>{
+      // clipboard failed — still try to open Notes
+      closeExportSheet();openNotes();toast("Open Notes and paste your plan");
+    });
 }
-function exportSavePDF(){closeExportSheet();setTimeout(doPrint,250);}
+function exportSavePDF(){closeExportSheet();setTimeout(()=>window.print(),300);}
 
 function doPrint(){
   if(!S.started&&!S.loadedRoutineId){toast("Build or load a class first!");return;}
