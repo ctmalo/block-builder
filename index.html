@@ -652,6 +652,20 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .export-opt-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.87rem;margin-bottom:2px;}
 .export-opt-sub{font-size:0.72rem;color:var(--text2);}
 
+/* ── TEACH MODE: STUDENTS BAR ── */
+.teach-students{background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.teach-stu-toggle{
+  width:100%;display:flex;align-items:center;gap:8px;
+  padding:9px 16px;background:none;border:none;color:var(--text2);
+  font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;
+}
+.teach-stu-toggle:hover{color:var(--text);}
+.teach-stu-count{font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);font-size:0.75rem;}
+.teach-stu-chevron{margin-left:auto;font-size:0.65rem;transition:transform 0.18s;display:inline-block;}
+.teach-stu-chevron.open{transform:rotate(180deg);}
+.teach-stu-names{padding:0 16px 10px;display:flex;flex-wrap:wrap;gap:5px;}
+.teach-stu-chip{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:3px 10px;font-size:0.72rem;color:var(--text);}
+
 /* ── BLOCK REORDER BUTTONS (mobile only) ── */
 .block-reorder-btns{display:none;flex-direction:column;align-items:stretch;gap:3px;flex-shrink:0;}
 .reorder-label{font-family:'Syne',sans-serif;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);text-align:center;white-space:nowrap;}
@@ -745,6 +759,9 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
       <span class="mmd-item-icon">📚</span> Moves
     </button>
     <div class="mmd-divider"></div>
+    <button class="mmd-item" onclick="openStudentsSheet();closeMobileMenu()">
+      <span class="mmd-item-icon">👥</span> Students in Class
+    </button>
     <button class="mmd-item" onclick="showPage('routines');closeMobileMenu()">
       <span class="mmd-item-icon">🕐</span> History
     </button>
@@ -793,6 +810,22 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   </div>
 </div>
 
+<!-- STUDENTS SHEET -->
+<div class="add-move-sheet" id="studentsSheet" onclick="if(event.target===this)closeStudentsSheet()">
+  <div class="sheet-inner">
+    <div class="sheet-drag"></div>
+    <div class="sheet-header">
+      <span class="sheet-title">Students in Class</span>
+      <button class="sheet-close" onclick="closeStudentsSheet()">✕ Done</button>
+    </div>
+    <div style="padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-shrink:0">
+      <input type="text" id="stuSheetInput" placeholder="Add student name…" onkeydown="if(event.key==='Enter')addStuFromSheet()" style="flex:1;font-size:16px!important">
+      <button class="btn" onclick="addStuFromSheet()">+</button>
+    </div>
+    <div class="sheet-list" id="stuSheetList"></div>
+  </div>
+</div>
+
 <!-- Teach Mode Overlay -->
 <div class="teach-overlay" id="teachOverlay">
   <div class="teach-header">
@@ -801,6 +834,14 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
       <div class="teach-meta" id="teachMeta"></div>
     </div>
     <button class="teach-close" onclick="closeTeachMode()">✕ Exit</button>
+  </div>
+  <div class="teach-students" id="teachStudentsSection" style="display:none">
+    <button class="teach-stu-toggle" onclick="toggleTeachStudents()">
+      <span>👥</span>
+      <span id="teachStuLabel">Students</span>
+      <span class="teach-stu-chevron" id="teachStuChevron">▾</span>
+    </button>
+    <div class="teach-stu-names" id="teachStuNames" style="display:none"></div>
   </div>
   <div class="teach-blocks" id="teachBlocks"></div>
   <div class="teach-nav">
@@ -2453,6 +2494,39 @@ function addStu(){const inp=document.getElementById("stuInput"),name=inp.value.t
 function renderStus(){document.getElementById("stuList").innerHTML=S.students.map((s,i)=>`<span class="chip">${s}<button onclick="rmStu(${i})">✕</button></span>`).join("");}
 function rmStu(i){S.students.splice(i,1);renderStus();}
 
+// ── STUDENTS SHEET ──
+function openStudentsSheet(){
+  document.getElementById("studentsSheet").classList.add("open");
+  renderStudentsSheet();
+  setTimeout(()=>document.getElementById("stuSheetInput").focus(),200);
+}
+function closeStudentsSheet(){document.getElementById("studentsSheet").classList.remove("open");}
+function addStuFromSheet(){
+  const inp=document.getElementById("stuSheetInput"),name=inp.value.trim();
+  if(!name||S.students.includes(name))return;
+  S.students.push(name);inp.value="";
+  renderStudentsSheet();renderStus();
+}
+function rmStuFromSheet(i){
+  S.students.splice(i,1);
+  renderStudentsSheet();renderStus();
+}
+function renderStudentsSheet(){
+  const el=document.getElementById("stuSheetList");if(!el)return;
+  el.innerHTML=S.students.length
+    ?S.students.map((s,i)=>`<span class="chip" style="margin:3px">${s}<button onclick="rmStuFromSheet(${i})">✕</button></span>`).join("")
+    :`<p style="color:var(--text3);font-size:0.78rem;padding:12px 4px">No students added yet.</p>`;
+}
+
+// ── TEACH MODE: STUDENTS TOGGLE ──
+function toggleTeachStudents(){
+  const names=document.getElementById("teachStuNames");
+  const chevron=document.getElementById("teachStuChevron");
+  const isOpen=names.style.display!=="none";
+  names.style.display=isOpen?"none":"flex";
+  chevron.className="teach-stu-chevron"+(isOpen?"":" open");
+}
+
 // ════════════════════════════════════════════════
 // MOVE LIBRARY
 // ════════════════════════════════════════════════
@@ -2787,6 +2861,22 @@ function openTeachMode(){
   if(titleEl) titleEl.textContent = S.loadedRoutineId
     ? (S.routines.find(r=>r.id===S.loadedRoutineId)?.name || "Class") : "Class Plan";
   if(metaEl) metaEl.textContent = `${style?.name||"Lagree-style"} · ${S.machine} · ${totalMins()} min`;
+  // Students bar
+  const stuSection=document.getElementById("teachStudentsSection");
+  const stuLabel=document.getElementById("teachStuLabel");
+  const stuNames=document.getElementById("teachStuNames");
+  const stuChevron=document.getElementById("teachStuChevron");
+  if(stuSection){
+    if(S.students.length){
+      stuSection.style.display="block";
+      stuLabel.textContent=`Students (${S.students.length})`;
+      stuNames.innerHTML=S.students.map(s=>`<span class="teach-stu-chip">${s}</span>`).join("");
+      stuNames.style.display="none";
+      stuChevron.className="teach-stu-chevron";
+    }else{
+      stuSection.style.display="none";
+    }
+  }
 }
 
 function closeTeachMode(){
