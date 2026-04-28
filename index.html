@@ -149,7 +149,8 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 /* ── BUILDER ── */
 .builder{flex:1;overflow-y:auto;padding:13px;display:flex;gap:13px;}
 .moves-list{flex:1;min-width:0;}
-.block-header{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.block-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.block-header-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0;}
 .block-header h2{font-family:'Syne',sans-serif;font-size:0.84rem;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
 .block-dur-input{width:42px;padding:2px 4px;font-size:0.7rem;border-radius:4px;text-align:center;}
 .bdur-label{font-size:0.66rem;color:var(--text3);}
@@ -652,11 +653,13 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .export-opt-sub{font-size:0.72rem;color:var(--text2);}
 
 /* ── BLOCK REORDER BUTTONS (mobile only) ── */
-.block-reorder-btns{display:none;gap:3px;}
+.block-reorder-btns{display:none;flex-direction:column;align-items:stretch;gap:3px;flex-shrink:0;}
+.reorder-label{font-family:'Syne',sans-serif;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);text-align:center;white-space:nowrap;}
+.reorder-arrows{display:flex;gap:3px;}
+.reorder-arrows .btn{flex:1;min-height:32px;padding:3px 0;text-align:center;font-size:0.9rem;}
+.reorder-arrows .btn:disabled{opacity:0.25;cursor:default;pointer-events:none;}
 @media(max-width:768px),(max-height:500px) and (orientation:landscape){
   .block-reorder-btns{display:flex;}
-  .block-reorder-btns button{min-width:36px;min-height:36px;padding:4px 8px;font-size:0.85rem;}
-  .block-reorder-btns button:disabled{opacity:0.25;cursor:default;}
 }
 
 /* ── ADD MOVE SHEET ── */
@@ -2273,15 +2276,20 @@ function renderMoves(){
     </div>`;
   }
   let h=`<div class="block-header">
-    <h2><span class="badge green">${block.name}</span><span class="badge blue">🏋️ ${S.machine}</span>${style?`<span class="badge style">${style.name}</span>`:""}</h2>
-    <div style="display:flex;align-items:center;gap:4px">
-      <input class="block-dur-input" type="number" value="${block.mins}" min="1" max="60" onchange="S.blocks[${S.activeIdx}].mins=Math.max(1,parseInt(this.value)||1);updateBar();renderTabs();">
-      <span class="bdur-label">min</span>
+    <div class="block-header-left">
+      <h2><span class="badge green">${block.name}</span><span class="badge blue">🏋️ ${S.machine}</span>${style?`<span class="badge style">${style.name}</span>`:""}</h2>
+      <div style="display:flex;align-items:center;gap:4px">
+        <input class="block-dur-input" type="number" value="${block.mins}" min="1" max="60" onchange="S.blocks[${S.activeIdx}].mins=Math.max(1,parseInt(this.value)||1);updateBar();renderTabs();">
+        <span class="bdur-label">min</span>
+      </div>
+      <button class="btn sec sm" onclick="openBlockModal(${S.activeIdx})">Edit</button>
     </div>
-    <button class="btn sec sm" onclick="openBlockModal(${S.activeIdx})">Edit</button>
     <div class="block-reorder-btns">
-      <button class="btn sec sm" onclick="moveBlock(-1)" ${S.activeIdx===0?"disabled":""} title="Move block left">←</button>
-      <button class="btn sec sm" onclick="moveBlock(1)" ${S.activeIdx===S.blocks.length-1?"disabled":""} title="Move block right">→</button>
+      <span class="reorder-label">Reorder blocks</span>
+      <div class="reorder-arrows">
+        <button class="btn sec sm" onclick="moveBlock(-1)" ${S.activeIdx===0?"disabled":""}>←</button>
+        <button class="btn sec sm" onclick="moveBlock(1)" ${S.activeIdx===S.blocks.length-1?"disabled":""}>→</button>
+      </div>
     </div>
   </div>${mirrorHTML}${alertHTML}`;
 
