@@ -1130,7 +1130,10 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     </div>
     <div class="sheet-controls">
       <div class="sw" style="flex:1;margin:0"><span class="si">🔍</span><input type="text" id="sheetSearch" placeholder="Search moves..." oninput="renderSheetOpts()" style="font-size:16px!important"></div>
-      <select id="sheetCat" onchange="renderSheetOpts()" style="width:auto;font-size:16px!important"><option value="">Filter by category</option><option value="core">Core</option><option value="oblique">Obliques</option><option value="lower">Lower Body</option><option value="upper">Upper Body</option><option value="full">Full Body</option></select>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:0.6rem;color:var(--text3);font-family:'Syne',sans-serif;text-transform:uppercase;letter-spacing:1px;padding-left:1px">Filter</span>
+        <select id="sheetCat" onchange="renderSheetOpts()" style="width:auto;font-size:16px!important"><option value="">All categories</option><option value="core">Core</option><option value="oblique">Obliques</option><option value="lower">Lower Body</option><option value="upper">Upper Body</option><option value="full">Full Body</option></select>
+      </div>
     </div>
     <div class="sheet-list" id="sheetOpts"></div>
   </div>
@@ -2436,7 +2439,8 @@ function blockNameToCat(name){
   if(n.includes("warm"))return"core";
   if(n.includes("leg"))return"lower";
   if(n.includes("oblique"))return"oblique";
-  if(n.includes("finisher"))return"full";
+  if(n.includes("upper")||n.includes("arm")||n.includes("shoulder")||n.includes("chest"))return"upper";
+  if(n.includes("finisher"))return"core";
   return"";
 }
 function openAddMoveSheet(){
