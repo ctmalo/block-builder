@@ -1130,7 +1130,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
     </div>
     <div class="sheet-controls">
       <div class="sw" style="flex:1;margin:0"><span class="si">🔍</span><input type="text" id="sheetSearch" placeholder="Search moves..." oninput="renderSheetOpts()" style="font-size:16px!important"></div>
-      <select id="sheetCat" onchange="renderSheetOpts()" style="width:auto;font-size:16px!important"><option value="">All</option><option value="core">Core</option><option value="oblique">Obliques</option><option value="lower">Lower</option><option value="upper">Upper</option><option value="full">Full</option></select>
+      <select id="sheetCat" onchange="renderSheetOpts()" style="width:auto;font-size:16px!important"><option value="">Filter by category</option><option value="core">Core</option><option value="oblique">Obliques</option><option value="lower">Lower Body</option><option value="upper">Upper Body</option><option value="full">Full Body</option></select>
     </div>
     <div class="sheet-list" id="sheetOpts"></div>
   </div>
@@ -2431,11 +2431,19 @@ function addMove(id){const m=getMoveById(id);if(!m)return;const nm={...m,dur:3,v
 // ════════════════════════════════════════════════
 // ADD MOVE SHEET (mobile)
 // ════════════════════════════════════════════════
+function blockNameToCat(name){
+  const n=(name||"").toLowerCase();
+  if(n.includes("warm"))return"core";
+  if(n.includes("leg"))return"lower";
+  if(n.includes("oblique"))return"oblique";
+  if(n.includes("finisher"))return"full";
+  return"";
+}
 function openAddMoveSheet(){
   const block=S.blocks[S.activeIdx];
   document.getElementById("sheetTitle").textContent="Add to: "+(block?block.name:"Block");
   document.getElementById("sheetSearch").value="";
-  document.getElementById("sheetCat").value="";
+  document.getElementById("sheetCat").value=blockNameToCat(block?block.name:"");
   document.getElementById("addMoveSheet").classList.add("open");
   renderSheetOpts();
   setTimeout(()=>document.getElementById("sheetSearch").focus(),200);
