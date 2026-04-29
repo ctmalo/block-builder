@@ -564,6 +564,19 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 }
 .teach-spring-banner .sdot{width:13px!important;height:13px!important;}
 .teach-change-banner .slabel{font-size:0.75rem;}
+.teach-next-warn{
+  margin:10px 0 2px;padding:10px 14px;border-radius:8px;
+  background:var(--card2);border:1px solid var(--border2);
+  border-left:4px solid var(--accent3);
+  font-size:0.76rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--text2);
+}
+.teach-next-warn strong{display:block;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:5px;}
+.teach-next-warn .tnw-item{display:flex;align-items:center;gap:6px;margin-top:3px;}
+.teach-next-warn .tnw-spring{color:#e88a00;}
+[data-theme="dark"] .teach-next-warn .tnw-spring{color:#ffb340;}
+.teach-next-warn .tnw-pos{color:var(--accent2);}
+.teach-next-warn .tnw-side{color:var(--accent2);}
+.teach-next-warn .sdot{width:12px!important;height:12px!important;}
 
 /* Teach nav dots */
 .teach-dots{
@@ -704,6 +717,114 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .sheet-list{flex:1;overflow-y:auto;padding:8px;-webkit-overflow-scrolling:touch;}
 .add-move-block-btn{display:none;}
 @media(max-width:768px){.add-move-block-btn{display:block;width:100%;margin-top:10px;padding:12px;font-size:0.82rem;border-radius:var(--radius-md);}}
+
+/* ═══════════════════════ ADMIN PANEL ═══════════════════════ */
+#adminOverlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.admin-topbar{display:flex;align-items:center;gap:14px;padding:0 20px;height:52px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.admin-topbar-title{font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:var(--text);flex:1;}
+.admin-topbar-badge{font-size:0.65rem;padding:2px 8px;border-radius:20px;background:var(--warn);color:#fff;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:0.5px;}
+.admin-exit{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:7px;padding:5px 13px;font-family:inherit;cursor:pointer;font-size:0.78rem;}
+.admin-exit:hover{border-color:var(--accent3);color:var(--accent3);}
+/* Gate */
+.admin-gate{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.admin-gate-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:36px 40px;width:100%;max-width:360px;text-align:center;}
+.admin-gate-icon{font-size:2.2rem;margin-bottom:12px;}
+.admin-gate-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:4px;}
+.admin-gate-sub{font-size:0.78rem;color:var(--text3);margin-bottom:20px;}
+.admin-gate-box input{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:var(--radius-md);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;margin-bottom:10px;box-sizing:border-box;}
+.admin-gate-box input:focus{outline:none;border-color:var(--accent);}
+.admin-gate-box .btn{width:100%;padding:11px;}
+.admin-pw-error{font-size:0.75rem;color:#e74c3c;margin-top:4px;display:none;}
+/* Tabs */
+.admin-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;padding:0 20px;}
+.atab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 18px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;color:var(--text2);cursor:pointer;transition:all 0.15s;margin-bottom:-1px;}
+.atab:hover{color:var(--text);}
+.atab.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* Content */
+#adminContent{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+/* Master Moves table */
+.admin-tbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);flex-shrink:0;gap:12px;}
+.admin-tbar-info{font-size:0.8rem;color:var(--text2);}
+.admin-table-wrap{flex:1;overflow:auto;}
+.admin-table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+.admin-table th{position:sticky;top:0;background:var(--surface);border-bottom:2px solid var(--border2);padding:8px 10px;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);white-space:nowrap;z-index:2;}
+.admin-table td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.admin-table tr:hover td{background:var(--card2);}
+.admin-table tr.admin-inactive td{opacity:0.45;}
+.admin-table tr.admin-inactive:hover td{opacity:0.7;}
+.admin-id{color:var(--text3);font-size:0.65rem;font-family:monospace;}
+.ac{background:transparent;border:1px solid transparent;border-radius:4px;padding:3px 6px;font-family:inherit;font-size:0.75rem;color:var(--text);width:100%;min-width:60px;box-sizing:border-box;}
+.ac:hover{border-color:var(--border2);}
+.ac:focus{outline:none;border-color:var(--accent);background:var(--surface);}
+.ac[readonly]{color:var(--text2);cursor:default;}
+.ac[readonly]:hover{border-color:transparent;}
+select.ac{cursor:pointer;}
+.admin-cb{cursor:pointer;width:15px;height:15px;}
+/* Toggle switch */
+.admin-toggle{position:relative;display:inline-flex;width:34px;height:19px;flex-shrink:0;}
+.admin-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.at-slider{position:absolute;inset:0;border-radius:19px;background:var(--border2);cursor:pointer;transition:0.2s;}
+.at-slider:before{content:'';position:absolute;width:13px;height:13px;left:3px;top:3px;border-radius:50%;background:#fff;transition:0.2s;}
+.admin-toggle input:checked + .at-slider{background:var(--accent);}
+.admin-toggle input:checked + .at-slider:before{transform:translateX(15px);}
+/* Settings */
+.admin-settings-wrap{display:flex;gap:0;flex:1;overflow:auto;}
+.admin-settings-section{flex:1;padding:20px 24px;border-right:1px solid var(--border);min-width:280px;}
+.admin-settings-section:last-child{border-right:none;}
+.ass-title{font-family:'Syne',sans-serif;font-weight:800;font-size:0.82rem;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px;}
+.admin-setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:16px;}
+.admin-setting-row:last-child{border-bottom:none;}
+.asr-label{font-weight:600;font-size:0.82rem;margin-bottom:2px;}
+.asr-sub{font-size:0.7rem;color:var(--text3);}
+/* Coming soon tab */
+.admin-coming{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--text3);font-size:0.85rem;font-family:'Syne',sans-serif;}
+.admin-coming-icon{font-size:2.5rem;}
+/* Click-to-edit name */
+.aname-display{cursor:pointer;padding:3px 6px;border-radius:4px;display:block;min-width:130px;}
+.aname-display:hover{background:var(--card2);outline:1px dashed var(--border2);}
+.aname-input{background:var(--surface);border:1px solid var(--accent);border-radius:4px;padding:3px 6px;font-family:inherit;font-size:0.75rem;color:var(--text);width:100%;box-sizing:border-box;display:none;}
+/* Checkbox groups */
+.acb-group{display:flex;flex-direction:column;gap:2px;}
+.acb-item{display:flex;align-items:center;gap:4px;font-size:0.68rem;color:var(--text2);white-space:nowrap;cursor:pointer;}
+.acb-item input[type=checkbox]{width:12px;height:12px;cursor:pointer;flex-shrink:0;accent-color:var(--accent);}
+/* Machine editor in settings */
+.admin-settings-scroll{flex:1;overflow:auto;padding:20px 24px;}
+.machine-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:12px;}
+.machine-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.machine-name-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 11px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--text);}
+.machine-name-input:focus{outline:none;border-color:var(--accent);}
+.machine-code-input{width:72px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 9px;font-family:monospace;font-size:0.82rem;color:var(--accent);font-weight:700;}
+.machine-code-input:focus{outline:none;border-color:var(--accent);}
+.machine-style-select{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:6px 8px;font-family:inherit;font-size:0.78rem;color:var(--text2);cursor:pointer;flex-shrink:0;}
+.machine-style-select:focus{outline:none;border-color:var(--accent);}
+.machine-springs-label{font-size:0.68rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:7px;}
+.spring-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
+.spring-item{display:flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;}
+.spring-swatch{width:22px;height:22px;border-radius:4px;border:1px solid rgba(128,128,128,0.35);flex-shrink:0;cursor:pointer;padding:0;}
+.spring-name-in{background:transparent;border:none;font-size:0.73rem;color:var(--text);font-family:inherit;width:66px;}
+.spring-name-in:focus{outline:none;}
+.spring-code-in{background:transparent;border:none;font-size:0.73rem;color:var(--accent);font-family:monospace;font-weight:700;width:36px;}
+.spring-code-in:focus{outline:none;}
+.spring-hex-in{background:transparent;border:none;font-size:0.67rem;color:var(--text3);font-family:monospace;width:60px;}
+.spring-hex-in:focus{outline:none;}
+.spring-rm{background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.75rem;padding:0 2px;line-height:1;}
+.spring-rm:hover{color:#e74c3c;}
+/* Expandable detail row */
+.aexpand-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.75rem;padding:3px 5px;border-radius:4px;line-height:1;}
+.aexpand-btn:hover{color:var(--text);background:var(--card2);}
+.arow-detail-tr td{padding:0!important;border-bottom:2px solid var(--border2)!important;}
+.arow-detail-tr:hover td{background:inherit!important;}
+.arow-detail-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px;background:var(--card2);}
+.arow-detail-inner .adf-label{font-size:0.65rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--text3);margin-bottom:4px;}
+.arow-detail-inner textarea{background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:0.74rem;min-height:68px;resize:vertical;padding:6px 8px;width:100%;font-family:inherit;}
+.arow-detail-inner textarea:focus{outline:none;border-color:var(--accent);}
+/* Archived tab */
+.archived-list{flex:1;overflow:auto;}
+.archived-row{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--border);}
+.archived-row:hover{background:var(--card2);}
+.archived-name{flex:1;font-size:0.82rem;font-weight:600;}
+.archived-meta{font-size:0.72rem;color:var(--text3);}
+.archived-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3);font-size:0.82rem;}
 </style>
 </head>
 <body>
@@ -1158,6 +1279,19 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 
 <script>
 // ════════════════════════════════════════════════
+// ADMIN GATE — runs before anything else
+// ════════════════════════════════════════════════
+if(window.location.hash === '#ducky-plank'){
+  document.addEventListener('DOMContentLoaded', function(){
+    const mainApp = document.getElementById('app');
+    if(mainApp) mainApp.style.display = 'none';
+    const overlay = document.getElementById('adminOverlay');
+    if(overlay) overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  });
+}
+
+// ════════════════════════════════════════════════
 // THEME
 // ════════════════════════════════════════════════
 function getSystemTheme(){return window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
@@ -1234,6 +1368,20 @@ function springDisplay(springs,sz=11){
     }
   });
   return dots+`<span class="slabel">${springLabel(springs)}</span>`;
+}
+// Canonical spring comparison key — uses springDesc when available so "Min 3W" ≠ "1W" even if both sp:"medium"
+function springKey(m){
+  if(m.springs)return springLabel(m.springs);
+  const base=getMoveById(m.id);
+  if(base&&base.springDesc)return base.springDesc;
+  return springLabel(effectiveSprings(m));
+}
+// Spring display for teach mode: dots when we have structured data, desc text otherwise
+function teachSpringDisplay(m){
+  if(m.springs)return springDisplay(m.springs,14);
+  const base=getMoveById(m.id);
+  if(base&&base.springDesc)return`<span style="font-size:0.78rem;color:var(--text2)">${base.springDesc}</span>`;
+  return springDisplay(effectiveSprings(m),14);
 }
 function getLvl(sp){const k=SM[S.sys][sp]||SM[S.sys]["light"];return SS[S.sys].levels.find(l=>l.k===k)||SS[S.sys].levels[0];}
 
@@ -2354,10 +2502,10 @@ function renderMoves(){
   else{
     block.moves.forEach((m,i)=>{
       const prev=i>0?block.moves[i-1]:null;
-      const mSprings=effectiveSprings(m);
-      const prevSprings=prev?effectiveSprings(prev):null;
-      const springChanged=prev&&springLabel(mSprings)!==springLabel(prevSprings);
+      const springChanged=prev&&springKey(m)!==springKey(prev);
       const sideFlipped=prev&&prev.side!==m.side&&m.side!=="bilateral"&&prev.side!=="bilateral";
+      const mPos=m.pos||"both";const prevPos=prev?prev.pos||"both":null;
+      const posChanged=prev&&prevPos!=="both"&&mPos!=="both"&&mPos!==prevPos;
       const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
       const posBadge=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆ front":"⬇ back"}</span>`:"";
       const facingBadge=m.facing&&m.side==="facing"?`<span class="facing-badge" onclick="cycleFacing(${i})">facing: ${m.facingDir||"?"}</span>`:"";
@@ -2365,8 +2513,9 @@ function renderMoves(){
       const isExp=expandedIdx===i;
       const base=getMoveById(m.id);
       const hasDet=base&&(base.setup||base.cues||base.mistakes||base.notes);
-      if(springChanged)h+=`<div class="callout spring">⚙️ Spring → ${springLabel(mSprings)}</div>`;
+      if(springChanged)h+=`<div class="callout spring">⚙️ Spring → ${springKey(m)}</div>`;
       if(sideFlipped)h+=`<div class="callout side-flip">↔ Side → ${m.side}</div>`;
+      if(posChanged)h+=`<div class="callout side-flip">📍 Position → ${mPos==="front"?"front platform":"back platform"}</div>`;
       h+=`<div class="move-card" draggable="true" ondragstart="onMDragStart(event,${i})" ondragover="onMDragOver(event,${i})" ondrop="onMDrop(event,${i})" ondragend="onMDragEnd()">
         <div class="move-card-top">
           <div class="drag-handle">⠿</div>
@@ -2925,31 +3074,29 @@ function renderTeachMode(){
   }
 
   blocksEl.innerHTML = activeBlocks.map((block, bi) => {
+    const nextBlock = bi + 1 < activeBlocks.length ? activeBlocks[bi + 1] : null;
+
     const movesHTML = block.moves.map((m, mi) => {
       const base = getMoveById(m.id);
-      const springs = effectiveSprings(m);
       const prev = mi > 0 ? block.moves[mi-1] : null;
 
-      // Spring change
-      const springChanged = prev && springLabel(effectiveSprings(prev)) !== springLabel(springs);
-      // Platform/position change (front vs back; skip "both" since it's flexible)
+      // Change detection using springKey so "1W" vs "Min 3W" always differs
+      const springChanged = prev && springKey(m) !== springKey(prev);
       const mPos = m.pos || "both";
       const prevPos = prev ? (prev.pos || "both") : null;
       const posChanged = prev && prevPos !== "both" && mPos !== "both" && mPos !== prevPos;
-
-      // Spring display: colored dots + label
-      const springHTML = base && base.springDesc
-        ? `<span style="font-size:0.78rem">${base.springDesc}</span>`
-        : springDisplay(springs, 14);
+      const sideChanged = prev && prev.side !== m.side && m.side !== "bilateral" && prev.side !== "bilateral";
 
       // Change banners
       let banners = "";
       if(springChanged){
-        banners += `<div class="teach-change-banner teach-spring-banner">⚙ Spring → ${springDisplay(effectiveSprings(m), 13)}</div>`;
+        banners += `<div class="teach-change-banner teach-spring-banner">⚙ Spring → ${teachSpringDisplay(m)}</div>`;
       }
-      if(posChanged){
-        const posLabel = mPos === "front" ? "⬆ Front platform" : mPos === "back" ? "⬇ Back platform" : mPos;
-        banners += `<div class="teach-change-banner teach-pos-banner">📍 Position → ${posLabel}</div>`;
+      if(posChanged || sideChanged){
+        let parts = [];
+        if(posChanged) parts.push(mPos === "front" ? "⬆ Front platform" : "⬇ Back platform");
+        if(sideChanged) parts.push(`↔ Side → ${m.side}`);
+        banners += `<div class="teach-change-banner teach-pos-banner">${parts.join(" · ")}</div>`;
       }
 
       const varHTML = (m.variations||[]).length
@@ -2959,16 +3106,38 @@ function renderTeachMode(){
       return `${banners}<div class="teach-move">
         <div class="teach-move-name">${moveName(m)}</div>
         <div class="teach-move-meta">
-          <span class="teach-spring">${springHTML}</span>
+          <span class="teach-spring">${teachSpringDisplay(m)}</span>
           ${cableBadge}
           <span class="teach-time">⏱ ${m.dur||3} min</span>
         </div>${varHTML}</div>`;
     }).join("");
+
+    // Next-block transition summary
+    let nextWarnHTML = "";
+    if(nextBlock && nextBlock.moves.length) {
+      const lastM = block.moves[block.moves.length - 1];
+      const firstM = nextBlock.moves[0];
+      const warns = [];
+      if(springKey(firstM) !== springKey(lastM)){
+        warns.push(`<div class="tnw-item tnw-spring">⚙ Spring change → ${teachSpringDisplay(firstM)}</div>`);
+      }
+      const lastPos = lastM.pos || "both"; const firstPos = firstM.pos || "both";
+      if(lastPos !== "both" && firstPos !== "both" && lastPos !== firstPos){
+        warns.push(`<div class="tnw-item tnw-pos">📍 Position → ${firstPos === "front" ? "front platform" : "back platform"}</div>`);
+      }
+      if(lastM.side !== firstM.side && firstM.side !== "bilateral" && lastM.side !== "bilateral"){
+        warns.push(`<div class="tnw-item tnw-side">↔ Side → ${firstM.side}</div>`);
+      }
+      if(warns.length){
+        nextWarnHTML = `<div class="teach-next-warn"><strong>heads up before next block</strong>${warns.join("")}</div>`;
+      }
+    }
+
     return `<div class="teach-block" data-bi="${bi}">
       <div class="teach-block-name">
         <span>${block.name}</span>
         <span class="teach-block-badge">${block.moves.length} moves · ${block.mins}m</span>
-      </div>${movesHTML}</div>`;
+      </div>${movesHTML}${nextWarnHTML}</div>`;
   }).join("");
 
   if(dotsEl) dotsEl.innerHTML = activeBlocks.map((_,i) =>
@@ -3031,6 +3200,542 @@ document.addEventListener("keydown", e => {
 })();
 document.getElementById("classDate").value=todayStr();
 renderRecentList();renderSidebarRoutines();renderStus();setTimeout(initMobile,100);initMobile();
+
+// ════════════════════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════════════════════
+const ADMIN_PASSWORD = 'plank2024';
+let adminTab = 'moves';
+
+function initAdmin(){
+  const isAdmin = window.location.hash === '#ducky-plank';
+  const overlay = document.getElementById('adminOverlay');
+  if(!isAdmin){ overlay.style.display='none'; return; }
+  overlay.style.display='flex';
+  document.body.style.overflow='hidden';
+  if(sessionStorage.getItem('bb_admin_auth')==='ok') showAdminPanel();
+  else showAdminGate();
+}
+
+function showAdminGate(){
+  document.getElementById('adminGate').style.display='flex';
+  document.getElementById('adminPanel').style.display='none';
+  setTimeout(()=>document.getElementById('adminPwInput').focus(),50);
+}
+
+function checkAdminPassword(){
+  const pw = document.getElementById('adminPwInput').value;
+  if(pw === ADMIN_PASSWORD){
+    sessionStorage.setItem('bb_admin_auth','ok');
+    showAdminPanel();
+  } else {
+    const err = document.getElementById('adminPwError');
+    err.style.display='block';
+    document.getElementById('adminPwInput').value='';
+    document.getElementById('adminPwInput').focus();
+  }
+}
+
+function showAdminPanel(){
+  document.getElementById('adminGate').style.display='none';
+  const panel = document.getElementById('adminPanel');
+  panel.style.display='flex';
+  panel.style.flexDirection='column';
+  panel.style.flex='1';
+  panel.style.overflow='hidden';
+  switchAdminTab('moves');
+}
+
+// ── Admin data helpers ──────────────────────────────────────────
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+const ADMIN_ARCHIVED_KEY = 'bb_admin_archived';
+const ADMIN_MACHINE_DEFS_KEY = 'bb_admin_machine_defs';
+const DEFAULT_MACHINE_DEFS = [
+  {id:'megaformer',  name:'Megaformer',        shortCode:'MF',   style:'lagree', active:true,
+   springs:[{name:'White',shortCode:'W',hex:'#FFFFFF'},{name:'Grey',shortCode:'G',hex:'#888888'},{name:'Black',shortCode:'B',hex:'#222222'}]},
+  {id:'microformer', name:'Microformer',        shortCode:'MC',   style:'lagree', active:false, springs:[]},
+  {id:'supra',       name:'Supra',              shortCode:'SP',   style:'lagree', active:false, springs:[]},
+  {id:'encore',      name:'Encore',             shortCode:'EN',   style:'lagree', active:false, springs:[]},
+  {id:'demo-test',   name:'Demo Test Machine',  shortCode:'DEMO', style:'lagree', active:false, springs:[]},
+];
+
+function adminGetArchived(){return ld(ADMIN_ARCHIVED_KEY,[]);}
+function adminGetMachineDefs(){
+  const saved=ld(ADMIN_MACHINE_DEFS_KEY,null);
+  if(!saved) return DEFAULT_MACHINE_DEFS;
+  // Merge any default machines missing from stale saved data, preserving order
+  const savedIds=saved.map(m=>m.id);
+  const result=[];
+  DEFAULT_MACHINE_DEFS.forEach(def=>{
+    if(savedIds.includes(def.id)) result.push(saved.find(m=>m.id===def.id));
+    else result.push(def);
+  });
+  // Append any custom machines the user added that aren't in defaults
+  saved.forEach(m=>{ if(!DEFAULT_MACHINE_DEFS.find(d=>d.id===m.id)) result.push(m); });
+  return result;
+}
+function adminSaveMachineDefs(defs){sv(ADMIN_MACHINE_DEFS_KEY,defs);}
+
+// Derive stance label/value from move
+const STANCE_OPTIONS=[
+  {v:'bilateral',    label:'Bilateral'},
+  {v:'left-only',    label:'Left Only'},
+  {v:'right-only',   label:'Right Only'},
+  {v:'left-or-right',label:'Left OR Right'},
+  {v:'facing',       label:'Facing'},
+];
+function adminGetStance(m){
+  const ov=moveDetails[m.id]?.stance;
+  if(ov) return ov;
+  if(m.side==='left')  return 'left-only';
+  if(m.side==='right') return 'right-only';
+  if(m.side==='facing')return 'facing';
+  return 'bilateral';
+}
+
+// Direction styles: {regular, reverse, mega, megaRev}
+function adminGetDirStyles(m){
+  const ov=moveDetails[m.id]?.dirStyles;
+  if(ov) return ov;
+  const hasMega=m.megaVariants||false;
+  return{regular:true, reverse:hasMega, mega:hasMega, megaRev:hasMega};
+}
+
+// L/R/C
+function adminGetLCR(m){
+  const ov=moveDetails[m.id]?.lcr;
+  if(ov) return ov;
+  return{l:m.hasLCR||false, r:m.hasLCR||false, c:m.hasLCR||false};
+}
+
+// Cables: {black, red, bungee}
+function adminGetCables(m){
+  const ov=moveDetails[m.id]?.cables3;
+  if(ov) return ov;
+  const c=m.cables||'none';
+  return{black:c==='black'||c==='black-straps',red:c==='red',bungee:false};
+}
+function adminCables(id,key,val){
+  if(!moveDetails[id])moveDetails[id]={};
+  const base=allMoves().find(m=>m.id===id)||{};
+  const cur={...adminGetCables(base),...(moveDetails[id].cables3||{})};
+  cur[key]=val; moveDetails[id].cables3=cur;
+  sv('bb_movedetails',moveDetails);
+}
+// Per-machine spring descriptions
+function adminGetMachSpring(moveId,machId){
+  const ms=moveDetails[moveId]?.machSprings||{};
+  if(ms[machId]!==undefined) return ms[machId];
+  if(machId==='megaformer'){const m=allMoves().find(m=>m.id===moveId);return m?.springDesc||'';}
+  return'';
+}
+function adminSaveMachSpring(moveId,machId,inp){
+  const val=inp.value.trim();
+  if(!moveDetails[moveId])moveDetails[moveId]={};
+  if(!moveDetails[moveId].machSprings)moveDetails[moveId].machSprings={};
+  moveDetails[moveId].machSprings[machId]=val;
+  sv('bb_movedetails',moveDetails);
+  const disp=document.getElementById(`mspring-${machId}-d-${moveId}`);
+  if(disp){disp.textContent=val||'—';disp.style.display='block';}
+  inp.style.display='none';
+}
+function adminStartEditMachSpring(moveId,machId){
+  document.getElementById(`mspring-${machId}-d-${moveId}`).style.display='none';
+  const inp=document.getElementById(`mspring-${machId}-i-${moveId}`);
+  inp.style.display='block';inp.focus();inp.select();
+}
+function adminCancelEditMachSpring(moveId,machId){
+  document.getElementById(`mspring-${machId}-i-${moveId}`).style.display='none';
+  document.getElementById(`mspring-${machId}-d-${moveId}`).style.display='block';
+}
+
+// Position internal → display
+const POS_OPTIONS=[
+  {v:'front', label:'Front Platform'},
+  {v:'back',  label:'Back Platform'},
+  {v:'both',  label:'Variant Dependent'},
+];
+
+// ── Tab routing ──────────────────────────────────────────────────
+function switchAdminTab(tab){
+  adminTab=tab;
+  document.querySelectorAll('.atab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  renderAdminTab(tab);
+}
+function renderAdminTab(tab){
+  const el=document.getElementById('adminContent');
+  if(tab==='moves')    renderMasterMoves(el);
+  else if(tab==='archived') renderArchivedMoves(el);
+  else if(tab==='user')el.innerHTML='<div class="admin-coming"><div class="admin-coming-icon">🚧</div>User Moves — Coming Soon</div>';
+  else if(tab==='settings') renderAdminSettings(el);
+}
+
+// ── Master Moves table ───────────────────────────────────────────
+function renderMasterMoves(el){
+  const archived=adminGetArchived();
+  const moves=allMoves().filter(m=>!archived.includes(m.id));
+  const activeMachines=adminGetMachineDefs().filter(m=>m.active);
+  const springHeaders=activeMachines.map(mach=>
+    `<th style="min-width:100px">Springs<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(${esc(mach.shortCode||mach.name)})</span></th>`
+  ).join('');
+  el.innerHTML=`
+    <div class="admin-tbar">
+      <div class="admin-tbar-info">${moves.length} moves &nbsp;·&nbsp; ${S.approved.filter(id=>!archived.includes(id)).length} active &nbsp;·&nbsp; ${archived.length} archived</div>
+      <button class="btn sm" onclick="adminAddMove()">+ Add New Move</button>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr>
+          <th style="width:28px"></th>
+          <th style="width:42px">ID</th>
+          <th style="min-width:155px">Name</th>
+          <th>Category</th>
+          <th style="min-width:118px">Stance</th>
+          ${springHeaders}
+          <th style="min-width:130px">Position</th>
+          <th style="min-width:110px">Direction Styles</th>
+          <th>L / R / C</th>
+          <th style="min-width:95px">Cables &amp;<br>Bungee</th>
+          <th style="min-width:55px">Active</th>
+          <th></th>
+        </tr></thead>
+        <tbody>${moves.map(m=>adminMoveRow(m,activeMachines)).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+function adminMoveRow(m,activeMachines){
+  const active=S.approved.includes(m.id);
+  const stance=adminGetStance(m);
+  const pos=m.pos||'both';
+  const dir=adminGetDirStyles(m);
+  const lcr=adminGetLCR(m);
+  const cables=adminGetCables(m);
+
+  const stanceOpts=STANCE_OPTIONS.map(o=>`<option value="${o.v}"${stance===o.v?' selected':''}>${o.label}</option>`).join('');
+  const posOpts=POS_OPTIONS.map(o=>`<option value="${o.v}"${pos===o.v?' selected':''}>${o.label}</option>`).join('');
+  const catOpts=['core','oblique','lower','upper','full'].map(c=>`<option value="${c}"${m.cat===c?' selected':''}>${c}</option>`).join('');
+
+  const springCells=activeMachines.map(mach=>{
+    const val=adminGetMachSpring(m.id,mach.id);
+    const mid=`mspring-${mach.id}-`;
+    return`<td><span class="aname-display" id="${mid}d-${m.id}" onclick="adminStartEditMachSpring(${m.id},'${mach.id}')" style="font-family:monospace;font-size:0.72rem">${esc(val||'—')}</span><input class="aname-input" id="${mid}i-${m.id}" value="${esc(val)}" placeholder="e.g. 1W" onblur="adminSaveMachSpring(${m.id},'${mach.id}',this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')adminCancelEditMachSpring(${m.id},'${mach.id}');"></td>`;
+  }).join('');
+
+  const setup   = moveDetails[m.id]?.setup    ?? m.setup    ?? '';
+  const cues    = moveDetails[m.id]?.cues     ?? m.cues     ?? '';
+  const mistakes= moveDetails[m.id]?.mistakes ?? m.mistakes ?? '';
+  const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
+  const colspan = 12 + activeMachines.length;
+
+  return`<tr id="arow-${m.id}" class="${active?'':'admin-inactive'}">
+    <td style="text-align:center"><button class="aexpand-btn" id="aexp-${m.id}" onclick="adminToggleDetail(${m.id})" title="Expand details">▼</button></td>
+    <td><span class="admin-id">${m.id}</span></td>
+    <td>
+      <span class="aname-display" id="aname-d-${m.id}" onclick="adminStartEditName(${m.id})">${esc(m.name||'')}</span>
+      <input class="aname-input" id="aname-i-${m.id}" value="${esc(m.name||'')}"
+        onblur="adminSaveName(${m.id},this)"
+        onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')adminCancelEditName(${m.id});">
+    </td>
+    <td><select class="ac" onchange="adminField(${m.id},'cat',this.value)">${catOpts}</select></td>
+    <td><select class="ac" onchange="adminField(${m.id},'stance',this.value,true)">${stanceOpts}</select></td>
+    ${springCells}
+    <td><select class="ac" onchange="adminField(${m.id},'pos',this.value)">${posOpts}</select></td>
+    <td><div class="acb-group">
+      <label class="acb-item"><input type="checkbox" ${dir.regular?'checked':''} onchange="adminDirStyle(${m.id},'regular',this.checked)"> Regular</label>
+      <label class="acb-item"><input type="checkbox" ${dir.reverse?'checked':''} onchange="adminDirStyle(${m.id},'reverse',this.checked)"> Reverse</label>
+      <label class="acb-item"><input type="checkbox" ${dir.mega?'checked':''} onchange="adminDirStyle(${m.id},'mega',this.checked)"> Mega</label>
+      <label class="acb-item"><input type="checkbox" ${dir.megaRev?'checked':''} onchange="adminDirStyle(${m.id},'megaRev',this.checked)"> Mega Rev</label>
+    </div></td>
+    <td><div class="acb-group">
+      <label class="acb-item"><input type="checkbox" ${lcr.l?'checked':''} onchange="adminLCR(${m.id},'l',this.checked)"> L</label>
+      <label class="acb-item"><input type="checkbox" ${lcr.r?'checked':''} onchange="adminLCR(${m.id},'r',this.checked)"> R</label>
+      <label class="acb-item"><input type="checkbox" ${lcr.c?'checked':''} onchange="adminLCR(${m.id},'c',this.checked)"> C</label>
+    </div></td>
+    <td><div class="acb-group">
+      <label class="acb-item"><input type="checkbox" ${cables.black?'checked':''} onchange="adminCables(${m.id},'black',this.checked)"> Black</label>
+      <label class="acb-item"><input type="checkbox" ${cables.red?'checked':''} onchange="adminCables(${m.id},'red',this.checked)"> Red</label>
+      <label class="acb-item"><input type="checkbox" ${cables.bungee?'checked':''} onchange="adminCables(${m.id},'bungee',this.checked)"> Bungee</label>
+    </div></td>
+    <td style="text-align:center"><label class="admin-toggle"><input type="checkbox" ${active?'checked':''} onchange="adminToggleActive(${m.id},this.checked)"><span class="at-slider"></span></label></td>
+    <td><button class="btn sec sm" style="white-space:nowrap;font-size:0.68rem" onclick="adminArchiveMove(${m.id})">Archive</button></td>
+  </tr>
+  <tr id="adetail-${m.id}" class="arow-detail-tr" style="display:none">
+    <td colspan="${colspan}">
+      <div class="arow-detail-inner">
+        <div><div class="adf-label">Setup &amp; Positioning</div><textarea onblur="adminField(${m.id},'setup',this.value)">${esc(setup)}</textarea></div>
+        <div><div class="adf-label">Coaching Cues</div><textarea onblur="adminField(${m.id},'cues',this.value)">${esc(cues)}</textarea></div>
+        <div><div class="adf-label">Common Mistakes</div><textarea onblur="adminField(${m.id},'mistakes',this.value)">${esc(mistakes)}</textarea></div>
+        <div><div class="adf-label">Notes</div><textarea onblur="adminField(${m.id},'notes',this.value)">${esc(notes)}</textarea></div>
+      </div>
+    </td>
+  </tr>`;
+}
+
+// Expand/collapse detail row
+function adminToggleDetail(id){
+  const tr=document.getElementById(`adetail-${id}`);
+  const btn=document.getElementById(`aexp-${id}`);
+  if(!tr)return;
+  const open=tr.style.display!=='none';
+  tr.style.display=open?'none':'table-row';
+  if(btn)btn.textContent=open?'▼':'▲';
+}
+
+// Click-to-edit name
+function adminStartEditName(id){
+  document.getElementById(`aname-d-${id}`).style.display='none';
+  const inp=document.getElementById(`aname-i-${id}`);
+  inp.style.display='block';inp.focus();inp.select();
+}
+function adminCancelEditName(id){
+  document.getElementById(`aname-i-${id}`).style.display='none';
+  document.getElementById(`aname-d-${id}`).style.display='block';
+}
+function adminSaveName(id,inp){
+  const val=inp.value.trim()||'Unnamed';
+  adminField(id,'name',val);
+  const disp=document.getElementById(`aname-d-${id}`);
+  disp.textContent=val;disp.style.display='block';
+  inp.style.display='none';
+}
+
+// Field save — useOverride=true stores in moveDetails for base moves; field on custom directly
+function adminField(id,field,value,useOverride=false){
+  if(isCustom(id)){
+    const m=S.custom.find(m=>m.id===id);
+    if(m){m[field]=value;sv('bb_custom',S.custom);}
+  } else {
+    if(!moveDetails[id])moveDetails[id]={};
+    moveDetails[id][field]=value;
+    sv('bb_movedetails',moveDetails);
+  }
+}
+
+function adminDirStyle(id,key,val){
+  if(!moveDetails[id])moveDetails[id]={};
+  const cur=moveDetails[id].dirStyles||adminGetDirStyles(allMoves().find(m=>m.id===id)||{});
+  cur[key]=val; moveDetails[id].dirStyles=cur;
+  sv('bb_movedetails',moveDetails);
+}
+function adminLCR(id,key,val){
+  if(!moveDetails[id])moveDetails[id]={};
+  const cur=moveDetails[id].lcr||adminGetLCR(allMoves().find(m=>m.id===id)||{});
+  cur[key]=val; moveDetails[id].lcr=cur;
+  sv('bb_movedetails',moveDetails);
+}
+
+function adminToggleActive(id,active){
+  if(active){if(!S.approved.includes(id))S.approved.push(id);}
+  else{S.approved=S.approved.filter(x=>x!==id);}
+  sv('bb_approved',S.approved);
+  const row=document.getElementById(`arow-${id}`);
+  if(row)row.classList.toggle('admin-inactive',!active);
+  const info=document.querySelector('.admin-tbar-info');
+  const archived=adminGetArchived();
+  if(info)info.textContent=`${allMoves().filter(m=>!archived.includes(m.id)).length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived`;
+}
+
+function adminArchiveMove(id){
+  const archived=adminGetArchived();
+  if(!archived.includes(id))archived.push(id);
+  sv(ADMIN_ARCHIVED_KEY,archived);
+  S.approved=S.approved.filter(x=>x!==id);
+  sv('bb_approved',S.approved);
+  renderAdminTab('moves');
+}
+
+function adminRestoreMove(id){
+  const archived=adminGetArchived().filter(x=>x!==id);
+  sv(ADMIN_ARCHIVED_KEY,archived);
+  if(!S.approved.includes(id))S.approved.push(id);
+  sv('bb_approved',S.approved);
+  renderAdminTab('archived');
+}
+
+function adminAddMove(){
+  const id=Date.now();
+  S.custom.push({id,name:'New Move',cat:'core',sp:'light',side:'bilateral',pos:'both',
+    tags:['core','bilateral'],mirror:null,springDesc:'1W',megaVariants:false,
+    hasLCR:false,variations:[],cables:'none',setup:'',cues:'',mistakes:'',notes:''});
+  S.approved.push(id);
+  sv('bb_custom',S.custom);sv('bb_approved',S.approved);
+  renderAdminTab('moves');
+  setTimeout(()=>{
+    const row=document.getElementById(`arow-${id}`);
+    if(row){row.scrollIntoView({behavior:'smooth',block:'center'});adminStartEditName(id);}
+  },80);
+}
+
+// ── Archived Moves tab ───────────────────────────────────────────
+function renderArchivedMoves(el){
+  const archived=adminGetArchived();
+  if(!archived.length){
+    el.innerHTML='<div class="archived-empty"><div style="font-size:2rem">📦</div>No archived moves yet</div>';
+    return;
+  }
+  const rows=archived.map(id=>{
+    const m=allMoves().find(m=>m.id===id);
+    const name=m?m.name:`Move #${id}`;
+    const meta=m?`${m.cat} · ${m.side}`:'';
+    return`<div class="archived-row">
+      <div class="archived-name">${esc(name)}</div>
+      <div class="archived-meta">${esc(meta)}</div>
+      <button class="btn sec sm" onclick="adminRestoreMove(${id})">Restore</button>
+    </div>`;
+  }).join('');
+  el.innerHTML=`<div class="archived-list">${rows}</div>`;
+}
+
+// ── Settings tab ─────────────────────────────────────────────────
+function renderAdminSettings(el){
+  const styleS=ld('bb_admin_styles',{});
+  const defs=adminGetMachineDefs();
+
+  const machineEditorHTML=defs.map((mach,mi)=>{
+    const machStyle=mach.style||'lagree';
+    const styleOpts=STYLES.map(s=>`<option value="${s.id}"${machStyle===s.id?' selected':''}>${s.icon} ${s.name}</option>`).join('');
+    return`
+    <div class="machine-card" id="mcard-${mi}">
+      <div class="machine-card-header">
+        <input class="machine-name-input" value="${esc(mach.name)}" placeholder="Machine name"
+          onchange="adminUpdateMachineField(${mi},'name',this.value)">
+        <input class="machine-code-input" value="${esc(mach.shortCode||'')}" placeholder="e.g. MF"
+          title="Short code used in notation like 1W, 2G"
+          onchange="adminUpdateMachineField(${mi},'shortCode',this.value)">
+        <select class="machine-style-select" title="Fitness style this machine belongs to"
+          onchange="adminUpdateMachineField(${mi},'style',this.value)">${styleOpts}</select>
+        <label class="admin-toggle" title="Active — adds a Springs column in Master Moves">
+          <input type="checkbox" ${mach.active?'checked':''} onchange="adminToggleMachineDef(${mi},this.checked)">
+          <span class="at-slider"></span>
+        </label>
+        <button class="btn sec sm" style="font-size:0.68rem;white-space:nowrap" onclick="adminRemoveMachine(${mi})">Remove</button>
+      </div>`;
+      <div class="machine-springs-label">Spring Types</div>
+      <div class="spring-list" id="slist-${mi}">
+        ${mach.springs.map((sp,si)=>`
+          <div class="spring-item" id="sitem-${mi}-${si}">
+            <input type="color" class="spring-swatch" value="${sp.hex||'#cccccc'}" title="Color"
+              onchange="adminUpdateSpring(${mi},${si},'hex',this.value)">
+            <input class="spring-name-in" value="${esc(sp.name||'')}" placeholder="Name"
+              onchange="adminUpdateSpring(${mi},${si},'name',this.value)">
+            <input class="spring-code-in" value="${esc(sp.shortCode||'')}" placeholder="Code"
+              title="Short code used in notation, e.g. W, G, B, Y"
+              onchange="adminUpdateSpring(${mi},${si},'shortCode',this.value)">
+            <input class="spring-hex-in" value="${esc(sp.hex||'')}" placeholder="#RRGGBB"
+              onchange="adminUpdateSpring(${mi},${si},'hex',this.value)">
+            <button class="spring-rm" onclick="adminRemoveSpring(${mi},${si})">✕</button>
+          </div>`).join('')}
+      </div>
+      <button class="btn sec sm" style="font-size:0.72rem" onclick="adminAddSpring(${mi})">+ Add Spring Type</button>
+    </div>`;
+  }).join('');
+
+  const styleHTML=STYLES.map(s=>{
+    const on=styleS[s.id]!==undefined?styleS[s.id]:!s.coming;
+    return`<div class="admin-setting-row">
+      <div><div class="asr-label">${s.icon} ${s.name}</div><div class="asr-sub">${s.desc}${s.coming?' · Coming soon':''}</div></div>
+      <label class="admin-toggle"><input type="checkbox" ${on?'checked':''} onchange="adminToggleStyle('${s.id}',this.checked)"><span class="at-slider"></span></label>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<div class="admin-settings-scroll">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="ass-title" style="margin:0">Machines</div>
+      <button class="btn sec sm" onclick="adminAddMachine()">+ Add Machine</button>
+    </div>
+    ${machineEditorHTML}
+    <div style="height:24px"></div>
+    <div class="ass-title">Fitness Styles</div>
+    <div class="admin-settings-section" style="border:none;padding:0;min-width:unset">${styleHTML}</div>
+  </div>`;
+}
+
+// Machine def mutations
+function adminUpdateMachineField(mi,field,val){
+  const d=adminGetMachineDefs();d[mi][field]=val;adminSaveMachineDefs(d);
+}
+function adminToggleMachineDef(mi,active){
+  const d=adminGetMachineDefs();d[mi].active=active;adminSaveMachineDefs(d);
+  // re-render moves table if open so spring columns update immediately
+  if(adminTab==='moves') renderAdminTab('moves');
+}
+function adminRemoveMachine(mi){
+  if(!confirm('Remove this machine?'))return;
+  const d=adminGetMachineDefs();d.splice(mi,1);adminSaveMachineDefs(d);
+  renderAdminTab('settings');
+}
+function adminAddMachine(){
+  const d=adminGetMachineDefs();
+  d.push({id:'machine-'+Date.now(),name:'New Machine',shortCode:'',style:'lagree',active:false,springs:[]});
+  adminSaveMachineDefs(d);renderAdminTab('settings');
+}
+function adminAddSpring(mi){
+  const d=adminGetMachineDefs();
+  d[mi].springs.push({name:'',shortCode:'',hex:'#cccccc'});
+  adminSaveMachineDefs(d);renderAdminTab('settings');
+}
+function adminRemoveSpring(mi,si){
+  const d=adminGetMachineDefs();d[mi].springs.splice(si,1);adminSaveMachineDefs(d);
+  renderAdminTab('settings');
+}
+function adminUpdateSpring(mi,si,field,val){
+  const d=adminGetMachineDefs();d[mi].springs[si][field]=val;adminSaveMachineDefs(d);
+  if(field==='hex'){
+    const hexIn=document.querySelector(`#sitem-${mi}-${si} .spring-hex-in`);
+    const swatch=document.querySelector(`#sitem-${mi}-${si} .spring-swatch`);
+    if(hexIn)hexIn.value=val;
+    if(swatch)swatch.value=val;
+  }
+}
+
+function adminToggleStyle(id,active){
+  const s=ld('bb_admin_styles',{});s[id]=active;sv('bb_admin_styles',s);
+}
+
+function exitAdmin(){
+  sessionStorage.removeItem('bb_admin_auth');
+  window.location.hash='';
+  document.getElementById('adminOverlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+initAdmin();
+window.addEventListener('hashchange', initAdmin);
 </script>
+
+<!-- ═══════════════════════ ADMIN OVERLAY ═══════════════════════ -->
+<div id="adminOverlay" style="display:none">
+  <!-- Top bar -->
+  <div class="admin-topbar">
+    <div class="admin-topbar-title">🦆 Block Builder Admin</div>
+    <span class="admin-topbar-badge">ADMIN</span>
+    <button class="admin-exit" onclick="exitAdmin()">✕ Exit</button>
+  </div>
+
+  <!-- Password gate -->
+  <div class="admin-gate" id="adminGate">
+    <div class="admin-gate-box">
+      <div class="admin-gate-icon">🔒</div>
+      <div class="admin-gate-title">Admin Access</div>
+      <div class="admin-gate-sub">Enter the admin password to continue</div>
+      <input type="password" id="adminPwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkAdminPassword()">
+      <div class="admin-pw-error" id="adminPwError">Incorrect password. Try again.</div>
+      <button class="btn" onclick="checkAdminPassword()">Unlock →</button>
+    </div>
+  </div>
+
+  <!-- Admin panel (shown after auth) -->
+  <div id="adminPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden;display:none">
+    <div class="admin-tabs">
+      <button class="atab active" data-tab="moves" onclick="switchAdminTab('moves')">Master Moves</button>
+      <button class="atab" data-tab="archived" onclick="switchAdminTab('archived')">Archived Moves</button>
+      <button class="atab" data-tab="user" onclick="switchAdminTab('user')">User Moves</button>
+      <button class="atab" data-tab="settings" onclick="switchAdminTab('settings')">Settings</button>
+    </div>
+    <div id="adminContent" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
+  </div>
+</div>
 </body>
 </html>
