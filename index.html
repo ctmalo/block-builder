@@ -187,11 +187,12 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .pos-badge{font-size:0.57rem;padding:1px 5px;border-radius:4px;font-weight:600;background:rgba(80,168,224,0.09);color:var(--accent2);border:1px solid rgba(80,168,224,0.18);}
 .facing-badge{font-size:0.57rem;padding:1px 5px;border-radius:4px;font-weight:600;background:rgba(192,57,43,0.07);color:var(--accent3);border:1px solid rgba(192,57,43,0.18);cursor:pointer;}
 .facing-badge:hover{background:rgba(192,57,43,0.14);}
-.dur-inline{display:flex;align-items:center;gap:3px;flex-shrink:0;}
-.dur-num{font-size:0.78rem;font-weight:500;color:var(--text);background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 5px;width:42px;text-align:center;cursor:text;-moz-appearance:textfield;}
-.dur-num::-webkit-inner-spin-button{opacity:1;width:16px;}
+.dur-inline{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.dur-num{font-size:0.78rem;font-weight:500;color:var(--text);background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 4px;width:44px;text-align:center;cursor:text;}
 .dur-num:focus{outline:none;border-color:var(--accent);color:var(--text);}
 .dur-label{font-size:0.7rem;color:var(--text2);font-weight:500;}
+.dur-arrow{background:none;border:1px solid var(--border2);color:var(--text3);border-radius:4px;padding:0;width:18px;height:24px;cursor:pointer;font-size:0.7rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:all 0.12s;flex-shrink:0;}
+.dur-arrow:hover{border-color:var(--accent);color:var(--accent);}
 .move-actions{display:flex;gap:3px;flex-shrink:0;}
 .ib{background:transparent;border:1px solid var(--border2);color:var(--text3);width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.69rem;transition:all 0.15s;}
 .ib:hover{border-color:var(--accent3);color:var(--accent3);}
@@ -204,6 +205,31 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .exp-text{color:var(--text);line-height:1.6;white-space:pre-wrap;}
 .exp-empty{color:var(--text3);font-style:italic;}
 
+/* split time */
+.split-time-wrap{margin-top:5px;padding-top:5px;border-top:1px solid var(--border);}
+.split-top{display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap;}
+.split-top-label{font-size:0.6rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);}
+.split-total{font-size:0.7rem;font-weight:600;}
+.split-mode-btn{background:none;border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:0.6rem;color:var(--text3);cursor:pointer;font-family:'Syne',sans-serif;text-transform:uppercase;letter-spacing:0.5px;transition:all 0.12s;white-space:nowrap;}
+.split-mode-btn.active{background:var(--accent-light);border-color:var(--accent);color:var(--accent-text);}
+.split-row{display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+.split-reorder{display:flex;flex-direction:column;gap:1px;flex-shrink:0;}
+.split-reorder .dur-arrow{height:11px;width:16px;font-size:0.55rem;}
+.split-name-in{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;font-size:0.72rem;color:var(--text);font-family:inherit;min-width:0;}
+.split-name-in:focus{outline:none;border-color:var(--accent);}
+.split-stepper{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.split-time-in{width:40px;text-align:center;background:var(--card2);border:1px solid var(--border2);border-radius:4px;padding:2px 4px;font-size:0.72rem;color:var(--text);font-family:monospace;}
+.split-time-in:focus{outline:none;border-color:var(--accent);}
+.split-rm{background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.7rem;padding:0 2px;line-height:1;flex-shrink:0;}
+.split-rm:hover{color:var(--accent3);}
+.split-warning{font-size:0.67rem;color:var(--accent3);padding:3px 0 1px;margin-top:2px;}
+/* teach mode splits */
+.teach-splits{margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.07);}
+.teach-splits-label{font-size:0.58rem;font-family:'Syne',sans-serif;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:4px;}
+.teach-split-row{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:0.73rem;}
+.teach-split-label{flex:1;color:var(--text);}
+.teach-split-time{color:var(--text2);font-family:monospace;font-size:0.7rem;flex-shrink:0;min-width:32px;text-align:right;}
+.teach-split-running{color:var(--text3);font-family:monospace;font-size:0.67rem;flex-shrink:0;}
 /* variations */
 .var-row{margin-top:5px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding-top:5px;border-top:1px solid var(--border);}
 .move-variant-row{margin-top:5px;padding-top:5px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
@@ -276,6 +302,8 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .mach-btn{background:var(--card2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:5px 12px;cursor:pointer;font-size:0.75rem;transition:all 0.15s;font-family:inherit;color:var(--text);}
 .mach-btn:hover{border-color:var(--accent);}
 .mach-btn.sel{border-color:var(--accent);background:var(--accent-light);color:var(--accent-text);}
+.mach-btn.cs,.mach-opt.cs{opacity:0.5;cursor:default;pointer-events:none;position:relative;}
+.mach-btn.cs .cs-tag,.mach-opt.cs .cs-tag{font-size:0.58rem;font-family:'Syne',sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);margin-left:4px;}
 .wiz-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
 
 /* ── MODALS ── */
@@ -790,13 +818,17 @@ select.ac{cursor:pointer;}
 /* Machine editor in settings */
 .admin-settings-scroll{flex:1;overflow:auto;padding:20px 24px;}
 .machine-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:12px;}
-.machine-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.machine-name-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 11px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--text);}
+.machine-card-header{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.mch-row{display:flex;align-items:center;gap:8px;}
+.machine-name-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 11px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);}
 .machine-name-input:focus{outline:none;border-color:var(--accent);}
 .machine-code-input{width:72px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 9px;font-family:monospace;font-size:0.82rem;color:var(--accent);font-weight:700;}
 .machine-code-input:focus{outline:none;border-color:var(--accent);}
 .machine-style-select{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:6px 8px;font-family:inherit;font-size:0.78rem;color:var(--text2);cursor:pointer;flex-shrink:0;}
 .machine-style-select:focus{outline:none;border-color:var(--accent);}
+.mach-state-group{display:flex;gap:10px;flex-shrink:0;align-items:center;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;}
+.mach-state-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.mach-state-label{font-size:0.6rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);white-space:nowrap;}
 .machine-springs-label{font-size:0.68rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:7px;}
 .spring-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
 .spring-item{display:flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;}
@@ -1414,14 +1446,12 @@ function effectiveSprings(m){
 }
 function getLvlFor(sp){return getLvl(sp);}
 function dotHTML(lvl,sz=10){const bg=lvl.half?`background:linear-gradient(90deg,${lvl.c} 50%,rgba(128,128,128,0.4) 50%)`:`background:${lvl.c}`;return`<span class="sdot" style="width:${sz}px;height:${sz}px;border-color:${lvl.b};${bg}"></span>`;}
-// Machines: {id, label, coming}
-const MACHINES=[
-  {id:"Mega Pro",       label:"Mega Pro",       coming:false},
-  {id:"Megaformer",     label:"Megaformer",     coming:true},
-  {id:"Microformer",    label:"Microformer",    coming:true},
-  {id:"Supra",          label:"Supra",          coming:true},
-  {id:"Encore",         label:"Encore",         coming:true},
-];
+// Dynamic machine list from admin defs — returns active + comingSoon machines (hides off ones)
+function getAppMachines(){
+  return adminGetMachineDefs()
+    .filter(m=>m.active||m.comingSoon)
+    .map(m=>({id:m.name, label:m.name, active:m.active, comingSoon:!!m.comingSoon}));
+}
 
 // ════════════════════════════════════════════════
 // WORKOUT STYLES
@@ -1970,9 +2000,11 @@ function daysSince(dateStr){if(!dateStr)return999;return Math.floor((Date.now()-
 // ════════════════════════════════════════════════
 // WIZARD
 // ════════════════════════════════════════════════
-let wizStyle=null,wizMachine="Mega Pro";
+let wizStyle=null,wizMachine=null;
 function openWizard(){
-  wizStyle=null;wizMachine="Megaformer";
+  wizStyle=null;
+  const first=getAppMachines().find(m=>m.active);
+  wizMachine=first?first.id:"Megaformer";
   const sg=document.getElementById("styleGrid");
   sg.innerHTML=STYLES.map(s=>{
     if(s.coming) return`<div class="style-card coming" title="Coming soon">
@@ -2003,8 +2035,8 @@ function renderWizMachines(){
   const ms=document.getElementById("machineSection");
   if(!style||!style.hasMachine){ms.style.display="none";return;}
   ms.style.display="block";
-  document.getElementById("machineRow").innerHTML=MACHINES.map(m=>{
-    if(m.coming) return`<button class="mach-btn" disabled style="opacity:0.45;cursor:default" title="Coming soon">${m.label} <span style="font-size:0.6rem;opacity:0.7">soon</span></button>`;
+  document.getElementById("machineRow").innerHTML=getAppMachines().map(m=>{
+    if(m.comingSoon) return`<button class="mach-btn cs" disabled title="Coming soon">${m.label}<span class="cs-tag">Coming Soon</span></button>`;
     return`<button class="mach-btn${wizMachine===m.id?" sel":""}" onclick="wizMachine='${m.id}';renderWizMachines()">${m.label}</button>`;
   }).join("");
 }
@@ -2280,7 +2312,7 @@ function showRoutineDetail(id){
       const springChangeNote=(i>0&&block.moves[i-1])?
         (springLabel(spToSprings(block.moves[i-1].sp||"medium"))!==springLabel(msp)?
           `<div style="font-size:0.67rem;color:var(--warn);padding:1px 0 2px 8px">⚙ Spring → ${springTxt}</div>`:""):"";
-      return springChangeNote+`<div class="bp-move"><span>${moveName(m)}</span><span style="color:var(--text3);font-size:0.67rem">${springTxt} · ${m.dur||3}m</span></div>${vars}`;
+      return springChangeNote+`<div class="bp-move"><span>${moveName(m)}</span><span style="color:var(--text3);font-size:0.67rem">${springTxt} · ${secsToTime(moveSecs(m))}</span></div>${vars}`;
     }).join("")}</div>`;
   }).join("");
   html+=`</div>`;
@@ -2339,20 +2371,60 @@ function onMDragEnd(){dragMI=null;document.querySelectorAll(".move-card").forEac
 let varTarget={bi:null,mi:null};
 function openVarMenu(e,bi,mi){
   e.stopPropagation();varTarget={bi,mi};
-  const m=S.blocks[bi].moves[mi];const base=getMoveById(m.id);
+  const m=S.blocks[bi].moves[mi];
   const moveVars=getMoveVariations(m.id);
-  const catV=base?VAR_PRESETS[base.cat]||[]:[];
-  const extras=[...new Set([...VAR_PRESETS.universal,...catV])].filter(v=>!moveVars.includes(v));
-  const allV=[...moveVars,...extras];
+  const existing=m.variations||[];
+  const available=moveVars.filter(v=>!existing.includes(v));
   document.getElementById("varCustomIn").value="";
-  document.getElementById("varMenuItems").innerHTML=allV.map(v=>`<div class="var-item" onclick="pickVar('${v.replace(/'/g,"\\'")}')">+ ${v}</div>`).join("")+`<div class="var-item co" onclick="document.getElementById('varCustomIn').focus()">✏️ Custom...</div>`;
+  document.getElementById("varMenuItems").innerHTML=
+    (available.length
+      ? available.map(v=>`<div class="var-item" onclick="pickVar('${v.replace(/'/g,"\\'")}')">+ ${v}</div>`).join("")
+      : `<div style="color:var(--text3);font-size:0.72rem;padding:5px 10px;font-style:italic">No preset variations</div>`)
+    +`<div class="var-item co" onclick="document.getElementById('varCustomIn').focus()">✏️ Custom...</div>`;
   const rect=e.currentTarget.getBoundingClientRect();
   const menu=document.getElementById("varMenu");
   menu.style.top=(rect.bottom+5)+"px";menu.style.left=Math.min(rect.left,window.innerWidth-200)+"px";
   menu.classList.add("open");
 }
-function pickVar(v){const{bi,mi}=varTarget;const m=S.blocks[bi].moves[mi];if(!m.variations)m.variations=[];if(!m.variations.includes(v)){m.variations.push(v);renderMoves();}closeVarMenu();toast("+ "+v);}
+function pickVar(v){
+  const{bi,mi}=varTarget;
+  const m=S.blocks[bi].moves[mi];
+  if(!m.variations)m.variations=[];
+  if(!m.variations.includes(v)){
+    m.variations.push(v);
+    const moveVars=getMoveVariations(m.id);
+    if(!moveVars.includes(v)){
+      const base=getMoveById(m.id);
+      logCustomVar(m.id,base?base.name:'Unknown',v);
+    }
+    autoGenerateSplits(bi,mi);
+    renderMoves();
+  }
+  closeVarMenu();
+  toast("+ "+v);
+}
 function addCustomVar(){const v=document.getElementById("varCustomIn").value.trim();if(v)pickVar(v);}
+function logCustomVar(moveId,moveName,val){
+  const log=ld('bb_custom_var_log',[]);
+  log.push({moveId,moveName,val,ts:Date.now()});
+  sv('bb_custom_var_log',log);
+}
+function autoGenerateSplits(bi,mi){
+  const m=S.blocks[bi].moves[mi];
+  const vars=m.variations||[];
+  if(!vars.length)return;
+  const total=moveSecs(m);
+  const base=getMoveById(m.id);
+  const mName=base?base.name:'Move';
+  const r15=s=>Math.max(15,Math.round(s/15)*15);
+  const firstFull=r15(total/2);
+  const perVar=r15(total/(4*Math.max(1,vars.length)));
+  const lastFull=Math.max(15,total-firstFull-(vars.length*perVar));
+  const segs=[{label:mName,secs:firstFull}];
+  vars.forEach(v=>segs.push({label:v,secs:perVar}));
+  segs.push({label:mName,secs:lastFull});
+  m.splits=segs;
+}
 function removeVar(bi,mi,vi){S.blocks[bi].moves[mi].variations.splice(vi,1);renderMoves();}
 function closeVarMenu(){document.getElementById("varMenu").classList.remove("open");}
 document.addEventListener("click",e=>{if(!e.target.closest(".var-menu")&&!e.target.closest(".add-var-btn"))closeVarMenu();});
@@ -2368,12 +2440,12 @@ function toggleExpand(i){expandedIdx=expandedIdx===i?null:i;renderMoves();}
 // ════════════════════════════════════════════════
 function openStudio(){
   document.getElementById("studioIn").value=S.studio;
-  document.getElementById("machCustom").value=MACHINES.some(m=>m.id===S.machine)?"":S.machine;
+  document.getElementById("machCustom").value=getAppMachines().some(m=>m.id===S.machine)?"":S.machine;
   renderMachs();renderSpringPrev();renderAppList();openOv("studioOv");
 }
 function renderMachs(){
-  document.getElementById("machSel").innerHTML=MACHINES.map(m=>{
-    if(m.coming) return`<button class="mach-opt" disabled style="opacity:0.45;cursor:default">🏋️ ${m.label} <span style="font-size:0.6rem">soon</span></button>`;
+  document.getElementById("machSel").innerHTML=getAppMachines().map(m=>{
+    if(m.comingSoon) return`<button class="mach-opt cs" disabled>🏋️ ${m.label}<span class="cs-tag">Coming Soon</span></button>`;
     return`<button class="mach-opt${S.machine===m.id?" sel":""}" onclick="pickMach('${m.id}')">🏋️ ${m.label}</button>`;
   }).join("");
 }
@@ -2529,14 +2601,15 @@ function renderMoves(){
               return dots+txt;
             })()}${base&&base.cables&&base.cables!=="none"?`<span class="badge" style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:${base.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff;margin-left:2px">${base.cables==="red"?"🔴 red":"⚫ black"}</span>`:""}</div>
           </div>
-          <div class="dur-inline"><input class="dur-num" type="number" value="${m.dur||3}" min="1" max="30" onchange="S.blocks[${S.activeIdx}].moves[${i}].dur=Math.max(1,parseInt(this.value)||1);updateBar();"><span class="dur-label">m</span></div>
+          <div class="dur-inline"><button class="dur-arrow" onclick="adjMoveSecs(${S.activeIdx},${i},-15)">▾</button><input class="dur-num" type="text" value="${secsToTime(moveSecs(m))}" onblur="setMoveSecs(${S.activeIdx},${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="dur-arrow" onclick="adjMoveSecs(${S.activeIdx},${i},15)">▴</button></div>
           <div class="move-actions">
             <button class="ib info" onclick="toggleExpand(${i})" title="${isExp?"Hide":"Show"} details">${isExp?"▲":"▼"}</button>
             <button class="ib" onclick="rmMove(${i})" title="Remove">✕</button>
           </div>
         </div>
-        <div class="var-row">${varHTML}${(base&&base.variations&&base.variations.length>0)?`<button class="add-var-btn" onclick="openVarMenu(event,${S.activeIdx},${i})">+ variation</button>`:""}</div>
+        <div class="var-row">${varHTML}<button class="add-var-btn" onclick="openVarMenu(event,${S.activeIdx},${i})">+ variation</button></div>
         ${renderVariantRow(base,m,S.activeIdx,i)}
+        ${renderSplitSection(S.activeIdx,i,m)}
         <div class="move-expand${isExp?" open":""}">
           ${base&&base.setup?`<div style="margin-bottom:7px"><div class="exp-label">Setup</div><div class="exp-text">${base.setup}</div></div>`:""}
           ${base&&base.cues?`<div style="margin-bottom:7px"><div class="exp-label">Cues</div><div class="exp-text">${base.cues}</div></div>`:""}
@@ -2554,8 +2627,58 @@ function renderMoves(){
 
 function cycleFacing(mi){const m=S.blocks[S.activeIdx].moves[mi];if(!m.facing)return;const dirs=["left","right","front","back"];const c=dirs.indexOf(m.facingDir);m.facingDir=dirs[(c+1)%dirs.length];renderMoves();renderTabs();}
 function rmMove(i){S.blocks[S.activeIdx].moves.splice(i,1);expandedIdx=null;renderMoves();renderOpts();renderTabs();updateBar();}
-function quickAddMove(id){const m=getMoveById(id);if(!m)return;S.blocks[S.activeIdx].moves.push({...m,dur:3,variations:[]});renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+moveName(m));}
-function quickAddFacing(origId,dir){const m=getMoveById(origId);if(!m)return;S.blocks[S.activeIdx].moves.push({...m,dur:3,variations:[],facingDir:dir});renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+m.name+" facing "+dir);}
+function adjMoveSecs(bi,mi,delta){const m=S.blocks[bi].moves[mi];m.secs=Math.max(15,moveSecs(m)+delta);renderMoves();renderTabs();updateBar();}
+function setMoveSecs(bi,mi,str){const s=Math.max(15,timeToSecs(str));S.blocks[bi].moves[mi].secs=s;renderMoves();renderTabs();updateBar();}
+
+function renderSplitSection(bi,mi,m){
+  const vars=m.variations||[];
+  const splits=m.splits||[];
+  if(!vars.length&&!splits.length)return'';
+  const total=splits.reduce((a,s)=>a+s.secs,0);
+  const moveTotal=moveSecs(m);
+  const mode=m.splitMode||'ordered';
+  const isOrdered=mode==='ordered';
+  const ok=total===moveTotal;
+  const rows=splits.map((seg,si)=>`<div class="split-row">
+      <div class="split-reorder">
+        <button class="dur-arrow" onclick="reorderSplit(${bi},${mi},${si},-1)"${si===0?' disabled':''}>▴</button>
+        <button class="dur-arrow" onclick="reorderSplit(${bi},${mi},${si},1)"${si===splits.length-1?' disabled':''}>▾</button>
+      </div>
+      <input class="split-name-in" value="${esc(seg.label||'')}" placeholder="Segment" onblur="setSplitLabel(${bi},${mi},${si},this.value)">
+      <div class="split-stepper">
+        <button class="dur-arrow" onclick="adjSplit(${bi},${mi},${si},-15)">▾</button>
+        <input class="split-time-in" value="${secsToTime(seg.secs)}" onblur="setSplitSecs(${bi},${mi},${si},this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+        <button class="dur-arrow" onclick="adjSplit(${bi},${mi},${si},15)">▴</button>
+      </div>
+      <button class="split-rm" onclick="rmSplit(${bi},${mi},${si})">✕</button>
+    </div>`).join('');
+  const warning=isOrdered&&splits.length&&!ok
+    ?`<div class="split-warning">Note: segments don't add up to total move time</div>`:'';
+  return`<div class="split-time-wrap">
+    <div class="split-top">
+      <span class="split-top-label">Split</span>
+      ${splits.length?`<span class="split-total" style="color:${isOrdered?(ok?'var(--accent)':'var(--accent3)'):'var(--text2)'}">${secsToTime(total)} / ${secsToTime(moveTotal)}</span>`:''}
+      <button class="split-mode-btn${isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'ordered')">Ordered</button>
+      <button class="split-mode-btn${!isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'highlights')">Highlights</button>
+      <button class="add-var-btn" style="margin-left:auto" onclick="addSplit(${bi},${mi})">+ segment</button>
+    </div>${rows}${warning}
+  </div>`;
+}
+function addSplit(bi,mi){const m=S.blocks[bi].moves[mi];if(!m.splits)m.splits=[];m.splits.push({label:'',secs:30});renderMoves();}
+function rmSplit(bi,mi,si){S.blocks[bi].moves[mi].splits.splice(si,1);renderMoves();}
+function setSplitLabel(bi,mi,si,val){S.blocks[bi].moves[mi].splits[si].label=val;}
+function setSplitSecs(bi,mi,si,str){S.blocks[bi].moves[mi].splits[si].secs=Math.max(15,timeToSecs(str));renderMoves();}
+function adjSplit(bi,mi,si,delta){const seg=S.blocks[bi].moves[mi].splits[si];seg.secs=Math.max(15,(seg.secs||30)+delta);renderMoves();}
+function setSplitMode(bi,mi,mode){S.blocks[bi].moves[mi].splitMode=mode;renderMoves();}
+function reorderSplit(bi,mi,si,dir){
+  const splits=S.blocks[bi].moves[mi].splits;
+  const ni=si+dir;
+  if(ni<0||ni>=splits.length)return;
+  [splits[si],splits[ni]]=[splits[ni],splits[si]];
+  renderMoves();
+}
+function quickAddMove(id){const m=getMoveById(id);if(!m)return;S.blocks[S.activeIdx].moves.push({...m,secs:adminGetDefaultTime(m),variations:[]});renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+moveName(m));}
+function quickAddFacing(origId,dir){const m=getMoveById(origId);if(!m)return;S.blocks[S.activeIdx].moves.push({...m,secs:adminGetDefaultTime(m),variations:[],facingDir:dir});renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+m.name+" facing "+dir);}
 function goToMoveLib(id){showPage('library');setTimeout(()=>selectLibMove(id),50);}
 
 // ════════════════════════════════════════════════
@@ -2592,7 +2715,7 @@ function moHTML(m,top){
   const cableBadge=m.cables&&m.cables!=="none"?`<span style="font-size:0.56rem;padding:1px 4px;border-radius:3px;background:${m.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff">${m.cables==="red"?"🔴":"⚫"}</span>`:"";
   return`<div class="mo${top?" top":""}" onclick="addMove(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${cableBadge}${springTxt}</div></div><span class="plus">+</span></div>`;
 }
-function addMove(id){const m=getMoveById(id);if(!m)return;const nm={...m,dur:3,variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+moveName(m));}
+function addMove(id){const m=getMoveById(id);if(!m)return;const nm={...m,secs:adminGetDefaultTime(m),variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderOpts();renderTabs();updateBar();toast("Added: "+moveName(m));}
 
 // ════════════════════════════════════════════════
 // ADD MOVE SHEET (mobile)
@@ -2658,7 +2781,12 @@ function addMoveFromSheet(id){
 // ════════════════════════════════════════════════
 // TIME BAR
 // ════════════════════════════════════════════════
-function totalMins(){return S.blocks.reduce((a,b)=>a+b.moves.reduce((c,m)=>c+(m.dur||3),0),0);}
+function secsToTime(s){const m=Math.floor((s||0)/60),sec=(s||0)%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
+function timeToSecs(str){const p=(str||'').trim().split(':');if(p.length===2){return Math.max(0,(parseInt(p[0])||0)*60+(parseInt(p[1])||0));}return Math.max(0,(parseInt(str)||0)*60);}
+function catDefaultSecs(cat){return(cat==='lower'||cat==='upper')?120:60;}
+function adminGetDefaultTime(m){if(!m)return 60;return moveDetails[m.id]?.defaultTime??catDefaultSecs(m.cat);}
+function moveSecs(m){if(m.secs!=null)return m.secs;if(m.dur)return m.dur*60;return adminGetDefaultTime(getMoveById(m.id)||m);}
+function totalMins(){const s=S.blocks.reduce((a,b)=>a+b.moves.reduce((c,m)=>c+moveSecs(m),0),0);return Math.round(s/60);}
 function updateBar(){const tot=parseInt(document.getElementById("classLen").value)||50,used=totalMins();const pct=Math.min((used/tot)*100,100);const f=document.getElementById("tFill");f.style.width=pct+"%";f.className="time-fill"+(used>tot?" over":used/tot>0.85?" warn":"");document.getElementById("tUsed").textContent=used+" min";const r=document.getElementById("tTotal");r.textContent=(used>tot?"⚠️ ":"")+tot+" min";r.className=used>tot?"over":"ok";}
 
 // ════════════════════════════════════════════════
@@ -2787,7 +2915,7 @@ function saveMove(){
   renderLibList();showLibDetail(selectedMoveId);document.getElementById("libEditMode").classList.remove("open");document.getElementById("libViewMode").classList.remove("hidden");
 }
 function deleteSelectedMove(){if(!isCustom(selectedMoveId)){toast("Can't delete built-in moves");return;}if(!confirm("Delete this move?"))return;S.custom=S.custom.filter(m=>m.id!==selectedMoveId);S.approved=S.approved.filter(id=>id!==selectedMoveId);sv("bb_custom",S.custom);sv("bb_approved",S.approved);selectedMoveId=null;document.getElementById("libDetailInner").style.display="none";document.getElementById("libEmpty").style.display="flex";renderLibList();toast("Deleted");}
-function addMoveFromLib(){if(!S.started){toast("Start a class first!");return;}if(!selectedMoveId)return;const m=getMoveById(selectedMoveId);if(!m)return;const nm={...m,dur:3,variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderTabs();updateBar();toast("Added to "+S.blocks[S.activeIdx].name);showPage('planner');}
+function addMoveFromLib(){if(!S.started){toast("Start a class first!");return;}if(!selectedMoveId)return;const m=getMoveById(selectedMoveId);if(!m)return;const nm={...m,secs:adminGetDefaultTime(m),variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderTabs();updateBar();toast("Added to "+S.blocks[S.activeIdx].name);showPage('planner');}
 
 // ════════════════════════════════════════════════
 // NOTES + PRINT
@@ -2816,8 +2944,12 @@ function buildNotes(){
       if(prev&&prev.side!==m.side&&m.side!=="bilateral"&&prev.side!=="bilateral")o+=`  ↔  SIDE CHANGE → ${m.side}\n`;
       const pos=m.pos&&m.pos!=="both"?` [${m.pos}]`:"";
       const fac=m.facing&&m.facingDir?` [facing ${m.facingDir}]`:"";
-      o+=`  ${(i+1+".").padEnd(4)}${moveName(m).padEnd(26)}${springLabel(mSpr).padEnd(18)}${(m.dur||3)+" min"}${pos}${fac}\n`;
-      if(m.variations&&m.variations.length)m.variations.forEach(v=>{o+=`         ↳ ${v}\n`;});
+      o+=`  ${(i+1+".").padEnd(4)}${moveName(m).padEnd(26)}${springLabel(mSpr).padEnd(18)}${secsToTime(moveSecs(m))}${pos}${fac}\n`;
+      if(m.splits&&m.splits.length){
+        m.splits.forEach(seg=>{o+=`         ${(seg.label||'').padEnd(32)}${secsToTime(seg.secs)}\n`;});
+      } else if(m.variations&&m.variations.length){
+        m.variations.forEach(v=>{o+=`         ↳ ${v}\n`;});
+      }
     });
     o+="\n";
   });
@@ -2877,6 +3009,9 @@ function doPrint(){
   .move-spring{font-size:0.72rem;color:#555;min-width:90px;}
   .move-dur{font-size:0.72rem;color:#888;min-width:38px;text-align:right;}
   .move-var{font-size:0.68rem;color:#777;padding-left:26px;font-style:italic;}
+  .move-split-row{display:flex;gap:8px;padding:2px 0 2px 26px;font-size:0.68rem;color:#555;}
+  .move-split-name{flex:1;}
+  .move-split-time{color:#888;font-family:monospace;min-width:36px;text-align:right;}
   .spring-change{font-size:0.68rem;color:#c87d10;padding:2px 0 2px 8px;font-style:italic;}
   .side-change{font-size:0.68rem;color:#2a7ab8;padding:2px 0 2px 8px;font-style:italic;}
   .footer{margin-top:24px;font-size:0.7rem;color:#aaa;border-top:1px solid #ddd;padding-top:8px;}
@@ -2906,9 +3041,13 @@ function doPrint(){
         <span class="move-num">${i+1}</span>
         <span class="move-name">${moveName(m)}</span>
         <span class="move-spring">${springTxt}</span>
-        <span class="move-dur">${m.dur||3}m</span>
+        <span class="move-dur">${secsToTime(moveSecs(m))}</span>
       </div>`);
-      if(m.variations&&m.variations.length)w.document.write(`<div class="move-var">↳ ${m.variations.join(" · ")}</div>`);
+      if(m.splits&&m.splits.length){
+        m.splits.forEach(seg=>{w.document.write(`<div class="move-split-row"><span class="move-split-name">${seg.label||''}</span><span class="move-split-time">${secsToTime(seg.secs)}</span></div>`);});
+      } else if(m.variations&&m.variations.length){
+        w.document.write(`<div class="move-var">↳ ${m.variations.join(" · ")}</div>`);
+      }
     });
     w.document.write(`</div>`);
   });
@@ -2969,7 +3108,7 @@ function applyMirror(fromIdx){
     if(base&&base.mirror){
       const mirBase=ms.find(bm=>bm.id===base.mirror);
       if(mirBase){
-        return{...mirBase,dur:m.dur,variations:[...(m.variations||[])],moveStyle:m.moveStyle||'Normal',movePos:m.movePos||'C'};
+        return{...mirBase,secs:moveSecs(m),variations:[...(m.variations||[])],moveStyle:m.moveStyle||'Normal',movePos:m.movePos||'C'};
       }
     }
     // If bilateral or no mirror, just copy as-is
@@ -3103,13 +3242,24 @@ function renderTeachMode(){
         ? `<div class="teach-vars">${m.variations.map(v=>`<span class="teach-var-tag">${v}</span>`).join("")}</div>` : "";
       const cableBadge = base&&base.cables&&base.cables!=="none"
         ? `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:${base.cables==="red"?"#c0392b":"#1a1a2a"};color:#fff">${base.cables==="red"?"🔴":"⚫"}</span>` : "";
+      const splitsTeachHTML=(()=>{
+        if(!m.splits||!m.splits.length)return'';
+        const isOrdered=(m.splitMode||'ordered')==='ordered';
+        let r=0;
+        const rows=m.splits.map(seg=>{
+          r+=seg.secs;
+          return`<div class="teach-split-row"><span class="teach-split-label">${esc(seg.label||'—')}</span><span class="teach-split-time">${secsToTime(seg.secs)}</span>${isOrdered?`<span class="teach-split-running">→ ${secsToTime(r)}</span>`:''}</div>`;
+        }).join('');
+        const modeLabel=isOrdered?'Split Sequence':'Highlights';
+        return`<div class="teach-splits"><div class="teach-splits-label">${modeLabel}</div>${rows}</div>`;
+      })();
       return `${banners}<div class="teach-move">
         <div class="teach-move-name">${moveName(m)}</div>
         <div class="teach-move-meta">
           <span class="teach-spring">${teachSpringDisplay(m)}</span>
           ${cableBadge}
-          <span class="teach-time">⏱ ${m.dur||3} min</span>
-        </div>${varHTML}</div>`;
+          <span class="teach-time">⏱ ${secsToTime(moveSecs(m))}</span>
+        </div>${varHTML}${splitsTeachHTML}</div>`;
     }).join("");
 
     // Next-block transition summary
@@ -3252,12 +3402,11 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').re
 const ADMIN_ARCHIVED_KEY = 'bb_admin_archived';
 const ADMIN_MACHINE_DEFS_KEY = 'bb_admin_machine_defs';
 const DEFAULT_MACHINE_DEFS = [
-  {id:'megaformer',  name:'Megaformer',        shortCode:'MF',   style:'lagree', active:true,
-   springs:[{name:'White',shortCode:'W',hex:'#FFFFFF'},{name:'Grey',shortCode:'G',hex:'#888888'},{name:'Black',shortCode:'B',hex:'#222222'}]},
-  {id:'microformer', name:'Microformer',        shortCode:'MC',   style:'lagree', active:false, springs:[]},
-  {id:'supra',       name:'Supra',              shortCode:'SP',   style:'lagree', active:false, springs:[]},
-  {id:'encore',      name:'Encore',             shortCode:'EN',   style:'lagree', active:false, springs:[]},
-  {id:'demo-test',   name:'Demo Test Machine',  shortCode:'DEMO', style:'lagree', active:false, springs:[]},
+  {id:'megaformer',  name:'Megaformer',        shortCode:'MF',   style:'lagree', active:true,  comingSoon:false, springs:[{name:'White',shortCode:'W',hex:'#FFFFFF'},{name:'Grey',shortCode:'G',hex:'#888888'},{name:'Black',shortCode:'B',hex:'#222222'}]},
+  {id:'microformer', name:'Microformer',        shortCode:'MC',   style:'lagree', active:false, comingSoon:true,  springs:[]},
+  {id:'supra',       name:'Supra',              shortCode:'SP',   style:'lagree', active:false, comingSoon:true,  springs:[]},
+  {id:'encore',      name:'Encore',             shortCode:'EN',   style:'lagree', active:false, comingSoon:true,  springs:[]},
+  {id:'demo-test',   name:'Demo Test Machine',  shortCode:'DEMO', style:'lagree', active:false, comingSoon:false, springs:[]},
 ];
 
 function adminGetArchived(){return ld(ADMIN_ARCHIVED_KEY,[]);}
@@ -3393,6 +3542,7 @@ function renderMasterMoves(el){
           <th>Category</th>
           <th style="min-width:118px">Stance</th>
           ${springHeaders}
+          <th style="min-width:80px">Default<br>Time</th>
           <th style="min-width:130px">Position</th>
           <th style="min-width:110px">Direction Styles</th>
           <th>L / R / C</th>
@@ -3427,7 +3577,8 @@ function adminMoveRow(m,activeMachines){
   const cues    = moveDetails[m.id]?.cues     ?? m.cues     ?? '';
   const mistakes= moveDetails[m.id]?.mistakes ?? m.mistakes ?? '';
   const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
-  const colspan = 12 + activeMachines.length;
+  const defSecs = adminGetDefaultTime(m);
+  const colspan = 13 + activeMachines.length;
 
   return`<tr id="arow-${m.id}" class="${active?'':'admin-inactive'}">
     <td style="text-align:center"><button class="aexpand-btn" id="aexp-${m.id}" onclick="adminToggleDetail(${m.id})" title="Expand details">▼</button></td>
@@ -3441,6 +3592,7 @@ function adminMoveRow(m,activeMachines){
     <td><select class="ac" onchange="adminField(${m.id},'cat',this.value)">${catOpts}</select></td>
     <td><select class="ac" onchange="adminField(${m.id},'stance',this.value,true)">${stanceOpts}</select></td>
     ${springCells}
+    <td><div class="dur-inline"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},-15)">▾</button><input class="dur-num" type="text" value="${secsToTime(defSecs)}" onblur="adminSetDefaultTime(${m.id},this.value)" onkeydown="if(event.key==='Enter')this.blur()" style="width:40px"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},15)">▴</button></div></td>
     <td><select class="ac" onchange="adminField(${m.id},'pos',this.value)">${posOpts}</select></td>
     <td><div class="acb-group">
       <label class="acb-item"><input type="checkbox" ${dir.regular?'checked':''} onchange="adminDirStyle(${m.id},'regular',this.checked)"> Regular</label>
@@ -3513,6 +3665,22 @@ function adminField(id,field,value,useOverride=false){
   }
 }
 
+function adminSetDefaultTime(id,str){
+  const s=Math.max(15,timeToSecs(str));
+  if(!moveDetails[id])moveDetails[id]={};
+  moveDetails[id].defaultTime=s;
+  sv('bb_movedetails',moveDetails);
+}
+function adminAdjDefaultTime(id,delta){
+  const m=allMoves().find(x=>x.id===id)||{};
+  const cur=adminGetDefaultTime(m);
+  const s=Math.max(15,cur+delta);
+  if(!moveDetails[id])moveDetails[id]={};
+  moveDetails[id].defaultTime=s;
+  sv('bb_movedetails',moveDetails);
+  const inp=document.querySelector(`[onblur*="adminSetDefaultTime(${id}"]`);
+  if(inp)inp.value=secsToTime(s);
+}
 function adminDirStyle(id,key,val){
   if(!moveDetails[id])moveDetails[id]={};
   const cur=moveDetails[id].dirStyles||adminGetDirStyles(allMoves().find(m=>m.id===id)||{});
@@ -3599,18 +3767,34 @@ function renderAdminSettings(el){
     return`
     <div class="machine-card" id="mcard-${mi}">
       <div class="machine-card-header">
-        <input class="machine-name-input" value="${esc(mach.name)}" placeholder="Machine name"
-          onchange="adminUpdateMachineField(${mi},'name',this.value)">
-        <input class="machine-code-input" value="${esc(mach.shortCode||'')}" placeholder="e.g. MF"
-          title="Short code used in notation like 1W, 2G"
-          onchange="adminUpdateMachineField(${mi},'shortCode',this.value)">
-        <select class="machine-style-select" title="Fitness style this machine belongs to"
-          onchange="adminUpdateMachineField(${mi},'style',this.value)">${styleOpts}</select>
-        <label class="admin-toggle" title="Active — adds a Springs column in Master Moves">
-          <input type="checkbox" ${mach.active?'checked':''} onchange="adminToggleMachineDef(${mi},this.checked)">
-          <span class="at-slider"></span>
-        </label>
-        <button class="btn sec sm" style="font-size:0.68rem;white-space:nowrap" onclick="adminRemoveMachine(${mi})">Remove</button>
+        <div class="mch-row">
+          <input class="machine-name-input" value="${esc(mach.name)}" placeholder="Machine name"
+            onchange="adminUpdateMachineField(${mi},'name',this.value)">
+          <input class="machine-code-input" value="${esc(mach.shortCode||'')}" placeholder="e.g. MF"
+            title="Short code used in spring notation e.g. 1MF"
+            onchange="adminUpdateMachineField(${mi},'shortCode',this.value)">
+          <button class="btn sec sm" style="font-size:0.68rem;white-space:nowrap;margin-left:auto" onclick="adminRemoveMachine(${mi})">Remove</button>
+        </div>
+        <div class="mch-row">
+          <select class="machine-style-select" title="Fitness style"
+            onchange="adminUpdateMachineField(${mi},'style',this.value)">${styleOpts}</select>
+          <div class="mach-state-group">
+            <div class="mach-state-item">
+              <span class="mach-state-label">Active</span>
+              <label class="admin-toggle" title="Fully on — selectable in app">
+                <input type="checkbox" ${mach.active?'checked':''} onchange="adminSetMachineState(${mi},'active',this.checked)">
+                <span class="at-slider"></span>
+              </label>
+            </div>
+            <div class="mach-state-item">
+              <span class="mach-state-label">Coming Soon</span>
+              <label class="admin-toggle" title="Visible but not selectable">
+                <input type="checkbox" ${mach.comingSoon?'checked':''} onchange="adminSetMachineState(${mi},'comingSoon',this.checked)">
+                <span class="at-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="machine-springs-label">Spring Types</div>
       <div class="spring-list" id="slist-${mi}">
@@ -3656,10 +3840,20 @@ function renderAdminSettings(el){
 function adminUpdateMachineField(mi,field,val){
   const d=adminGetMachineDefs();d[mi][field]=val;adminSaveMachineDefs(d);
 }
-function adminToggleMachineDef(mi,active){
-  const d=adminGetMachineDefs();d[mi].active=active;adminSaveMachineDefs(d);
-  // re-render moves table if open so spring columns update immediately
+function adminSetMachineState(mi,field,val){
+  const d=adminGetMachineDefs();
+  if(val){
+    // mutually exclusive — turning one on turns the other off
+    if(field==='active')    d[mi].comingSoon=false;
+    if(field==='comingSoon') d[mi].active=false;
+  }
+  d[mi][field]=val;
+  adminSaveMachineDefs(d);
+  renderAdminTab('settings');
   if(adminTab==='moves') renderAdminTab('moves');
+}
+function adminToggleMachineDef(mi,active){
+  adminSetMachineState(mi,'active',active);
 }
 function adminRemoveMachine(mi){
   if(!confirm('Remove this machine?'))return;
