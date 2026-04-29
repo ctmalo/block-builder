@@ -57,7 +57,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   .moves-list{width:100%!important;}
   .print-header{display:block!important;}
   .move-card{break-inside:avoid;border:1px solid #ccc!important;background:white!important;margin-bottom:5px!important;color:black!important;}
-  .callout,.side-alert{color:#555!important;background:#f9f9f9!important;border:1px solid #ddd!important;}
+  .callout{color:#555!important;background:#f9f9f9!important;border:1px solid #ddd!important;}
   .block-header{margin-bottom:8px!important;}
 }
 
@@ -155,12 +155,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .block-dur-input{width:42px;padding:2px 4px;font-size:0.7rem;border-radius:4px;text-align:center;}
 .bdur-label{font-size:0.66rem;color:var(--text3);}
 
-.side-alert{background:rgba(200,125,16,0.07);border:1px solid rgba(200,125,16,0.22);border-radius:var(--radius-sm);padding:7px 10px;margin-bottom:9px;font-size:0.74rem;color:var(--warn);display:none;}
-.side-alert.show{display:block;}
-.side-alert strong{display:block;margin-bottom:3px;font-family:'Syne',sans-serif;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;}
-.unmatched-list{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;}
-.um-chip{background:rgba(200,125,16,0.1);border:1px solid rgba(200,125,16,0.25);border-radius:5px;padding:2px 7px;font-size:0.68rem;cursor:pointer;color:var(--warn);}
-.um-chip:hover{background:rgba(200,125,16,0.2);}
+
 
 /* ── MOVE CARD ── */
 .move-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;margin-bottom:5px;transition:border-color 0.15s;}
@@ -188,7 +183,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .facing-badge{font-size:0.57rem;padding:1px 5px;border-radius:4px;font-weight:600;background:rgba(192,57,43,0.07);color:var(--accent3);border:1px solid rgba(192,57,43,0.18);cursor:pointer;}
 .facing-badge:hover{background:rgba(192,57,43,0.14);}
 .dur-inline{display:flex;align-items:center;gap:2px;flex-shrink:0;}
-.dur-num{font-size:0.78rem;font-weight:500;color:var(--text);background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 4px;width:44px;text-align:center;cursor:text;}
+.dur-num{font-size:0.78rem;font-weight:500;color:var(--text);background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 4px;width:52px;text-align:center;cursor:text;}
 .dur-num:focus{outline:none;border-color:var(--accent);color:var(--text);}
 .dur-label{font-size:0.7rem;color:var(--text2);font-weight:500;}
 .dur-arrow{background:none;border:1px solid var(--border2);color:var(--text3);border-radius:4px;padding:0;width:18px;height:24px;cursor:pointer;font-size:0.7rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:all 0.12s;flex-shrink:0;}
@@ -218,7 +213,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .split-name-in{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;font-size:0.72rem;color:var(--text);font-family:inherit;min-width:0;}
 .split-name-in:focus{outline:none;border-color:var(--accent);}
 .split-stepper{display:flex;align-items:center;gap:2px;flex-shrink:0;}
-.split-time-in{width:40px;text-align:center;background:var(--card2);border:1px solid var(--border2);border-radius:4px;padding:2px 4px;font-size:0.72rem;color:var(--text);font-family:monospace;}
+.split-time-in{width:48px;text-align:center;background:var(--card2);border:1px solid var(--border2);border-radius:4px;padding:2px 4px;font-size:0.72rem;color:var(--text);font-family:monospace;}
 .split-time-in:focus{outline:none;border-color:var(--accent);}
 .split-rm{background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.7rem;padding:0 2px;line-height:1;flex-shrink:0;}
 .split-rm:hover{color:var(--accent3);}
@@ -583,12 +578,12 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 }
 .teach-spring-banner{
   background:rgba(255,155,0,0.14);border:1.5px solid rgba(255,155,0,0.45);
-  border-left-color:#ff9500;color:#e88a00;
+  border-left:4px solid #ff9500;color:#e88a00;
 }
 [data-theme="dark"] .teach-spring-banner{color:#ffb340;}
 .teach-pos-banner{
   background:rgba(80,168,224,0.12);border:1.5px solid rgba(80,168,224,0.38);
-  border-left-color:var(--accent2);color:var(--accent2);
+  border-left:4px solid var(--accent2);color:var(--accent2);
 }
 .teach-spring-banner .sdot{width:13px!important;height:13px!important;}
 .teach-change-banner .slabel{font-size:0.75rem;}
@@ -850,6 +845,14 @@ select.ac{cursor:pointer;}
 .arow-detail-inner .adf-label{font-size:0.65rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--text3);margin-bottom:4px;}
 .arow-detail-inner textarea{background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:0.74rem;min-height:68px;resize:vertical;padding:6px 8px;width:100%;font-family:inherit;}
 .arow-detail-inner textarea:focus{outline:none;border-color:var(--accent);}
+.admin-var-list{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding-top:4px;}
+.admin-var-chip{display:inline-flex;align-items:center;gap:2px;background:var(--accent-light);border:1px solid var(--accent);border-radius:20px;padding:2px 6px 2px 9px;}
+.avc-name{background:none;border:none;color:var(--accent-text);font-family:inherit;font-size:0.7rem;width:72px;outline:none;cursor:text;padding:0;}
+.avc-rm{background:none;border:none;color:var(--accent);cursor:pointer;padding:0 1px;font-size:0.65rem;line-height:1;opacity:0.7;}
+.avc-rm:hover{opacity:1;}
+.admin-var-add{background:var(--surface);border:1px dashed var(--border2);border-radius:20px;padding:2px 10px;font-size:0.7rem;color:var(--text);width:120px;font-family:inherit;}
+.admin-var-add::placeholder{color:var(--text3);}
+.admin-var-add:focus{outline:none;border-color:var(--accent);border-style:solid;}
 /* Archived tab */
 .archived-list{flex:1;overflow:auto;}
 .archived-row{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--border);}
@@ -1912,7 +1915,7 @@ let moveDetails=ld("bb_movedetails",{});
 const S={
   classLen:50,classDate:"",studio:"",machine:"Mega Pro",sys:"wb",workoutStyle:"lagree",
   studioSprings:ld("bb_studioSprings",{}), // {moveId: {front:[...], back:[...]}} per-studio overrides
-  students:[],blocks:[],activeIdx:0,started:false,warnActive:false,_pendingMirrorFrom:null,_blockSide:null,
+  students:[],blocks:[],activeIdx:0,started:false,_pendingMirrorFrom:null,_blockSide:null,
   loadedRoutineId:null, // if we loaded an existing routine
   custom:ld("bb_custom",[]),
   approved:ld("bb_approved",BASE_MOVES.map(m=>m.id)),
@@ -1942,43 +1945,6 @@ function moveName(m){
   return name;
 }
 
-// ════════════════════════════════════════════════
-// SIDE BALANCE
-// ════════════════════════════════════════════════
-function getUnmatchedForBlock(bi){
-  const sec=S.blocks[bi];if(!sec)return[];
-  const allIds=new Set(S.blocks.flatMap(b=>b.moves.map(m=>m.id)));
-  const unmatched=[],seen=new Set();
-  const thisIds=new Set(sec.moves.map(m=>m.id));
-  sec.moves.forEach(m=>{
-    const base=getMoveById(m.id);
-    if(base&&base.mirror&&!allIds.has(base.mirror)&&!seen.has(base.mirror)){
-      const mir=getMoveById(base.mirror);if(mir){seen.add(base.mirror);unmatched.push(mir);}
-    }
-    if(base&&base.facing&&m.facingDir){
-      const opp=m.facingDir==="left"?"right":"left";
-      const hasOpp=S.blocks.some(bl=>bl.moves.some(mv=>mv.id===m.id&&mv.facingDir===opp));
-      const k=m.id+"_f_"+opp;if(!hasOpp&&!seen.has(k)){seen.add(k);unmatched.push({...base,facingDir:opp,_isFacingMirror:true,_origId:m.id});}
-    }
-  });
-  S.blocks.forEach((ob,obi)=>{
-    if(obi===bi)return;
-    ob.moves.forEach(m=>{
-      const base=getMoveById(m.id);if(!base||!base.mirror)return;
-      const mid=base.mirror;
-      if(!thisIds.has(mid)&&!allIds.has(mid)&&!seen.has(mid)){
-        const mir=getMoveById(mid);if(mir){seen.add(mid);unmatched.push(mir);}
-      }
-      if(allIds.has(mid)&&!thisIds.has(mid)&&!seen.has(mid)){
-        const bName=sec.name.toLowerCase();
-        const isR=bName.includes("right"),isL=bName.includes("left");
-        const mIsL=base.side==="left",mIsR=base.side==="right";
-        if((isR&&mIsL)||(isL&&mIsR)){const mir=getMoveById(mid);if(mir&&!thisIds.has(mir.id)){seen.add(mid);unmatched.push(mir);}}
-      }
-    });
-  });
-  return unmatched;
-}
 
 // ════════════════════════════════════════════════
 // SPRING HELPERS
@@ -2051,7 +2017,7 @@ function confirmWizard(){
   S.classLen=style.defaultLen;
   document.getElementById("classLen").value=style.defaultLen;
   S.blocks=style.defaultBlocks.map(b=>({...b,moves:[]}));
-  S.activeIdx=0;S.started=true;S.warnActive=false;S.loadedRoutineId=null;
+  S.activeIdx=0;S.started=true;S.loadedRoutineId=null;
   S.students=[];renderStus();
   document.getElementById("classDate").value=todayStr();
   closeWizard();
@@ -2114,7 +2080,6 @@ function confirmSaveRoutine(){
   sv("bb_routines",S.routines);
   // Also log the class
   logClass(routineId,name);
-  S.warnActive=true;
   closeOv("saveRoutineOv");
   renderRecentList();renderSidebarRoutines();renderTabs();renderMoves();
   toast("Saved as \""+name+"\" ✓");
@@ -2127,7 +2092,7 @@ function logClassOnly(){
   if(S.classLog.length>200)S.classLog=S.classLog.slice(0,200);
   sv("bb_classlog",S.classLog);
   closeOv("saveRoutineOv");
-  S.warnActive=true;renderRecentList();renderTabs();renderMoves();
+  renderRecentList();renderTabs();renderMoves();
   toast("Class logged!");
 }
 
@@ -2213,7 +2178,7 @@ function loadRoutineById(id){
   const r=S.routines.find(r=>r.id===id);if(!r)return;
   S.blocks=JSON.parse(JSON.stringify(r.blocks));
   S.machine=r.machine;S.sys=r.sys;S.workoutStyle=r.style;
-  S.activeIdx=0;S.started=true;S.warnActive=false;S.loadedRoutineId=r.id;
+  S.activeIdx=0;S.started=true;S.loadedRoutineId=r.id;
   S.students=[];renderStus();
   document.getElementById("classDate").value=todayStr();
   document.getElementById("barWrap").style.display="block";
@@ -2477,9 +2442,7 @@ function confirmBlock(){const name=document.getElementById("blockName").value.tr
 
 function renderTabs(){
   document.getElementById("blockTabs").innerHTML=S.blocks.map((b,i)=>{
-    const uc=S.warnActive?getUnmatchedForBlock(i).length:0;
-    const warn=uc>0?`<span class="sw">${uc}</span>`:"";
-    return`<button class="block-tab${i===S.activeIdx?" active":""}" draggable="true" ondragstart="onBDragStart(event,${i})" ondragover="onBDragOver(event,${i})" ondrop="onBDrop(event,${i})" ondragend="onBDragEnd()" onclick="swBlock(${i})" ondblclick="openBlockModal(${i})" title="Dbl-click to edit">${b.name} <span class="m">${b.mins}m</span>${warn}</button>`;
+    return`<button class="block-tab${i===S.activeIdx?" active":""}" draggable="true" ondragstart="onBDragStart(event,${i})" ondragover="onBDragOver(event,${i})" ondrop="onBDrop(event,${i})" ondragend="onBDragEnd()" onclick="swBlock(${i})" ondblclick="openBlockModal(${i})" title="Dbl-click to edit">${b.name} <span class="m">${b.mins}m</span></button>`;
   }).join("");
 }
 function blockNameToCategory(name){
@@ -2533,12 +2496,6 @@ function swBlock(i){
 function renderMoves(){
   const area=document.getElementById("movesArea"),block=S.blocks[S.activeIdx];
   if(!block)return;
-  const unmatched=S.warnActive?getUnmatchedForBlock(S.activeIdx):[];
-  let alertHTML="";
-  if(unmatched.length){
-    const chips=unmatched.map(m=>m._isFacingMirror?`<span class="um-chip" onclick="quickAddFacing(${m._origId},'${m.facingDir}')">+ ${m.name} facing ${m.facingDir}</span>`:`<span class="um-chip" onclick="quickAddMove(${m.id})">+ ${moveName(m)}</span>`).join("");
-    alertHTML=`<div class="side-alert show"><strong>⚠️ Unmatched sides</strong>Missing across whole class — tap to add here:<div class="unmatched-list">${chips}</div></div>`;
-  }
   const style=STYLES.find(s=>s.id===S.workoutStyle);
   // Mirror prompt
   let mirrorHTML="";
@@ -2568,7 +2525,7 @@ function renderMoves(){
         <button class="btn sec sm" onclick="moveBlock(1)" ${S.activeIdx===S.blocks.length-1?"disabled":""}>→</button>
       </div>
     </div>
-  </div>${mirrorHTML}${alertHTML}`;
+  </div>${mirrorHTML}`;
 
   if(!block.moves.length){h+=`<div class="empty-st"><div class="e">✨</div><p>No moves yet.</p><button class="btn add-move-block-btn" onclick="openAddMoveSheet()">+ Add Move to Block</button></div>`;}
   else{
@@ -2658,8 +2615,8 @@ function renderSplitSection(bi,mi,m){
     <div class="split-top">
       <span class="split-top-label">Split</span>
       ${splits.length?`<span class="split-total" style="color:${isOrdered?(ok?'var(--accent)':'var(--accent3)'):'var(--text2)'}">${secsToTime(total)} / ${secsToTime(moveTotal)}</span>`:''}
-      <button class="split-mode-btn${isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'ordered')">Ordered</button>
-      <button class="split-mode-btn${!isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'highlights')">Highlights</button>
+      <button class="split-mode-btn${isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'ordered')">Variation + Move</button>
+      <button class="split-mode-btn${!isOrdered?' active':''}" onclick="setSplitMode(${bi},${mi},'highlights')">Variations Only</button>
       <button class="add-var-btn" style="margin-left:auto" onclick="addSplit(${bi},${mi})">+ segment</button>
     </div>${rows}${warning}
   </div>`;
@@ -2669,7 +2626,16 @@ function rmSplit(bi,mi,si){S.blocks[bi].moves[mi].splits.splice(si,1);renderMove
 function setSplitLabel(bi,mi,si,val){S.blocks[bi].moves[mi].splits[si].label=val;}
 function setSplitSecs(bi,mi,si,str){S.blocks[bi].moves[mi].splits[si].secs=Math.max(15,timeToSecs(str));renderMoves();}
 function adjSplit(bi,mi,si,delta){const seg=S.blocks[bi].moves[mi].splits[si];seg.secs=Math.max(15,(seg.secs||30)+delta);renderMoves();}
-function setSplitMode(bi,mi,mode){S.blocks[bi].moves[mi].splitMode=mode;renderMoves();}
+function setSplitMode(bi,mi,mode){
+  const m=S.blocks[bi].moves[mi];
+  m.splitMode=mode;
+  if(mode==='highlights'&&m.splits&&m.splits.length){
+    const base=getMoveById(m.id);
+    const baseName=base?base.name:'';
+    if(baseName)m.splits=m.splits.filter(s=>s.label!==baseName);
+  }
+  renderMoves();
+}
 function reorderSplit(bi,mi,si,dir){
   const splits=S.blocks[bi].moves[mi].splits;
   const ni=si+dir;
@@ -2771,7 +2737,7 @@ function sheetMoHTML(m,top){
 }
 function addMoveFromSheet(id){
   const m=getMoveById(id);if(!m)return;
-  const nm={...m,dur:3,variations:[]};if(m.facing)nm.facingDir="left";
+  const nm={...m,secs:adminGetDefaultTime(m),variations:[]};if(m.facing)nm.facingDir="left";
   S.blocks[S.activeIdx].moves.push(nm);
   renderMoves();renderOpts();renderTabs();updateBar();
   toast("Added: "+moveName(m));
@@ -2781,11 +2747,11 @@ function addMoveFromSheet(id){
 // ════════════════════════════════════════════════
 // TIME BAR
 // ════════════════════════════════════════════════
-function secsToTime(s){const m=Math.floor((s||0)/60),sec=(s||0)%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
+function secsToTime(s){const t=Math.round(s||0);const m=Math.floor(t/60),sec=t%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
 function timeToSecs(str){const p=(str||'').trim().split(':');if(p.length===2){return Math.max(0,(parseInt(p[0])||0)*60+(parseInt(p[1])||0));}return Math.max(0,(parseInt(str)||0)*60);}
 function catDefaultSecs(cat){return(cat==='lower'||cat==='upper')?120:60;}
 function adminGetDefaultTime(m){if(!m)return 60;return moveDetails[m.id]?.defaultTime??catDefaultSecs(m.cat);}
-function moveSecs(m){if(m.secs!=null)return m.secs;if(m.dur)return m.dur*60;return adminGetDefaultTime(getMoveById(m.id)||m);}
+function moveSecs(m){if(m.secs!=null)return m.secs;if(m.dur&&m.dur!==3)return m.dur*60;return adminGetDefaultTime(getMoveById(m.id)||m);}
 function totalMins(){const s=S.blocks.reduce((a,b)=>a+b.moves.reduce((c,m)=>c+moveSecs(m),0),0);return Math.round(s/60);}
 function updateBar(){const tot=parseInt(document.getElementById("classLen").value)||50,used=totalMins();const pct=Math.min((used/tot)*100,100);const f=document.getElementById("tFill");f.style.width=pct+"%";f.className="time-fill"+(used>tot?" over":used/tot>0.85?" warn":"");document.getElementById("tUsed").textContent=used+" min";const r=document.getElementById("tTotal");r.textContent=(used>tot?"⚠️ ":"")+tot+" min";r.className=used>tot?"over":"ok";}
 
@@ -2932,8 +2898,7 @@ function buildNotes(){
   if(S.students.length)o+=`Students: ${S.students.join(", ")}\n`;
   o+=`${"─".repeat(44)}\n\n`;
   S.blocks.forEach((block,bi)=>{
-    const uc=S.warnActive?getUnmatchedForBlock(bi).length:0;
-    o+=`╔ ${block.name.toUpperCase()} — ${block.mins} min${uc?" ⚠️ "+uc+" UNMATCHED":""} ╗\n`;
+    o+=`╔ ${block.name.toUpperCase()} — ${block.mins} min ╗\n`;
     if(!block.moves.length){o+=`  (empty)\n`;}
     else block.moves.forEach((m,i)=>{
       const prev=i>0?block.moves[i-1]:null;
@@ -2953,7 +2918,6 @@ function buildNotes(){
     });
     o+="\n";
   });
-  if(S.warnActive){const all=[];S.blocks.forEach((b,bi)=>{const um=getUnmatchedForBlock(bi);if(um.length)all.push(`${b.name}: ${um.map(m=>moveName(m)).join(", ")}`);});if(all.length){o+=`${"─".repeat(44)}\n⚠️ UNMATCHED SIDES:\n`;all.forEach(l=>o+=`  ${l}\n`);}}
   o+=`${"─".repeat(44)}\nTotal: ${totalMins()} min  ·  Block Builder\nNot affiliated with any specific fitness brand.\n`;
   return o;
 }
@@ -3104,15 +3068,16 @@ function applyMirror(fromIdx){
   const ms=allMoves();
   const mirrored=fromBlock.moves.map(m=>{
     const base=ms.find(bm=>bm.id===m.id);
+    const copySplits=m.splits?m.splits.map(s=>({...s})):undefined;
     // Flip side: find mirror move if exists
     if(base&&base.mirror){
       const mirBase=ms.find(bm=>bm.id===base.mirror);
       if(mirBase){
-        return{...mirBase,secs:moveSecs(m),variations:[...(m.variations||[])],moveStyle:m.moveStyle||'Normal',movePos:m.movePos||'C'};
+        return{...mirBase,secs:moveSecs(m),variations:[...(m.variations||[])],splits:copySplits,splitMode:m.splitMode,moveStyle:m.moveStyle||'Normal',movePos:m.movePos||'C'};
       }
     }
-    // If bilateral or no mirror, just copy as-is
-    return{...m,variations:[...(m.variations||[])]};
+    // If bilateral or no mirror, just copy as-is (spread already includes splits/splitMode)
+    return{...m,variations:[...(m.variations||[])],splits:copySplits};
   });
   S.blocks[S.activeIdx].moves=mirrored;
   S._pendingMirrorFrom=null;
@@ -3250,7 +3215,7 @@ function renderTeachMode(){
           r+=seg.secs;
           return`<div class="teach-split-row"><span class="teach-split-label">${esc(seg.label||'—')}</span><span class="teach-split-time">${secsToTime(seg.secs)}</span>${isOrdered?`<span class="teach-split-running">→ ${secsToTime(r)}</span>`:''}</div>`;
         }).join('');
-        const modeLabel=isOrdered?'Split Sequence':'Highlights';
+        const modeLabel=isOrdered?'Split Sequence':'Variations Only';
         return`<div class="teach-splits"><div class="teach-splits-label">${modeLabel}</div>${rows}</div>`;
       })();
       return `${banners}<div class="teach-move">
@@ -3579,6 +3544,9 @@ function adminMoveRow(m,activeMachines){
   const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
   const defSecs = adminGetDefaultTime(m);
   const colspan = 13 + activeMachines.length;
+  const varChips = adminGetVarList(m.id).map((v,i)=>
+    `<span class="admin-var-chip"><input class="avc-name" value="${esc(v)}" onblur="adminSaveVar(${m.id},${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})">✕</button></span>`
+  ).join('');
 
   return`<tr id="arow-${m.id}" class="${active?'':'admin-inactive'}">
     <td style="text-align:center"><button class="aexpand-btn" id="aexp-${m.id}" onclick="adminToggleDetail(${m.id})" title="Expand details">▼</button></td>
@@ -3620,6 +3588,7 @@ function adminMoveRow(m,activeMachines){
         <div><div class="adf-label">Coaching Cues</div><textarea onblur="adminField(${m.id},'cues',this.value)">${esc(cues)}</textarea></div>
         <div><div class="adf-label">Common Mistakes</div><textarea onblur="adminField(${m.id},'mistakes',this.value)">${esc(mistakes)}</textarea></div>
         <div><div class="adf-label">Notes</div><textarea onblur="adminField(${m.id},'notes',this.value)">${esc(notes)}</textarea></div>
+        <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-list" id="avars-${m.id}">${varChips}<input class="admin-var-add" placeholder="+ Add variation" onkeydown="if(event.key==='Enter'){adminAddVar(${m.id},this.value,this);}" onblur="if(this.value.trim())adminAddVar(${m.id},this.value,this);"></div></div>
       </div>
     </td>
   </tr>`;
@@ -3633,6 +3602,32 @@ function adminToggleDetail(id){
   const open=tr.style.display!=='none';
   tr.style.display=open?'none':'table-row';
   if(btn)btn.textContent=open?'▼':'▲';
+}
+
+// Variation editor helpers
+function adminGetVarList(id){const m=getMoveById(id);return[...(m?.variations||[])];}
+function adminSaveVars(id,vars){adminField(id,'variations',vars);}
+function adminAddVar(id,val,inp){
+  const v=(val||'').trim();if(!v)return;
+  const vars=adminGetVarList(id);
+  if(!vars.includes(v)){vars.push(v);adminSaveVars(id,vars);renderAdminVars(id);}
+  if(inp)inp.value='';
+}
+function adminRemoveVar(id,idx){
+  const vars=adminGetVarList(id);vars.splice(idx,1);adminSaveVars(id,vars);renderAdminVars(id);
+}
+function adminSaveVar(id,idx,val){
+  const v=(val||'').trim();
+  const vars=adminGetVarList(id);
+  if(!v){adminRemoveVar(id,idx);return;}
+  vars[idx]=v;adminSaveVars(id,vars);
+}
+function renderAdminVars(id){
+  const el=document.getElementById('avars-'+id);if(!el)return;
+  const vars=adminGetVarList(id);
+  el.innerHTML=vars.map((v,i)=>
+    `<span class="admin-var-chip"><input class="avc-name" value="${esc(v)}" onblur="adminSaveVar(${id},${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="avc-rm" onclick="adminRemoveVar(${id},${i})">✕</button></span>`
+  ).join('')+`<input class="admin-var-add" placeholder="+ Add variation" onkeydown="if(event.key==='Enter'){adminAddVar(${id},this.value,this);}" onblur="if(this.value.trim())adminAddVar(${id},this.value,this);">`;
 }
 
 // Click-to-edit name
