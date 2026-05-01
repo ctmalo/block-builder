@@ -772,6 +772,19 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .admin-table-wrap{flex:1;overflow:auto;}
 .admin-table{width:100%;border-collapse:collapse;font-size:0.76rem;}
 .admin-table th{position:sticky;top:0;background:var(--surface);border-bottom:2px solid var(--border2);padding:8px 10px;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);white-space:nowrap;z-index:2;}
+.admin-table th.sortable{cursor:pointer;user-select:none;}
+.admin-table th.sortable:hover{color:var(--text);}
+.admin-table th.sort-active{color:var(--accent);}
+.th-sort-arrow{display:inline-block;margin-left:4px;opacity:0.5;font-size:0.6rem;vertical-align:middle;}
+.admin-table th.sort-active .th-sort-arrow{opacity:1;}
+.admin-filter-bar{display:flex;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;}
+.admin-filter-bar .sw{flex:1;min-width:160px;max-width:320px;display:flex;align-items:center;background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:0 10px;gap:6px;}
+.admin-filter-bar .sw input{background:none;border:none;outline:none;color:var(--text);font-family:inherit;font-size:0.8rem;width:100%;padding:7px 0;}
+.admin-filter-bar .sw input::placeholder{color:var(--text3);}
+.admin-filter-bar select{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:7px 10px;font-family:inherit;font-size:0.8rem;color:var(--text);cursor:pointer;outline:none;}
+.admin-filter-bar select:focus{border-color:var(--accent);}
+.admin-filter-clear{background:none;border:none;color:var(--text3);font-size:0.75rem;cursor:pointer;padding:4px 6px;border-radius:4px;white-space:nowrap;}
+.admin-filter-clear:hover{color:var(--text);background:var(--card2);}
 .admin-table td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .admin-table tr:hover td{background:var(--card2);}
 .admin-table tr.admin-inactive td{opacity:0.45;}
@@ -3543,6 +3556,10 @@ renderRecentList();renderSidebarRoutines();renderStus();setTimeout(initMobile,10
 // ════════════════════════════════════════════════
 const ADMIN_PASSWORD = 'plank2024';
 let adminTab = 'moves';
+let adminMovesSearch = '';
+let adminMovesCat = '';
+let adminMovesSort = '';      // ''|'name'|'cat'|'active'
+let adminMovesSortDir = 1;    // 1=asc, -1=desc
 
 function initAdmin(){
   const isAdmin = window.location.hash === '#ducky-plank';
@@ -3708,26 +3725,79 @@ function renderAdminTab(tab){
 }
 
 // ── Master Moves table ───────────────────────────────────────────
+function adminFilterSort(moves){
+  let ms=moves;
+  if(adminMovesSearch)ms=ms.filter(m=>(m.name||'').toLowerCase().includes(adminMovesSearch));
+  if(adminMovesCat)ms=ms.filter(m=>m.cat===adminMovesCat);
+  if(adminMovesSort==='name'){
+    ms=[...ms].sort((a,b)=>adminMovesSortDir*(a.name||'').localeCompare(b.name||''));
+  }else if(adminMovesSort==='cat'){
+    ms=[...ms].sort((a,b)=>adminMovesSortDir*(a.cat||'').localeCompare(b.cat||'')||(a.name||'').localeCompare(b.name||''));
+  }else if(adminMovesSort==='active'){
+    ms=[...ms].sort((a,b)=>{
+      const aa=S.approved.includes(a.id)?1:0,bb=S.approved.includes(b.id)?1:0;
+      return adminMovesSortDir*(bb-aa)||(a.name||'').localeCompare(b.name||'');
+    });
+  }
+  return ms;
+}
+
+function adminSetSort(col){
+  if(adminMovesSort===col){adminMovesSortDir*=-1;}
+  else{adminMovesSort=col;adminMovesSortDir=1;}
+  adminRenderMovesBody();
+}
+
+function adminRenderMovesBody(){
+  const archived=adminGetArchived();
+  const allVisible=allMoves().filter(m=>!archived.includes(m.id));
+  const filtered=adminFilterSort(allVisible);
+  const activeMachines=adminGetMachineDefs().filter(m=>m.active);
+  const tbody=document.getElementById('adminMovesBody');
+  if(tbody)tbody.innerHTML=filtered.map(m=>adminMoveRow(m,activeMachines)).join('');
+  const info=document.querySelector('.admin-tbar-info');
+  if(info)info.textContent=`${filtered.length} of ${allVisible.length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived`;
+}
+
+function thSort(col,label){
+  const active=adminMovesSort===col;
+  const arrow=active?(adminMovesSortDir===1?'▲':'▼'):'⇅';
+  return`<th class="sortable${active?' sort-active':''}" style="min-width:155px" onclick="adminSetSort('${col}')">${label}<span class="th-sort-arrow">${arrow}</span></th>`;
+}
+
 function renderMasterMoves(el){
   const archived=adminGetArchived();
   const moves=allMoves().filter(m=>!archived.includes(m.id));
+  const filtered=adminFilterSort(moves);
   const activeMachines=adminGetMachineDefs().filter(m=>m.active);
   const springHeaders=activeMachines.map(mach=>
     `<th style="min-width:100px">Springs<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(${esc(mach.shortCode||mach.name)})</span></th>`
   ).join('');
   el.innerHTML=`
     <div class="admin-tbar">
-      <div class="admin-tbar-info">${moves.length} moves &nbsp;·&nbsp; ${S.approved.filter(id=>!archived.includes(id)).length} active &nbsp;·&nbsp; ${archived.length} archived</div>
+      <div class="admin-tbar-info">${filtered.length} of ${moves.length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived</div>
       <button id="sbExportBtn" class="sb-export-btn" onclick="sbExportAll()">Export All to Supabase</button>
       <button class="btn sm" onclick="adminAddMove()">+ Add New Move</button>
+    </div>
+    <div class="admin-filter-bar">
+      <div class="sw"><span class="si">🔍</span><input id="adminMovesSearchInp" type="text" placeholder="Search moves…" value="${esc(adminMovesSearch)}" oninput="adminMovesSearch=this.value.toLowerCase();adminRenderMovesBody()"></div>
+      <select id="adminMovesCatSel" onchange="adminMovesCat=this.value;adminRenderMovesBody()">
+        <option value="">All categories</option>
+        <option value="core"${adminMovesCat==='core'?' selected':''}>Core</option>
+        <option value="oblique"${adminMovesCat==='oblique'?' selected':''}>Obliques</option>
+        <option value="lower"${adminMovesCat==='lower'?' selected':''}>Lower Body</option>
+        <option value="upper"${adminMovesCat==='upper'?' selected':''}>Upper Body</option>
+        <option value="full"${adminMovesCat==='full'?' selected':''}>Full Body</option>
+      </select>
+      <button class="admin-filter-clear" onclick="adminMovesSearch='';adminMovesCat='';adminMovesSort='';adminMovesSortDir=1;document.getElementById('adminMovesSearchInp').value='';document.getElementById('adminMovesCatSel').value='';adminRenderMovesBody()">✕ Clear</button>
     </div>
     <div class="admin-table-wrap">
       <table class="admin-table">
         <thead><tr>
           <th style="width:28px"></th>
           <th style="width:42px">ID</th>
-          <th style="min-width:155px">Name</th>
-          <th>Category</th>
+          ${thSort('name','Name')}
+          ${thSort('cat','Category')}
           <th style="min-width:118px">Stance</th>
           ${springHeaders}
           <th style="min-width:80px">Default<br>Time</th>
@@ -3735,10 +3805,10 @@ function renderMasterMoves(el){
           <th style="min-width:110px">Direction Styles</th>
           <th>L / R / C</th>
           <th style="min-width:95px">Cables &amp;<br>Bungee</th>
-          <th style="min-width:55px">Active</th>
+          ${thSort('active','Active')}
           <th></th>
         </tr></thead>
-        <tbody>${moves.map(m=>adminMoveRow(m,activeMachines)).join('')}</tbody>
+        <tbody id="adminMovesBody">${filtered.map(m=>adminMoveRow(m,activeMachines)).join('')}</tbody>
       </table>
     </div>`;
 }
