@@ -867,6 +867,8 @@ select.ac{cursor:pointer;}
 .admin-var-add{background:var(--surface);border:1px dashed var(--border2);border-radius:20px;padding:3px 10px;font-size:0.72rem;color:var(--text);width:140px;font-family:inherit;}
 .admin-var-add::placeholder{color:var(--text3);}
 .admin-var-add:focus{outline:none;border-color:var(--accent);border-style:solid;}
+.admin-var-addbtn{background:var(--accent);border:none;border-radius:20px;padding:3px 10px;font-size:0.72rem;color:#fff;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.admin-var-addbtn:hover{opacity:0.85;}
 /* Supabase status */
 .sb-status{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text2);cursor:default;user-select:none;}
 .sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background 0.3s;}
@@ -3881,7 +3883,7 @@ function adminMoveRow(m,activeMachines){
         <div><div class="adf-label">Coaching Cues</div><textarea onblur="adminField(${m.id},'cues',this.value)">${esc(cues)}</textarea></div>
         <div><div class="adf-label">Common Mistakes</div><textarea onblur="adminField(${m.id},'mistakes',this.value)">${esc(mistakes)}</textarea></div>
         <div><div class="adf-label">Notes</div><textarea onblur="adminField(${m.id},'notes',this.value)">${esc(notes)}</textarea></div>
-        <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-section" id="avars-${m.id}"><div class="admin-var-section" id="avars-chips-${m.id}" style="display:contents">${varChips}</div><input class="admin-var-add" placeholder="+ Add variation" onkeydown="if(event.key==='Enter'||event.key==='Tab'){event.preventDefault();adminAddVar(${m.id},this.value,this);}"></div></div>
+        <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-section"><div id="avars-chips-${m.id}" style="display:contents">${varChips}</div><div style="display:inline-flex;align-items:center;gap:4px"><input class="admin-var-add" id="avars-inp-${m.id}" placeholder="Type name…" onkeydown="if(event.key==='Enter'||event.key==='Tab'){event.preventDefault();adminAddVar(${m.id},this.value,this);}"><button type="button" class="admin-var-addbtn" onclick="adminAddVar(${m.id},document.getElementById('avars-inp-${m.id}').value,document.getElementById('avars-inp-${m.id}'))">Add</button></div></div></div>
       </div>
     </td>
   </tr>`;
@@ -3895,20 +3897,41 @@ function adminToggleDetail(id){
   const open=tr.style.display!=='none';
   tr.style.display=open?'none':'table-row';
   if(btn)btn.textContent=open?'▼':'▲';
+  if(!open){
+    // Reset so the editor always loads fresh data from the current move state
+    delete adminVarState[id];
+    renderAdminVarChips(id);
+  }
 }
 
 // Variation editor helpers
-function adminGetVarList(id){const m=getMoveById(id);return[...(m?.variations||[])];}
-function adminSaveVars(id,vars){adminField(id,'variations',vars);}
+// adminVarState holds the live in-session list per move, avoiding any re-read through allMoves()
+const adminVarState={};
+
+function adminGetVarList(id){
+  // Read once from source; after that adminVarState is the source of truth
+  if(!adminVarState[id]){
+    const m=getMoveById(id);
+    adminVarState[id]=[...(m?.variations||[])];
+  }
+  return adminVarState[id];
+}
+function adminSaveVars(id){
+  const vars=adminVarState[id]||[];
+  adminField(id,'variations',[...vars]);
+}
 function adminAddVar(id,val,inp){
   const v=(val||'').trim();if(!v)return;
   const vars=adminGetVarList(id);
-  if(!vars.includes(v)){vars.push(v);adminSaveVars(id,vars);}
+  if(!vars.includes(v)){vars.push(v);adminSaveVars(id);}
   renderAdminVarChips(id);
   if(inp){inp.value='';inp.focus();}
 }
 function adminRemoveVar(id,idx){
-  const vars=adminGetVarList(id);vars.splice(idx,1);adminSaveVars(id,vars);renderAdminVarChips(id);
+  const vars=adminGetVarList(id);
+  vars.splice(idx,1);
+  adminSaveVars(id);
+  renderAdminVarChips(id);
 }
 function renderAdminVarChips(id){
   const el=document.getElementById('avars-chips-'+id);if(!el)return;
