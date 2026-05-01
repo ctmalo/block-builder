@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(grep -n \"avars-\\\\${m.id}\\\\|admin-var-list\\\\|varChips\\\\|Add variation\" \"/Users/alicejenkins/Dropbox/My Mac \\(Alices-MacBook-Pro.local\\)/Desktop/BlockBuilder/index.html\")"
     ]
   }
 }

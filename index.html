@@ -3838,7 +3838,7 @@ function adminMoveRow(m,activeMachines){
   const defSecs = adminGetDefaultTime(m);
   const colspan = 13 + activeMachines.length;
   const varChips = adminGetVarList(m.id).map((v,i)=>
-    `<span class="admin-var-chip"><input class="avc-name" value="${esc(v)}" onblur="adminSaveVar(${m.id},${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})">✕</button></span>`
+    `<span class="admin-var-chip"><span class="avc-name">${esc(v)}</span><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})" type="button">✕</button></span>`
   ).join('');
 
   return`<tr id="arow-${m.id}" class="${active?'':'admin-inactive'}">
@@ -3881,7 +3881,7 @@ function adminMoveRow(m,activeMachines){
         <div><div class="adf-label">Coaching Cues</div><textarea onblur="adminField(${m.id},'cues',this.value)">${esc(cues)}</textarea></div>
         <div><div class="adf-label">Common Mistakes</div><textarea onblur="adminField(${m.id},'mistakes',this.value)">${esc(mistakes)}</textarea></div>
         <div><div class="adf-label">Notes</div><textarea onblur="adminField(${m.id},'notes',this.value)">${esc(notes)}</textarea></div>
-        <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-list" id="avars-${m.id}">${varChips}<input class="admin-var-add" placeholder="+ Add variation" onkeydown="if(event.key==='Enter'){adminAddVar(${m.id},this.value,this);}" onblur="if(this.value.trim())adminAddVar(${m.id},this.value,this);"></div></div>
+        <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-section" id="avars-${m.id}"><div class="admin-var-section" id="avars-chips-${m.id}" style="display:contents">${varChips}</div><input class="admin-var-add" placeholder="+ Add variation" onkeydown="if(event.key==='Enter'||event.key==='Tab'){event.preventDefault();adminAddVar(${m.id},this.value,this);}"></div></div>
       </div>
     </td>
   </tr>`;
