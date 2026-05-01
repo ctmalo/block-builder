@@ -2156,8 +2156,15 @@ async function sbExportAll(){
 function allMoves(){
   if(sbMoves!==null&&sbMoves.length>0){
     const sbIds=new Set(sbMoves.map(m=>String(m.id)));
+    const customById=Object.fromEntries(S.custom.map(m=>[String(m.id),m]));
+    // Custom moves prefer S.custom (always up-to-date); base moves use sbMoves + moveDetails overlay
+    const fromSb=sbMoves.map(m=>{
+      const sid=String(m.id);
+      if(customById[sid])return{...customById[sid]};
+      return{...m,...(moveDetails[sid]||{})};
+    });
     const localOnly=S.custom.filter(m=>!sbIds.has(String(m.id)));
-    return[...sbMoves.map(m=>({...m,...(moveDetails[String(m.id)]||{})})),...localOnly];
+    return[...fromSb,...localOnly];
   }
   return[...BASE_MOVES.map(m=>({...m,...(moveDetails[m.id]||{})})),...S.custom];
 }
@@ -3839,7 +3846,8 @@ function adminMoveRow(m,activeMachines){
   const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
   const defSecs = adminGetDefaultTime(m);
   const colspan = 13 + activeMachines.length;
-  const varChips = adminGetVarList(m.id).map((v,i)=>
+  // Read directly — don't use adminGetVarList here as that would init adminVarState during render
+  const varChips = normalizeVars(m.variations).map((v,i)=>
     `<span class="admin-var-chip"><span class="avc-name">${esc(v)}</span><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})" type="button">✕</button></span>`
   ).join('');
 
@@ -3908,11 +3916,20 @@ function adminToggleDetail(id){
 // adminVarState holds the live in-session list per move, avoiding any re-read through allMoves()
 const adminVarState={};
 
+// Normalise variations to a clean string array regardless of how they were stored.
+// Handles: proper array, comma-separated string, single string, null/undefined.
+function normalizeVars(v){
+  if(!v)return[];
+  if(Array.isArray(v))return v.map(s=>String(s).trim()).filter(Boolean);
+  if(typeof v==='string')return v.split(',').map(s=>s.trim()).filter(Boolean);
+  return[];
+}
+
 function adminGetVarList(id){
   // Read once from source; after that adminVarState is the source of truth
   if(!adminVarState[id]){
     const m=getMoveById(id);
-    adminVarState[id]=[...(m?.variations||[])];
+    adminVarState[id]=normalizeVars(m?.variations);
   }
   return adminVarState[id];
 }
