@@ -2024,6 +2024,7 @@ async function sbFetchMoves(){
     }
     // Use id from the data blob (preserves original numeric type for S.approved lookups)
     sbMoves=data.map(row=>({...row.data}));
+    sbApprovedFromMoves(sbMoves);
     sbUpdateStatus('ok');
   }catch(e){
     console.warn('Supabase fetch failed:',e);
@@ -2039,7 +2040,7 @@ async function sbSeedIfEmpty(){
   const baseline=[...BASE_MOVES.map(m=>({...m,...(moveDetails[m.id]||{})})),...S.custom];
   const rows=baseline.map(m=>({
     id:String(m.id),
-    data:m,
+    data:{...m,active:sbIsApproved(m.id)},
     archived:archived.includes(m.id)||archived.includes(String(m.id)),
     updated_at:new Date().toISOString()
   }));
@@ -2054,6 +2055,7 @@ async function sbSeedIfEmpty(){
     if(error)throw error;
     // Use id from the data blob (preserves original numeric type for S.approved lookups)
     sbMoves=data.map(row=>({...row.data}));
+    sbApprovedFromMoves(sbMoves);
     sbUpdateStatus('ok');
     // Refresh admin view if open
     const el=document.getElementById('adminContent');
@@ -2083,15 +2085,28 @@ function sbUpdateStatus(status){
   }
 }
 
+function sbIsApproved(id){return S.approved.some(aid=>String(aid)===String(id));}
+
+function sbApprovedFromMoves(moves){
+  // Rebuild S.approved from active flags stored in Supabase data blobs.
+  // Preserve any locally-only IDs (custom moves not yet in Supabase).
+  const sbIds=new Set(moves.map(m=>String(m.id)));
+  const localOnly=S.approved.filter(aid=>!sbIds.has(String(aid)));
+  const fromSb=moves.filter(m=>m.active).map(m=>m.id);
+  S.approved=[...fromSb,...localOnly];
+  sv('bb_approved',S.approved);
+}
+
 async function sbUpsertMoveById(id){
   if(!sbClient)return;
   const move=allMoves().find(m=>String(m.id)===String(id));
   if(!move)return;
   const archived=adminGetArchived();
+  const active=sbIsApproved(id);
   try{
     await sbClient.from('moves').upsert({
       id:String(id),
-      data:move,
+      data:{...move,active},
       archived:archived.includes(id)||archived.includes(String(id)),
       updated_at:new Date().toISOString()
     },{onConflict:'id'});
@@ -2109,7 +2124,7 @@ async function sbExportAll(){
   try{
     const rows=moves.map(m=>({
       id:String(m.id),
-      data:m,
+      data:{...m,active:sbIsApproved(m.id)},
       archived:archived.includes(m.id)||archived.includes(String(m.id)),
       updated_at:new Date().toISOString()
     }));
@@ -3906,6 +3921,7 @@ function adminToggleActive(id,active){
   if(active){if(!S.approved.includes(id))S.approved.push(id);}
   else{S.approved=S.approved.filter(x=>x!==id);}
   sv('bb_approved',S.approved);
+  sbUpsertMoveById(id);
   const row=document.getElementById(`arow-${id}`);
   if(row)row.classList.toggle('admin-inactive',!active);
   const info=document.querySelector('.admin-tbar-info');
