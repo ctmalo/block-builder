@@ -2025,6 +2025,22 @@ async function sbInit(){
   }
 }
 
+// Normalise a move ID coming back from Supabase.
+// Old exports stored ids as JSON strings ("1","2"...) because the original fetch code did
+// id:String(row.id).  Convert them back to numbers so all in-app comparisons work uniformly.
+function sbNormalizeId(id){
+  if(id==null)return id;
+  const n=Number(id);
+  return(Number.isFinite(n)&&String(n)===String(id))?n:id;
+}
+
+function sbNormalizeMove(row){
+  const m={...row.data};
+  // If the data blob had a string id (old export bug), convert it back to a number
+  m.id=sbNormalizeId(m.id!=null?m.id:row.id);
+  return m;
+}
+
 async function sbFetchMoves(){
   if(!sbClient)return;
   try{
@@ -2037,8 +2053,7 @@ async function sbFetchMoves(){
       await sbSeedIfEmpty();
       return;
     }
-    // Use id from the data blob (preserves original numeric type for S.approved lookups)
-    sbMoves=data.map(row=>({...row.data}));
+    sbMoves=data.map(sbNormalizeMove);
     sbApprovedFromMoves(sbMoves);
     sbUpdateStatus('ok');
   }catch(e){
@@ -2069,7 +2084,7 @@ async function sbSeedIfEmpty(){
     const{data,error}=await sbClient.from('moves').select('*').eq('archived',false);
     if(error)throw error;
     // Use id from the data blob (preserves original numeric type for S.approved lookups)
-    sbMoves=data.map(row=>({...row.data}));
+    sbMoves=data.map(sbNormalizeMove);
     sbApprovedFromMoves(sbMoves);
     sbUpdateStatus('ok');
     // Refresh admin view if open
@@ -2181,8 +2196,8 @@ function allMoves(){
 }
 // ─────────────────────────────────────────────────────────────────────
 
-function getMoveById(id){return allMoves().find(m=>m.id===id);}
-function isCustom(id){return S.custom.some(m=>m.id===id);}
+function getMoveById(id){return allMoves().find(m=>String(m.id)===String(id));}
+function isCustom(id){return S.custom.some(m=>String(m.id)===String(id));}
 function moveName(m){
   if(!m)return"";
   const base=getMoveById(m.id);
@@ -2683,8 +2698,8 @@ function renderSpringPrev(){
     colors.map(([k,c])=>`<div style="display:flex;align-items:center;gap:4px;font-size:0.67rem"><span class="sdot" style="width:12px;height:12px;background:${c.hex};border-color:${c.border}"></span> ${c.label}</div>`).join("")+
     `</div><div style="font-size:0.63rem;color:var(--text3);margin-top:5px">Machine: ${S.machine}</div>`;
 }
-function renderAppList(){document.getElementById("appList").innerHTML=allMoves().map(m=>`<label class="mc"><input type="checkbox" ${S.approved.includes(m.id)?"checked":""} onchange="toggleApp(${m.id},this.checked)"> <span>${moveName(m)}</span></label>`).join("");}
-function toggleApp(id,v){if(v){if(!S.approved.includes(id))S.approved.push(id);}else S.approved=S.approved.filter(x=>x!==id);}
+function renderAppList(){document.getElementById("appList").innerHTML=allMoves().map(m=>`<label class="mc"><input type="checkbox" ${sbIsApproved(m.id)?"checked":""} onchange="toggleApp(${m.id},this.checked)"> <span>${moveName(m)}</span></label>`).join("");}
+function toggleApp(id,v){if(v){if(!sbIsApproved(id))S.approved.push(id);}else S.approved=S.approved.filter(x=>String(x)!==String(id));}
 function quickAddCustomMove(){const inp=document.getElementById("cmIn"),name=inp.value.trim();if(!name)return;const id=Date.now();S.custom.push({id,name,cat:"full",sp:"medium",side:"bilateral",pos:"both",tags:["full","bilateral"],mirror:null,setup:"",cues:"",mistakes:"",notes:""});S.approved.push(id);sv("bb_custom",S.custom);inp.value="";renderAppList();toast("Added: "+name);}
 function saveStudio(){const n=document.getElementById("studioIn").value.trim(),c=document.getElementById("machCustom").value.trim();if(n)S.studio=n;if(c)S.machine=c;sv("bb_approved",S.approved);sv("bb_custom",S.custom);document.getElementById("sName").textContent=S.studio||"Studio";renderSpringPrev();closeOv("studioOv");if(S.started){renderTabs();renderMoves();renderOpts();}toast("Studio saved ✓");}
 
@@ -2910,7 +2925,7 @@ function renderOpts(){
   const cat=document.getElementById("mCat").value;
   const block=S.blocks[S.activeIdx];
   const last=block&&block.moves.length>0?block.moves[block.moves.length-1]:null;
-  let ms=allMoves().filter(m=>S.approved.includes(m.id));
+  let ms=allMoves().filter(m=>sbIsApproved(m.id));
   if(search)ms=ms.filter(m=>m.name.toLowerCase().includes(search));
   if(cat)ms=ms.filter(m=>m.cat===cat);
   // If block name implies a side (Left Legs/Right Legs), filter to matching side moves
@@ -2965,7 +2980,7 @@ function renderSheetOpts(){
   const cat=document.getElementById("sheetCat").value;
   const block=S.blocks[S.activeIdx];
   const last=block&&block.moves.length?block.moves[block.moves.length-1]:null;
-  let ms=allMoves().filter(m=>S.approved.includes(m.id));
+  let ms=allMoves().filter(m=>sbIsApproved(m.id));
   if(search)ms=ms.filter(m=>m.name.toLowerCase().includes(search));
   if(cat)ms=ms.filter(m=>m.cat===cat);
   if(!search&&S._blockSide)ms=ms.filter(m=>m.side===S._blockSide||m.side==="bilateral");
@@ -3135,7 +3150,7 @@ function saveMove(){
   else{moveDetails[selectedMoveId]={setup:data.setup,cues:data.cues,mistakes:data.mistakes,notes:data.notes};sv("bb_movedetails",moveDetails);toast("Details saved ✓");}
   renderLibList();showLibDetail(selectedMoveId);document.getElementById("libEditMode").classList.remove("open");document.getElementById("libViewMode").classList.remove("hidden");
 }
-function deleteSelectedMove(){if(!isCustom(selectedMoveId)){toast("Can't delete built-in moves");return;}if(!confirm("Delete this move?"))return;S.custom=S.custom.filter(m=>m.id!==selectedMoveId);S.approved=S.approved.filter(id=>id!==selectedMoveId);sv("bb_custom",S.custom);sv("bb_approved",S.approved);selectedMoveId=null;document.getElementById("libDetailInner").style.display="none";document.getElementById("libEmpty").style.display="flex";renderLibList();toast("Deleted");}
+function deleteSelectedMove(){if(!isCustom(selectedMoveId)){toast("Can't delete built-in moves");return;}if(!confirm("Delete this move?"))return;S.custom=S.custom.filter(m=>String(m.id)!==String(selectedMoveId));S.approved=S.approved.filter(id=>String(id)!==String(selectedMoveId));sv("bb_custom",S.custom);sv("bb_approved",S.approved);selectedMoveId=null;document.getElementById("libDetailInner").style.display="none";document.getElementById("libEmpty").style.display="flex";renderLibList();toast("Deleted");}
 function addMoveFromLib(){if(!S.started){toast("Start a class first!");return;}if(!selectedMoveId)return;const m=getMoveById(selectedMoveId);if(!m)return;const nm={...m,secs:adminGetDefaultTime(m),variations:[]};if(m.facing)nm.facingDir="left";S.blocks[S.activeIdx].moves.push(nm);renderMoves();renderTabs();updateBar();toast("Added to "+S.blocks[S.activeIdx].name);showPage('planner');}
 
 // ════════════════════════════════════════════════
@@ -3755,7 +3770,7 @@ function adminFilterSort(moves){
     ms=[...ms].sort((a,b)=>adminMovesSortDir*(a.cat||'').localeCompare(b.cat||'')||(a.name||'').localeCompare(b.name||''));
   }else if(adminMovesSort==='active'){
     ms=[...ms].sort((a,b)=>{
-      const aa=S.approved.includes(a.id)?1:0,bb=S.approved.includes(b.id)?1:0;
+      const aa=sbIsApproved(a.id)?1:0,bb=sbIsApproved(b.id)?1:0;
       return adminMovesSortDir*(bb-aa)||(a.name||'').localeCompare(b.name||'');
     });
   }
@@ -3834,7 +3849,7 @@ function renderMasterMoves(el){
 }
 
 function adminMoveRow(m,activeMachines){
-  const active=S.approved.includes(m.id);
+  const active=sbIsApproved(m.id);
   const stance=adminGetStance(m);
   const pos=m.pos||'both';
   const dir=adminGetDirStyles(m);
@@ -4034,8 +4049,8 @@ function adminLCR(id,key,val){
 }
 
 function adminToggleActive(id,active){
-  if(active){if(!S.approved.includes(id))S.approved.push(id);}
-  else{S.approved=S.approved.filter(x=>x!==id);}
+  if(active){if(!sbIsApproved(id))S.approved.push(id);}
+  else{S.approved=S.approved.filter(x=>String(x)!==String(id));}
   sv('bb_approved',S.approved);
   sbUpsertMoveById(id);
   const row=document.getElementById(`arow-${id}`);
@@ -4049,7 +4064,7 @@ function adminArchiveMove(id){
   const archived=adminGetArchived();
   if(!archived.includes(id))archived.push(id);
   sv(ADMIN_ARCHIVED_KEY,archived);
-  S.approved=S.approved.filter(x=>x!==id);
+  S.approved=S.approved.filter(x=>String(x)!==String(id));
   sv('bb_approved',S.approved);
   sbUpsertMoveById(id);
   renderAdminTab('moves');
@@ -4058,7 +4073,7 @@ function adminArchiveMove(id){
 function adminRestoreMove(id){
   const archived=adminGetArchived().filter(x=>x!==id);
   sv(ADMIN_ARCHIVED_KEY,archived);
-  if(!S.approved.includes(id))S.approved.push(id);
+  if(!sbIsApproved(id))S.approved.push(id);
   sv('bb_approved',S.approved);
   sbUpsertMoveById(id);
   renderAdminTab('archived');
