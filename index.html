@@ -2015,12 +2015,54 @@ async function sbFetchMoves(){
   try{
     const{data,error}=await sbClient.from('moves').select('*').eq('archived',false);
     if(error)throw error;
-    sbMoves=data.map(row=>({...row.data,id:String(row.id)}));
+    if(data.length===0){
+      // Table is empty — seed from local BASE_MOVES and re-fetch
+      sbMoves=null;
+      sbUpdateStatus('ok');
+      await sbSeedIfEmpty();
+      return;
+    }
+    // Use id from the data blob (preserves original numeric type for S.approved lookups)
+    sbMoves=data.map(row=>({...row.data}));
     sbUpdateStatus('ok');
   }catch(e){
     console.warn('Supabase fetch failed:',e);
     sbMoves=null;
     sbUpdateStatus('error');
+  }
+}
+
+async function sbSeedIfEmpty(){
+  if(!sbClient)return;
+  const archived=adminGetArchived();
+  // Always seed from the local baseline (BASE_MOVES + custom), not allMoves() which may be empty
+  const baseline=[...BASE_MOVES.map(m=>({...m,...(moveDetails[m.id]||{})})),...S.custom];
+  const rows=baseline.map(m=>({
+    id:String(m.id),
+    data:m,
+    archived:archived.includes(m.id)||archived.includes(String(m.id)),
+    updated_at:new Date().toISOString()
+  }));
+  try{
+    // Insert in batches of 50 to stay within Supabase request limits
+    for(let i=0;i<rows.length;i+=50){
+      const{error}=await sbClient.from('moves').upsert(rows.slice(i,i+50),{onConflict:'id'});
+      if(error)throw error;
+    }
+    // Now fetch back the seeded data
+    const{data,error}=await sbClient.from('moves').select('*').eq('archived',false);
+    if(error)throw error;
+    // Use id from the data blob (preserves original numeric type for S.approved lookups)
+    sbMoves=data.map(row=>({...row.data}));
+    sbUpdateStatus('ok');
+    // Refresh admin view if open
+    const el=document.getElementById('adminContent');
+    if(el&&document.getElementById('adminPanel')&&document.getElementById('adminPanel').style.display!=='none'){
+      renderAdminTab('moves');
+    }
+  }catch(e){
+    console.warn('Supabase auto-seed failed:',e);
+    sbMoves=null;
   }
 }
 
@@ -2082,7 +2124,7 @@ async function sbExportAll(){
 }
 
 function allMoves(){
-  if(sbMoves!==null){
+  if(sbMoves!==null&&sbMoves.length>0){
     const sbIds=new Set(sbMoves.map(m=>String(m.id)));
     const localOnly=S.custom.filter(m=>!sbIds.has(String(m.id)));
     return[...sbMoves.map(m=>({...m,...(moveDetails[String(m.id)]||{})})),...localOnly];
