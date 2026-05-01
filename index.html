@@ -2153,6 +2153,17 @@ async function sbExportAll(){
   }
 }
 
+// Merge moveDetails on top of a base move, but never overwrite a non-empty variations array
+// with an empty one (guards against corruption from the old variation editor bug).
+function mergeDetails(base,details){
+  const merged={...base,...details};
+  if(Array.isArray(details.variations)&&details.variations.length===0&&
+     Array.isArray(base.variations)&&base.variations.length>0){
+    merged.variations=base.variations;
+  }
+  return merged;
+}
+
 function allMoves(){
   if(sbMoves!==null&&sbMoves.length>0){
     const sbIds=new Set(sbMoves.map(m=>String(m.id)));
@@ -2161,12 +2172,12 @@ function allMoves(){
     const fromSb=sbMoves.map(m=>{
       const sid=String(m.id);
       if(customById[sid])return{...customById[sid]};
-      return{...m,...(moveDetails[sid]||{})};
+      return mergeDetails(m,moveDetails[sid]||{});
     });
     const localOnly=S.custom.filter(m=>!sbIds.has(String(m.id)));
     return[...fromSb,...localOnly];
   }
-  return[...BASE_MOVES.map(m=>({...m,...(moveDetails[m.id]||{})})),...S.custom];
+  return[...BASE_MOVES.map(m=>mergeDetails(m,moveDetails[m.id]||{})),...S.custom];
 }
 // ─────────────────────────────────────────────────────────────────────
 
