@@ -3307,7 +3307,7 @@ function renderVariantRow(base,m,bi,mi){
     html+='<span style="font-size:0.63rem;color:var(--text3)">Amp: '+springDisplay(springs.amp,9)+'</span>';
     html+='</div>';
     html+='<div class="mv-group"><span class="mv-label">Style:</span>';
-    ['Normal','Reverse','Mega','Mega Rev'].forEach(function(v){
+    ['Normal','Reverse','Giant','Giant Rev'].forEach(function(v){
       const vpos=getVariantPosition(v);
       const platform=vpos==='front'?'front':'back';
       html+='<button class="mv-btn'+(cur===v?' active':'')+'" onclick="setMoveStyle('+bi+','+mi+',\''+v+'\')" title="'+platform+' platform">'+v+'</button>';
@@ -3582,6 +3582,19 @@ document.addEventListener("keydown", e => {
     sv("bb_data_version", DATA_VERSION);
     console.log("Move database updated to v"+DATA_VERSION+": cleared stale data");
   }
+})();
+// Rename "Mega"/"Mega Rev" moveStyle values to "Giant"/"Giant Rev" in saved routines
+(function(){
+  const styleMap={'Mega':'Giant','Mega Rev':'Giant Rev'};
+  let dirty=false;
+  S.routines.forEach(r=>{
+    (r.blocks||[]).forEach(b=>{
+      (b.moves||[]).forEach(m=>{
+        if(m.moveStyle&&styleMap[m.moveStyle]){m.moveStyle=styleMap[m.moveStyle];dirty=true;}
+      });
+    });
+  });
+  if(dirty)sv('bb_routines',S.routines);
 })();
 document.getElementById("classDate").value=todayStr();
 renderRecentList();renderSidebarRoutines();renderStus();setTimeout(initMobile,100);initMobile();
@@ -3894,8 +3907,8 @@ function adminMoveRow(m,activeMachines){
     <td><div class="acb-group">
       <label class="acb-item"><input type="checkbox" ${dir.regular?'checked':''} onchange="adminDirStyle(${m.id},'regular',this.checked)"> Regular</label>
       <label class="acb-item"><input type="checkbox" ${dir.reverse?'checked':''} onchange="adminDirStyle(${m.id},'reverse',this.checked)"> Reverse</label>
-      <label class="acb-item"><input type="checkbox" ${dir.mega?'checked':''} onchange="adminDirStyle(${m.id},'mega',this.checked)"> Mega</label>
-      <label class="acb-item"><input type="checkbox" ${dir.megaRev?'checked':''} onchange="adminDirStyle(${m.id},'megaRev',this.checked)"> Mega Rev</label>
+      <label class="acb-item"><input type="checkbox" ${dir.mega?'checked':''} onchange="adminDirStyle(${m.id},'mega',this.checked)"> Giant</label>
+      <label class="acb-item"><input type="checkbox" ${dir.megaRev?'checked':''} onchange="adminDirStyle(${m.id},'megaRev',this.checked)"> Giant Rev</label>
     </div></td>
     <td><div class="acb-group">
       <label class="acb-item"><input type="checkbox" ${lcr.l?'checked':''} onchange="adminLCR(${m.id},'l',this.checked)"> L</label>
