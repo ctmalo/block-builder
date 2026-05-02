@@ -3294,7 +3294,8 @@ function doPrint(){
 // MOVE STYLE / POSITION
 // ════════════════════════════════════════════════
 function renderVariantRow(base,m,bi,mi){
-  if(!base||(!base.megaVariants&&!base.hasLCR))return'';
+  const lcrPositions=getMoveActiveLCR(base);
+  if(!base||(!base.megaVariants&&!lcrPositions.length))return'';
   let html='<div class="move-variant-row">';
   if(base.megaVariants){
     const cur=m.moveStyle||'Normal';
@@ -3314,10 +3315,10 @@ function renderVariantRow(base,m,bi,mi){
     });
     html+='</div>';
   }
-  if(base.hasLCR){
-    const cur=m.movePos||'C';
+  if(lcrPositions.length){
+    const cur=lcrPositions.includes(m.movePos||'')?m.movePos:lcrPositions[0];
     html+='<div class="mv-group"><span class="mv-label">Pos:</span>';
-    ['L','C','R'].forEach(function(v){
+    lcrPositions.forEach(function(v){
       html+='<button class="mv-btn'+(cur===v?' active':'')+'" onclick="setMovePos('+bi+','+mi+',\''+v+'\')">'+v+'</button>';
     });
     html+='</div>';
@@ -3693,6 +3694,15 @@ function adminGetStance(m){
   if(m.side==='right') return 'right-only';
   if(m.side==='facing')return 'facing';
   return 'bilateral';
+}
+
+// Returns which LCR positions are enabled for a move (reads admin lcr obj or falls back to hasLCR)
+function getMoveActiveLCR(base){
+  if(base&&base.lcr&&typeof base.lcr==='object'){
+    return['L','C','R'].filter(p=>base.lcr[p.toLowerCase()]);
+  }
+  if(base&&base.hasLCR)return['L','C','R'];
+  return[];
 }
 
 // Direction styles: {regular, reverse, mega, megaRev}
