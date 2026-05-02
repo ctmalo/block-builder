@@ -2717,12 +2717,13 @@ function renderTabs(){
 }
 function blockNameToCategory(name){
   const n=name.toLowerCase();
+  // Check warm/cool/finish first — "warm" contains "arm" as a substring
+  if(n.includes("warm")||n.includes("cool")||n.includes("finish")||n.includes("cardio")||n.includes("full"))return"core";
   if(n.includes("upper")||n.includes("arm")||n.includes("shoulder")||n.includes("chest"))return"upper";
   if(n.includes("leg")||n.includes("glute")||n.includes("hip")||n.includes("squat")||n.includes("lunge"))return"lower";
   if(n.includes("oblique"))return"oblique";
   if(n.includes("core")||n.includes("abs")||n.includes("crunch"))return"core";
-  if(n.includes("warm")||n.includes("cool")||n.includes("finish")||n.includes("cardio")||n.includes("full"))return"core";
-  return"core"; // default to core for anything unrecognised
+  return"core";
 }
 function blockSideFilter(name){
   const n=name.toLowerCase();
@@ -3316,8 +3317,8 @@ function renderVariantRow(base,m,bi,mi){
     html+='</div>';
   }
   if(lcrPositions.length){
-    const cur=lcrPositions.includes(m.movePos||'')?m.movePos:lcrPositions[0];
-    html+='<div class="mv-group"><span class="mv-label">Pos:</span>';
+    const cur=lcrPositions.includes(m.movePos||'')?m.movePos:(lcrPositions.includes('C')?'C':lcrPositions[0]);
+    html+='<div class="mv-group"><span class="mv-label">Position:</span>';
     lcrPositions.forEach(function(v){
       html+='<button class="mv-btn'+(cur===v?' active':'')+'" onclick="setMovePos('+bi+','+mi+',\''+v+'\')">'+v+'</button>';
     });
