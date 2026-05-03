@@ -2235,18 +2235,11 @@ function getMoveById(id){return allMoves().find(m=>String(m.id)===String(id));}
 function isCustom(id){return S.custom.some(m=>String(m.id)===String(id));}
 function moveName(m){
   if(!m)return"";
-  const base=getMoveById(m.id);
-  // Always use base move's authoritative side — never trust stored block data
-  const side=base?base.side:"bilateral";
   let name=m.name;
   // Only append style if not Normal
   if(m.moveStyle&&m.moveStyle!=="Normal")name+=" "+m.moveStyle;
-  // Only append side for truly unilateral moves
-  if(side==="left")name+=" (L)";
-  else if(side==="right")name+=" (R)";
-  else if(side==="facing")name+=(m.facingDir?" (facing "+m.facingDir+")":" (facing ?)");
-  // L/C/R position (only if user explicitly set it, not C)
-  if(m.movePos&&m.movePos!=="C")name+=" ["+m.movePos+"]";
+  // Facing direction (user-set, not a side indicator)
+  if(m.side==="facing")name+=(m.facingDir?" (facing "+m.facingDir+")":" (facing ?)");
   return name;
 }
 
