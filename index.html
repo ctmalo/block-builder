@@ -2238,6 +2238,9 @@ function moveName(m){
   let name=m.name;
   // Only append style if not Normal
   if(m.moveStyle&&m.moveStyle!=="Normal")name+=" "+m.moveStyle;
+  // Position suffix: Left/Right only — Center and unset show nothing
+  if(m.movePos==="L")name+=" (Left)";
+  else if(m.movePos==="R")name+=" (Right)";
   // Facing direction (user-set, not a side indicator)
   if(m.side==="facing")name+=(m.facingDir?" (facing "+m.facingDir+")":" (facing ?)");
   return name;
