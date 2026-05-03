@@ -2168,6 +2168,41 @@ async function sbExportAll(){
   }
 }
 
+async function adminCleanLegacyTags(){
+  if(!sbClient){alert('Not connected to Supabase.');return;}
+  const btn=document.getElementById('cleanTagsBtn');
+  if(!confirm('Remove all side:L / side:R / side:C tags from every move in Supabase?\nThis cannot be undone.'))return;
+  if(btn){btn.disabled=true;btn.textContent='Cleaning…';}
+  try{
+    const{data,error}=await sbClient.from('moves').select('*');
+    if(error)throw error;
+    const LEGACY=/^side:[LRC]$/i;
+    const toUpdate=data.filter(row=>Array.isArray(row.data?.tags)&&row.data.tags.some(t=>LEGACY.test(t)));
+    if(!toUpdate.length){
+      if(btn){btn.disabled=false;btn.textContent='🧹 Clean Legacy Tags';}
+      toast('No legacy tags found.');return;
+    }
+    const rows=toUpdate.map(row=>({
+      ...row,
+      data:{...row.data,tags:(row.data.tags||[]).filter(t=>!LEGACY.test(t))},
+      updated_at:new Date().toISOString()
+    }));
+    for(let i=0;i<rows.length;i+=50){
+      const{error:e}=await sbClient.from('moves').upsert(rows.slice(i,i+50),{onConflict:'id'});
+      if(e)throw e;
+    }
+    // Refresh local sbMoves
+    const{data:fresh,error:fe}=await sbClient.from('moves').select('*').eq('archived',false);
+    if(!fe)sbMoves=fresh.map(sbNormalizeMove);
+    if(btn){btn.textContent='✓ Cleaned '+rows.length+' moves';setTimeout(()=>{btn.disabled=false;btn.textContent='🧹 Clean Legacy Tags';},3000);}
+    toast('Cleaned legacy tags from '+rows.length+' moves');
+  }catch(e){
+    console.warn('Clean legacy tags failed:',e);
+    alert('Failed: '+e.message);
+    if(btn){btn.disabled=false;btn.textContent='🧹 Clean Legacy Tags';}
+  }
+}
+
 // Merge moveDetails on top of a base move, but never overwrite a non-empty variations array
 // with an empty one (guards against corruption from the old variation editor bug).
 function mergeDetails(base,details){
@@ -2806,7 +2841,7 @@ function renderMoves(){
       const sideFlipped=prev&&prev.side!==m.side&&m.side!=="bilateral"&&prev.side!=="bilateral";
       const mPos=m.pos||"both";const prevPos=prev?prev.pos||"both":null;
       const posChanged=prev&&prevPos!=="both"&&mPos!=="both"&&mPos!==prevPos;
-      const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
+      const tags=m.tags.filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
       const posBadge=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆ front":"⬇ back"}</span>`:"";
       const facingBadge=m.facing&&m.side==="facing"?`<span class="facing-badge" onclick="cycleFacing(${i})">facing: ${m.facingDir||"?"}</span>`:"";
       const varHTML=(m.variations||[]).map((v,vi)=>`<span class="var-tag">${v}<span class="rm" onclick="removeVar(${S.activeIdx},${i},${vi})">✕</span></span>`).join("");
@@ -2946,7 +2981,7 @@ function renderOpts(){
 }
 function moHTML(m,top){
   const mBaseSprings=spToSprings(m.sp||"medium");
-  const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
+  const tags=m.tags.filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
   const pos=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆":"⬇"}</span>`:"";
   const springTxt=m.springDesc?`<span style="font-size:0.59rem;color:var(--text2)">${m.springDesc}</span>`:springDisplay(mBaseSprings,9);
   const cableBadge=m.cables&&m.cables!=="none"?`<span style="font-size:0.56rem;padding:1px 4px;border-radius:3px;background:${m.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff">${m.cables==="red"?"🔴":"⚫"}</span>`:"";
@@ -3001,7 +3036,7 @@ function renderSheetOpts(){
   c.innerHTML=html;
 }
 function sheetMoHTML(m,top){
-  const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
+  const tags=m.tags.filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
   const pos=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆":"⬇"}</span>`:"";
   const springTxt=m.springDesc?`<span style="font-size:0.64rem;color:var(--text2)">${m.springDesc}</span>`:springDisplay(spToSprings(m.sp||"medium"),9);
   return`<div class="mo${top?" top":""}" onclick="addMoveFromSheet(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${springTxt}</div></div><span class="plus">+</span></div>`;
@@ -3078,14 +3113,14 @@ function renderLibList(){
   ms.sort((a,b)=>a.name.localeCompare(b.name));
   const el=document.getElementById("libItems");
   if(!ms.length){el.innerHTML=`<p style="color:var(--text3);font-size:0.72rem;padding:10px">No moves found.</p>`;return;}
-  el.innerHTML=ms.map(m=>{const liSprings=spToSprings(m.sp||'medium');const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");return`<div class="lib-item${selectedMoveId===m.id?" active":""}${isCustom(m.id)?" custom-move":""}" onclick="selectLibMove(${m.id})"><div class="lib-item-name">${moveName(m)}</div><div class="lib-item-meta">${tags}${springDisplay(liSprings,9)}</div></div>`;}).join("");
+  el.innerHTML=ms.map(m=>{const liSprings=spToSprings(m.sp||'medium');const tags=m.tags.filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");return`<div class="lib-item${selectedMoveId===m.id?" active":""}${isCustom(m.id)?" custom-move":""}" onclick="selectLibMove(${m.id})"><div class="lib-item-name">${moveName(m)}</div><div class="lib-item-meta">${tags}${springDisplay(liSprings,9)}</div></div>`;}).join("");
 }
 function selectLibMove(id){selectedMoveId=id;isNewMove=false;renderLibList();showLibDetail(id);cancelEdit();}
 function showLibDetail(id){
   const m=getMoveById(id);if(!m)return;
   document.getElementById("libEmpty").style.display="none";document.getElementById("libDetailInner").style.display="block";
   const lvl=getLvlFor(m.sp,S.sys);
-  const tags=m.tags.map(t=>{const c=t.startsWith("side")?"side":t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}" style="font-size:0.69rem;padding:2px 7px">${t}</span>`;}).join(" ");
+  const tags=m.tags.filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}" style="font-size:0.69rem;padding:2px 7px">${t}</span>`;}).join(" ");
   document.getElementById("dTitle").textContent=moveName(m);
   document.getElementById("dSubtitle").innerHTML=`
     <span class="badge gray">${m.series||m.cat}</span>
@@ -3317,10 +3352,15 @@ function renderVariantRow(base,m,bi,mi){
     html+='</div>';
   }
   if(lcrPositions.length){
-    const cur=lcrPositions.includes(m.movePos||'')?m.movePos:(lcrPositions.includes('C')?'C':lcrPositions[0]);
+    // Default: single option → auto-select; C available → Center; L+R only → no default
+    const LCR_LABELS={L:'Left',C:'Center',R:'Right'};
+    let defaultPos=null;
+    if(lcrPositions.length===1)defaultPos=lcrPositions[0];
+    else if(lcrPositions.includes('C'))defaultPos='C';
+    const cur=lcrPositions.includes(m.movePos||'')?m.movePos:defaultPos;
     html+='<div class="mv-group"><span class="mv-label">Position:</span>';
     lcrPositions.forEach(function(v){
-      html+='<button class="mv-btn'+(cur===v?' active':'')+'" onclick="setMovePos('+bi+','+mi+',\''+v+'\')">'+v+'</button>';
+      html+='<button class="mv-btn'+(cur===v?' active':'')+'" onclick="setMovePos('+bi+','+mi+',\''+v+'\')">'+(LCR_LABELS[v]||v)+'</button>';
     });
     html+='</div>';
   }
@@ -3836,6 +3876,7 @@ function renderMasterMoves(el){
     <div class="admin-tbar">
       <div class="admin-tbar-info">${filtered.length} of ${moves.length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived</div>
       <button id="sbExportBtn" class="sb-export-btn" onclick="sbExportAll()">Export All to Supabase</button>
+      <button id="cleanTagsBtn" class="sb-export-btn" onclick="adminCleanLegacyTags()" title="Remove side:L / side:R / side:C tags from all moves in Supabase">🧹 Clean Legacy Tags</button>
       <button class="btn sm" onclick="adminAddMove()">+ Add New Move</button>
     </div>
     <div class="admin-filter-bar">
