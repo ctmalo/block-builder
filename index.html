@@ -302,6 +302,38 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .mach-btn.cs .cs-tag,.mach-opt.cs .cs-tag{font-size:0.58rem;font-family:'Syne',sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);margin-left:4px;}
 .wiz-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
 
+/* ── ONBOARDING SLIDESHOW ── */
+.onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(6px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.onboard-overlay.open{opacity:1;pointer-events:all;}
+.onboard-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;width:min(480px,94vw);max-height:94vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,0.45);transform:translateY(10px) scale(0.98);transition:transform 0.28s cubic-bezier(.22,1,.36,1);}
+.onboard-overlay.open .onboard-card{transform:translateY(0) scale(1);}
+.onboard-slide-area{padding:22px 28px 12px;flex:1;overflow-y:auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.onboard-progress{width:100%;height:3px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:2px;}
+.onboard-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.35s ease;}
+.ob-visual{display:flex;justify-content:center;width:100%;pointer-events:none;user-select:none;}
+.ob-screen{border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.22);border:1px solid var(--border2);width:240px;text-align:left;font-family:'Inter','Helvetica Neue',sans-serif;}
+.onboard-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);line-height:1.25;margin:0;}
+.onboard-desc{font-size:0.83rem;color:var(--text2);line-height:1.65;margin:0;max-width:380px;text-align:center;}
+.onboard-dots{display:flex;gap:7px;justify-content:center;padding:4px 0 2px;}
+.onboard-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:all 0.2s;cursor:pointer;}
+.onboard-dot.active{background:var(--accent);width:22px;border-radius:4px;}
+.onboard-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 22px 18px;gap:8px;border-top:1px solid var(--border);}
+.onboard-skip{background:none;border:none;color:var(--text3);font-size:0.75rem;cursor:pointer;font-family:inherit;padding:6px 8px;border-radius:6px;transition:color 0.15s;}
+.onboard-skip:hover{color:var(--text2);}
+.onboard-prev{background:none;border:1px solid var(--border2);color:var(--text2);font-size:0.78rem;cursor:pointer;font-family:inherit;padding:7px 14px;border-radius:8px;transition:all 0.15s;}
+.onboard-prev:hover{border-color:var(--accent);color:var(--accent);}
+.onboard-next{background:var(--accent);border:none;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;padding:9px 22px;border-radius:8px;transition:all 0.15s;letter-spacing:0.3px;}
+.onboard-next:hover{filter:brightness(1.1);}
+.onboard-finish{background:var(--accent);border:none;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;padding:9px 22px;border-radius:8px;transition:all 0.15s;letter-spacing:0.3px;}
+.onboard-finish:hover{filter:brightness(1.1);}
+@media(max-width:480px){
+  .onboard-slide-area{padding:16px 18px 10px;gap:10px;}
+  .ob-screen{width:210px;}
+  .onboard-title{font-size:1rem;}
+  .onboard-desc{font-size:0.79rem;}
+  .onboard-nav{padding:10px 14px 14px;}
+}
+
 /* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.18s;}
 .overlay.open{opacity:1;pointer-events:all;}
@@ -968,6 +1000,7 @@ select.ac{cursor:pointer;}
     <button class="mmd-foot-btn" onclick="openStudio();closeMobileMenu()">⚙️ Studio</button>
     <button class="mmd-foot-btn" onclick="toggleTheme()">☀️ Theme</button>
     <button class="mmd-foot-btn" onclick="doPrint();closeMobileMenu()">🖨 Print</button>
+    <button class="mmd-foot-btn" onclick="openOnboarding();closeMobileMenu()">❓ Help</button>
   </div>
 </div>
 
@@ -1081,6 +1114,9 @@ select.ac{cursor:pointer;}
     <div class="sb">
       <h3>Routine Library</h3>
       <div id="sidebarRoutines"><p style="color:var(--text3);font-size:0.71rem">No saved routines yet.</p></div>
+    </div>
+    <div class="sb" style="border-top:1px solid var(--border);padding-top:12px;margin-top:auto">
+      <button class="btn sec sm" style="width:100%" onclick="openOnboarding()">❓ Help / Tour</button>
     </div>
   </aside>
 
@@ -4314,10 +4350,225 @@ function exitAdmin(){
   document.body.style.overflow='';
 }
 
+// ════════════════════════════════════════════════
+// ONBOARDING SLIDESHOW
+// ════════════════════════════════════════════════
+const _ob={
+  row(items){return `<div style="display:flex;gap:4px;flex-wrap:wrap">${items}</div>`;},
+  chip(t,active){return `<span style="font-size:0.6rem;padding:3px 8px;border-radius:5px;${active?'background:var(--accent);color:#fff;font-weight:700':'background:var(--surface);border:1px solid var(--border);color:var(--text2)'}">${t}</span>`;},
+  move(name,time,hl){return `<div style="background:${hl?'var(--accent-light)':'var(--surface)'};border:1px solid ${hl?'var(--accent)':'var(--border)'};border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:0.61rem;color:${hl?'var(--accent-text)':'var(--text)'};font-weight:${hl?'600':'400'}">${name}</span><span style="font-size:0.57rem;color:${hl?'var(--accent)':'var(--text3)'};font-family:monospace">${time}</span></div>`;},
+  bar(label){return `<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 10px;display:flex;align-items:center;gap:7px"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.75rem;color:var(--text)">block<span style="color:var(--accent)">builder</span></span><span style="margin-left:auto;font-size:0.55rem;padding:2px 6px;border-radius:8px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-weight:700">${label}</span></div>`;},
+  screen(content){return `<div class="ob-screen" style="background:var(--card)">${content}</div>`;}
+};
+
+const ONBOARD_SLIDES=[
+  // 1 — Welcome
+  {title:'Welcome to Block Builder',
+   desc:'Your all-in-one fitness class planning tool. Build blocks, add moves, manage spring setups, and run your class confidently — all from your phone.',
+   visual:_ob.screen(`
+    ${_ob.bar('PLAN')}
+    <div style="padding:7px;display:flex;gap:4px">${_ob.chip('Warm Up',true)}${_ob.chip('Legs',false)}${_ob.chip('Core',false)}</div>
+    <div style="padding:0 7px 7px;display:flex;flex-direction:column;gap:3px">
+      ${_ob.move('Elevated Plank','0:45',false)}
+      ${_ob.move('Bear','1:00',false)}
+      ${_ob.move('Saw','0:45',true)}
+    </div>`)},
+
+  // 2 — New Class
+  {title:'Create a new class',
+   desc:'Tap <strong>New Class</strong> from the home screen. Choose your class and machine, your workout style, and set your total class time to get started.',
+   visual:_ob.screen(`
+    <div style="background:var(--accent);padding:10px 12px">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.76rem;color:#fff">✨ New Class</div>
+      <div style="font-size:0.57rem;color:rgba(255,255,255,0.75);margin-top:1px">Step 1 of 3</div>
+    </div>
+    <div style="padding:10px 12px">
+      <div style="font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Machine</div>
+      <div style="display:flex;gap:4px;margin-bottom:9px">${_ob.chip('Mega Pro',true)}${_ob.chip('Ultra',false)}${_ob.chip('Reformer',false)}</div>
+      <div style="font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Style</div>
+      <div style="display:flex;gap:4px;margin-bottom:10px">${_ob.chip('Lagree',true)}${_ob.chip('Pilates',false)}</div>
+      <div style="width:100%;padding:6px;border-radius:6px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.63rem;text-align:center">Next →</div>
+    </div>`)},
+
+  // 3 — Build blocks
+  {title:'Build your blocks',
+   desc:'Tap any block tab to open it. Use the <strong>← →</strong> arrows to reorder blocks. Tap <strong>Edit</strong> to rename or adjust time. Need more? Tap <strong>+ Add Block</strong>.',
+   visual:_ob.screen(`
+    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:7px;display:flex;gap:4px;overflow:hidden">${_ob.chip('Warm Up',false)}${_ob.chip('Upper Body',true)}${_ob.chip('Legs',false)}</div>
+    <div style="padding:6px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px">
+      <span style="font-size:0.61rem;font-weight:600;color:var(--text);flex:1">Upper Body · 8 min</span>
+      <span style="font-size:0.68rem;color:var(--text3);line-height:1">←</span>
+      <span style="font-size:0.68rem;color:var(--text3);line-height:1">→</span>
+      <span style="font-size:0.58rem;padding:2px 7px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text2)">Edit</span>
+    </div>
+    <div style="padding:7px;display:flex;flex-direction:column;gap:3px">
+      ${_ob.move('Tricep Press','0:45',false)}
+      ${_ob.move('Chest Press','1:00',false)}
+      <div style="font-size:0.6rem;padding:5px 8px;border-radius:6px;border:1.5px dashed var(--accent);color:var(--accent);text-align:center;font-weight:700">+ Add Move to Block</div>
+    </div>`)},
+
+  // 4 — Add moves
+  {title:'Add moves to a block',
+   desc:'Tap <strong>Add Move to Block</strong> inside any block. Search or filter by category. For moves done on one side, tap <strong>Left</strong> or <strong>Right</strong> to set which side you\'re working.',
+   visual:_ob.screen(`
+    <div style="padding:7px;background:var(--surface);border-bottom:1px solid var(--border)">
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:4px 9px;font-size:0.6rem;color:var(--text3);display:flex;gap:6px;align-items:center">🔍 Search moves…</div>
+    </div>
+    <div style="padding:6px 7px;display:flex;flex-direction:column;gap:3px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px">
+        <div style="font-size:0.61rem;color:var(--text);font-weight:500;margin-bottom:4px">Back Lunge</div>
+        <div style="display:flex;gap:4px">
+          <span style="font-size:0.57rem;padding:2px 8px;border-radius:4px;background:var(--accent);color:#fff;font-weight:700">Left</span>
+          <span style="font-size:0.57rem;padding:2px 8px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text2)">Right</span>
+        </div>
+      </div>
+      ${_ob.move('Light Squat','Lower Body',false)}
+      ${_ob.move('Single Leg Squat','Lower Body',false)}
+    </div>`)},
+
+  // 5 — Variations
+  {title:'Variations & splits',
+   desc:'Tap <strong>+ variation</strong> on any move to add named variations. Use <strong>Variation + Move</strong> or <strong>Variations Only</strong> split mode to divide time across each automatically.',
+   visual:_ob.screen(`
+    <div style="padding:7px 9px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:0.65rem;font-weight:600;color:var(--text)">Side Plank</span>
+      <span style="font-size:0.58rem;color:var(--text3);font-family:monospace">1:30</span>
+    </div>
+    <div style="padding:6px 8px;display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--border)">
+      <span style="font-size:0.57rem;padding:2px 7px;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent);color:var(--accent-text)">Stagger ✕</span>
+      <span style="font-size:0.57rem;padding:2px 7px;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent);color:var(--accent-text)">Kick ✕</span>
+      <span style="font-size:0.57rem;padding:2px 7px;border-radius:11px;border:1px dashed var(--border2);color:var(--text3)">+ variation</span>
+    </div>
+    <div style="padding:7px 9px">
+      <div style="font-size:0.54rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px">Time splits</div>
+      <div style="display:flex;justify-content:space-between;font-size:0.6rem;margin-bottom:3px">
+        <span style="color:var(--text)">▶ Stagger</span><span style="color:var(--accent);font-family:monospace;font-weight:600">0:45</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.6rem;opacity:0.65">
+        <span style="color:var(--text)">Kick</span><span style="color:var(--text3);font-family:monospace">0:45</span>
+      </div>
+    </div>`)},
+
+  // 6 — Teach Mode
+  {title:'Teach Mode',
+   desc:'Tap <strong>Teach</strong> in the bottom bar to enter Teach Mode. Spring changes and side transitions are flagged automatically. Variation splits show inline so nothing gets missed mid-class.',
+   visual:_ob.screen(`
+    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:7px 10px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:0.63rem;font-weight:700;color:var(--text)">🎙️ Teach Mode</span>
+      <span style="font-size:0.54rem;padding:2px 6px;border-radius:8px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-weight:700">LIVE</span>
+    </div>
+    <div style="margin:7px;padding:5px 8px;border-radius:6px;background:rgba(126,200,80,0.1);border:1px solid rgba(126,200,80,0.28);font-size:0.59rem;color:var(--accent-text)">⚙️ Spring change → <strong>2W + 1G</strong></div>
+    <div style="margin:0 7px;padding:8px;border-radius:7px;background:var(--accent-light);border:1px solid var(--accent)">
+      <div style="font-size:0.68rem;font-weight:700;color:var(--accent-text);margin-bottom:5px">Scrambled Eggs</div>
+      <div style="display:flex;justify-content:space-between;font-size:0.6rem;margin-bottom:2px">
+        <span style="color:var(--accent-text)">▶ Stagger</span><span style="color:var(--accent);font-family:monospace;font-weight:700">0:45</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.6rem;opacity:0.6">
+        <span style="color:var(--accent-text)">Kick</span><span style="color:var(--accent);font-family:monospace">0:45</span>
+      </div>
+    </div>
+    <div style="margin:5px 7px 7px;padding:4px 8px;border-radius:5px;background:var(--surface);border:1px solid var(--border);font-size:0.58rem;color:var(--text3)">Next: Mermaid Crunch</div>`)},
+
+  // 7 — Custom moves
+  {title:'Custom moves',
+   desc:'Don\'t see a move you need? Tap <strong>+ variation</strong> and type a custom name for a quick one-off. Or open <strong>Menu → Moves</strong> to add a full custom move to your library.',
+   visual:_ob.screen(`
+    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:7px 10px">
+      <span style="font-size:0.64rem;font-weight:700;color:var(--text)">📚 Moves Library</span>
+    </div>
+    <div style="padding:6px 8px;border-bottom:1px solid var(--border)">
+      <div style="background:var(--surface);border:1px solid var(--accent);border-radius:6px;padding:4px 8px;font-size:0.61rem;color:var(--text);display:flex;gap:6px;align-items:center">
+        <span style="color:var(--text3)">🔍</span> Hip Hinge
+      </div>
+    </div>
+    <div style="padding:7px 10px;text-align:center;color:var(--text3);font-size:0.59rem;border-bottom:1px solid var(--border)">No moves found for "Hip Hinge"</div>
+    <div style="padding:8px 10px">
+      <div style="font-size:0.56rem;color:var(--text3);margin-bottom:5px">Add a custom move:</div>
+      <div style="display:flex;gap:5px;align-items:center">
+        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:5px;padding:4px 7px;font-size:0.6rem;color:var(--text)">Hip Hinge</div>
+        <div style="padding:4px 10px;border-radius:5px;background:var(--accent);color:#fff;font-size:0.6rem;font-weight:700;font-family:'Syne',sans-serif">+ Add</div>
+      </div>
+    </div>`)},
+
+  // 8 — All set
+  {title:'You\'re all set!',
+   desc:'You now know everything you need to plan and teach a great class. Find this guide anytime from <strong>Menu → Help</strong>. Happy teaching! 💚',
+   visual:_ob.screen(`
+    ${_ob.bar('MENU')}
+    <div style="padding:5px 7px;display:flex;flex-direction:column;gap:2px">
+      <div style="padding:5px 8px;border-radius:5px;font-size:0.6rem;color:var(--text2)">📋 Planner</div>
+      <div style="padding:5px 8px;border-radius:5px;font-size:0.6rem;color:var(--text2)">📁 Routines</div>
+      <div style="padding:5px 8px;border-radius:5px;font-size:0.6rem;color:var(--text2)">📚 Moves</div>
+      <div style="padding:5px 8px;border-radius:5px;background:var(--accent-light);border:1px solid var(--accent);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:0.6rem;color:var(--accent-text);font-weight:700">❓ Help</span>
+        <span style="font-size:0.53rem;padding:1px 5px;border-radius:7px;background:var(--accent);color:#fff">You are here</span>
+      </div>
+    </div>
+    <div style="margin:3px 7px 8px;padding:7px;border-radius:7px;background:var(--accent);text-align:center">
+      <span style="font-size:0.64rem;font-weight:700;color:#fff;font-family:'Syne',sans-serif">🎉 Happy teaching!</span>
+    </div>`)}
+];
+let onboardIdx=0;
+
+function openOnboarding(){
+  onboardIdx=0;
+  onboardRender();
+  document.getElementById('onboardOv').classList.add('open');
+}
+function closeOnboarding(){
+  document.getElementById('onboardOv').classList.remove('open');
+  sv('bb_onboarded',true);
+}
+function onboardRender(){
+  const s=ONBOARD_SLIDES[onboardIdx];
+  const total=ONBOARD_SLIDES.length;
+  const pct=Math.round(((onboardIdx+1)/total)*100);
+  const isFirst=onboardIdx===0;
+  const isLast=onboardIdx===total-1;
+
+  document.getElementById('onboardSlide').innerHTML=`
+    <div class="onboard-progress"><div class="onboard-progress-fill" style="width:${pct}%"></div></div>
+    <div class="ob-visual">${s.visual}</div>
+    <h2 class="onboard-title">${s.title}</h2>
+    <p class="onboard-desc">${s.desc}</p>`;
+
+  document.getElementById('onboardDots').innerHTML=ONBOARD_SLIDES.map((_,i)=>
+    `<span class="onboard-dot${i===onboardIdx?' active':''}" onclick="onboardGo(${i})"></span>`).join('');
+
+  const prevBtn=isFirst?'':`<button class="onboard-prev" onclick="onboardGo(${onboardIdx-1})">← Back</button>`;
+  const skipBtn=isLast?'':`<button class="onboard-skip" onclick="closeOnboarding()">Skip</button>`;
+  const nextBtn=isLast
+    ?`<button class="onboard-finish" onclick="closeOnboarding()">Get started →</button>`
+    :`<button class="onboard-next" onclick="onboardGo(${onboardIdx+1})">Next →</button>`;
+
+  document.getElementById('onboardNav').innerHTML=
+    isFirst?`<span></span>${skipBtn}${nextBtn}`:`${prevBtn}${skipBtn}${nextBtn}`;
+}
+function onboardGo(idx){
+  onboardIdx=Math.max(0,Math.min(ONBOARD_SLIDES.length-1,idx));
+  onboardRender();
+}
+
+// Show on first visit (after a short delay so the app loads first)
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!ld('bb_onboarded',false)){
+    setTimeout(openOnboarding,600);
+  }
+});
+
 sbInit();
 initAdmin();
 window.addEventListener('hashchange', initAdmin);
 </script>
+
+<!-- ═══════════════════════ ONBOARDING ═══════════════════════ -->
+<div class="onboard-overlay" id="onboardOv" onclick="if(event.target===this)closeOnboarding()">
+  <div class="onboard-card">
+    <div class="onboard-slide-area" id="onboardSlide"></div>
+    <div class="onboard-dots" id="onboardDots"></div>
+    <div class="onboard-nav" id="onboardNav"></div>
+  </div>
+</div>
 
 <!-- ═══════════════════════ ADMIN OVERLAY ═══════════════════════ -->
 <div id="adminOverlay" style="display:none">
