@@ -1532,6 +1532,27 @@ function getMachSpringDesc(moveId){
   if(machSpring)return machSpring;
   return getMoveById(moveId)?.springDesc||'';
 }
+// Render spring dots+label for a move using the current class machine's colours.
+// Used in both move pickers and move cards so colours always match the machine definition.
+function pickerSpringHTML(moveId,sz){
+  const desc=getMachSpringDesc(moveId);
+  if(!desc)return'';
+  const parsed=parseSpringDesc(desc);
+  if(parsed){
+    const colorMap=getMachineSpringColorMap();
+    const known=parsed.filter(({code})=>colorMap[code]);
+    if(known.length){
+      const dots=known.map(({code,count})=>{
+        const col=colorMap[code];
+        return Array(Math.min(count,4)).fill(0).map(()=>
+          `<span class="sdot" style="width:${sz}px;height:${sz}px;background:${col.hex};border-color:${col.border};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`
+        ).join('');
+      }).join('');
+      return dots+`<span style="font-size:${Math.round(sz*1.3)}px;color:var(--text2);margin-left:2px">${desc}</span>`;
+    }
+  }
+  return`<span style="font-size:${Math.round(sz*1.3)}px;color:var(--text2)">${desc}</span>`;
+}
 // Parse "1W", "Min 3W", "4W+1G", "Min 1B+2W" → [{code,count}]
 // Takes only the first segment (before OR, ·) to handle complex multi-option descs
 function parseSpringDesc(desc){
@@ -3065,10 +3086,9 @@ function renderOpts(){
   c.innerHTML=html;
 }
 function moHTML(m,top){
-  const mBaseSprings=spToSprings(m.sp||"medium");
   const tags=(m.tags||[]).filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
   const pos=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆":"⬇"}</span>`:"";
-  const springTxt=m.springDesc?`<span style="font-size:0.59rem;color:var(--text2)">${m.springDesc}</span>`:springDisplay(mBaseSprings,9);
+  const springTxt=pickerSpringHTML(m.id,9);
   const cableBadge=m.cables&&m.cables!=="none"?`<span style="font-size:0.56rem;padding:1px 4px;border-radius:3px;background:${m.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff">${m.cables==="red"?"🔴":"⚫"}</span>`:"";
   return`<div class="mo${top?" top":""}" onclick="addMove(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${cableBadge}${springTxt}</div></div><span class="plus">+</span></div>`;
 }
@@ -3123,7 +3143,7 @@ function renderSheetOpts(){
 function sheetMoHTML(m,top){
   const tags=(m.tags||[]).filter(t=>!t.startsWith("side:")).map(t=>{const c=t==="bilateral"?"bilateral":["core","lower","upper","full","oblique"].includes(t)?t:"";return`<span class="tag ${c}">${t}</span>`;}).join("");
   const pos=m.pos&&m.pos!=="both"?`<span class="pos-badge">${m.pos==="front"?"⬆":"⬇"}</span>`:"";
-  const springTxt=m.springDesc?`<span style="font-size:0.64rem;color:var(--text2)">${m.springDesc}</span>`:springDisplay(spToSprings(m.sp||"medium"),9);
+  const springTxt=pickerSpringHTML(m.id,9);
   return`<div class="mo${top?" top":""}" onclick="addMoveFromSheet(${m.id})"><div style="flex:1;min-width:0"><div class="mo-name">${moveName(m)}</div><div class="mo-sub">${tags}${pos}${springTxt}</div></div><span class="plus">+</span></div>`;
 }
 function addMoveFromSheet(id){
@@ -3965,9 +3985,8 @@ function adminRenderMovesBody(){
   const archived=adminGetArchived();
   const allVisible=allMoves().filter(m=>!archived.includes(m.id));
   const filtered=adminFilterSort(allVisible);
-  const activeMachines=adminGetMachineDefs().filter(m=>m.active);
   const tbody=document.getElementById('adminMovesBody');
-  if(tbody)tbody.innerHTML=filtered.map(m=>adminMoveRow(m,activeMachines)).join('');
+  if(tbody)tbody.innerHTML=filtered.map(m=>adminMoveRow(m)).join('');
   const info=document.querySelector('.admin-tbar-info');
   if(info)info.textContent=`${filtered.length} of ${allVisible.length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived`;
 }
@@ -3982,10 +4001,6 @@ function renderMasterMoves(el){
   const archived=adminGetArchived();
   const moves=allMoves().filter(m=>!archived.includes(m.id));
   const filtered=adminFilterSort(moves);
-  const activeMachines=adminGetMachineDefs().filter(m=>m.active);
-  const springHeaders=activeMachines.map(mach=>
-    `<th style="min-width:100px">Springs<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(${esc(mach.shortCode||mach.name)})</span></th>`
-  ).join('');
   el.innerHTML=`
     <div class="admin-tbar">
       <div class="admin-tbar-info">${filtered.length} of ${moves.length} moves · ${S.approved.filter(id=>!archived.includes(id)).length} active · ${archived.length} archived</div>
@@ -4013,7 +4028,7 @@ function renderMasterMoves(el){
           ${thSort('name','Name')}
           ${thSort('cat','Category')}
           <th style="min-width:118px">Stance</th>
-          ${springHeaders}
+          <th style="min-width:120px">Springs</th>
           <th style="min-width:80px">Default<br>Time</th>
           <th style="min-width:130px">Position</th>
           <th style="min-width:110px">Direction Styles</th>
@@ -4022,12 +4037,12 @@ function renderMasterMoves(el){
           ${thSort('active','Active')}
           <th></th>
         </tr></thead>
-        <tbody id="adminMovesBody">${filtered.map(m=>adminMoveRow(m,activeMachines)).join('')}</tbody>
+        <tbody id="adminMovesBody">${filtered.map(m=>adminMoveRow(m)).join('')}</tbody>
       </table>
     </div>`;
 }
 
-function adminMoveRow(m,activeMachines){
+function adminMoveRow(m){
   const active=sbIsApproved(m.id);
   const stance=adminGetStance(m);
   const pos=m.pos||'both';
@@ -4039,18 +4054,17 @@ function adminMoveRow(m,activeMachines){
   const posOpts=POS_OPTIONS.map(o=>`<option value="${o.v}"${pos===o.v?' selected':''}>${o.label}</option>`).join('');
   const catOpts=['core','oblique','lower','upper','full'].map(c=>`<option value="${c}"${m.cat===c?' selected':''}>${c}</option>`).join('');
 
-  const springCells=activeMachines.map(mach=>{
-    const val=adminGetMachSpring(m.id,mach.id);
-    const mid=`mspring-${mach.id}-`;
-    return`<td><span class="aname-display" id="${mid}d-${m.id}" onclick="adminStartEditMachSpring(${m.id},'${mach.id}')" style="font-family:monospace;font-size:0.72rem">${esc(val||'—')}</span><input class="aname-input" id="${mid}i-${m.id}" value="${esc(val)}" placeholder="e.g. 1W" onblur="adminSaveMachSpring(${m.id},'${mach.id}',this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')adminCancelEditMachSpring(${m.id},'${mach.id}');"></td>`;
-  }).join('');
+  const springSummary=adminGetMachineDefs()
+    .filter(mach=>{const v=adminGetMachSpring(m.id,mach.name);return v&&v.trim();})
+    .map(mach=>`${esc(mach.shortCode||mach.name.slice(0,2))}: ${esc(adminGetMachSpring(m.id,mach.name))}`)
+    .join(' · ');
 
   const setup   = moveDetails[m.id]?.setup    ?? m.setup    ?? '';
   const cues    = moveDetails[m.id]?.cues     ?? m.cues     ?? '';
   const mistakes= moveDetails[m.id]?.mistakes ?? m.mistakes ?? '';
   const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
   const defSecs = adminGetDefaultTime(m);
-  const colspan = 13 + activeMachines.length;
+  const colspan = 13;
   // Read directly — don't use adminGetVarList here as that would init adminVarState during render
   const varChips = normalizeVars(m.variations).map((v,i)=>
     `<span class="admin-var-chip"><span class="avc-name">${esc(v)}</span><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})" type="button">✕</button></span>`
@@ -4067,7 +4081,7 @@ function adminMoveRow(m,activeMachines){
     </td>
     <td><select class="ac" onchange="adminField(${m.id},'cat',this.value)">${catOpts}</select></td>
     <td><select class="ac" onchange="adminField(${m.id},'stance',this.value,true)">${stanceOpts}</select></td>
-    ${springCells}
+    <td style="font-family:monospace;font-size:0.7rem;color:var(--text2);white-space:nowrap">${springSummary||'—'}</td>
     <td><div class="dur-inline"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},-15)">▾</button><input class="dur-num" type="text" value="${secsToTime(defSecs)}" onblur="adminSetDefaultTime(${m.id},this.value)" onkeydown="if(event.key==='Enter')this.blur()" style="width:40px"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},15)">▴</button></div></td>
     <td><select class="ac" onchange="adminField(${m.id},'pos',this.value)">${posOpts}</select></td>
     <td><div class="acb-group">
