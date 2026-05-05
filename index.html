@@ -1512,15 +1512,19 @@ function springBorderFromHex(hex){
   const b=parseInt((hex||'#888').slice(5,7),16)||136;
   return(0.299*r+0.587*g+0.114*b)/255>0.55?'#aaa':'#555';
 }
-// Build shortCode → {hex,border} from the active machine's spring list
+// Build shortCode → {hex,border} from the active machine's spring list.
+// Matches S.machine by name OR by id to handle both storage formats.
 function getMachineSpringColorMap(){
   const defs=adminGetMachineDefs();
-  const mach=defs.find(d=>d.name===S.machine)||defs.find(d=>d.active)||defs[0];
+  const mach=defs.find(d=>d.name===S.machine||d.id===S.machine)||defs.find(d=>d.active)||defs[0];
   const map={};
   (mach?.springs||[]).forEach(s=>{
+    if(!s.shortCode)return;
     const k=s.shortCode.toUpperCase();
-    map[k]={hex:s.hex,border:springBorderFromHex(s.hex)};
+    const hex=s.hex||'#cccccc';
+    map[k]={hex,border:springBorderFromHex(hex)};
   });
+  // Fallbacks for standard codes if machine has no definition for them
   if(!map.W)map.W={hex:'#FFFFFF',border:'#aaa'};
   if(!map.G)map.G={hex:'#888888',border:'#666'};
   if(!map.B)map.B={hex:'#222222',border:'#555'};
@@ -1545,7 +1549,7 @@ function pickerSpringHTML(moveId,sz){
       const dots=known.map(({code,count})=>{
         const col=colorMap[code];
         return Array(Math.min(count,4)).fill(0).map(()=>
-          `<span class="sdot" style="width:${sz}px;height:${sz}px;background:${col.hex};border-color:${col.border};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`
+          `<span class="sdot" style="width:${sz}px;height:${sz}px;background:${col.hex};border:1.5px solid ${col.border}"></span>`
         ).join('');
       }).join('');
       return dots+`<span style="font-size:${Math.round(sz*1.3)}px;color:var(--text2);margin-left:2px">${desc}</span>`;
@@ -1565,18 +1569,17 @@ function parseSpringDesc(desc){
 }
 // Spring display for teach mode: parse shortcodes into coloured dots + keep label
 function teachSpringDisplay(m){
-  if(m.springs)return springDisplay(m.springs,14);
+  const colorMap=getMachineSpringColorMap();
   const desc=getMachSpringDesc(m.id);
   if(desc){
     const parsed=parseSpringDesc(desc);
     if(parsed){
-      const colorMap=getMachineSpringColorMap();
       const known=parsed.filter(({code})=>colorMap[code]);
       if(known.length){
         const dots=known.map(({code,count})=>{
           const col=colorMap[code];
           return Array(Math.min(count,6)).fill(0).map(()=>
-            `<span class="sdot" style="width:14px;height:14px;background:${col.hex};border-color:${col.border}"></span>`
+            `<span class="sdot" style="width:14px;height:14px;background:${col.hex};border:1.5px solid ${col.border}"></span>`
           ).join('');
         }).join('');
         return dots+`<span class="slabel" style="font-size:0.7rem;margin-left:3px;color:var(--text2)">${desc}</span>`;
@@ -1584,6 +1587,7 @@ function teachSpringDisplay(m){
     }
     return`<span style="font-size:0.78rem;color:var(--text2)">${desc}</span>`;
   }
+  if(m.springs)return springDisplay(m.springs,14);
   return springDisplay(effectiveSprings(m),14);
 }
 function getLvl(sp){const k=SM[S.sys][sp]||SM[S.sys]["light"];return SS[S.sys].levels.find(l=>l.k===k)||SS[S.sys].levels[0];}
@@ -2959,14 +2963,15 @@ function renderMoves(){
                   const colorMap=getMachineSpringColorMap();
                   const known=parsed.filter(({code})=>colorMap[code]);
                   if(known.length){
-                    const dots=known.map(({code,count})=>{const col=colorMap[code];return Array(Math.min(count,4)).fill(0).map(()=>`<span class="sdot" style="width:10px;height:10px;background:${col.hex};border-color:${col.border};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`).join('');}).join('');
+                    const dots=known.map(({code,count})=>{const col=colorMap[code];return Array(Math.min(count,4)).fill(0).map(()=>`<span class="sdot" style="width:10px;height:10px;background:${col.hex};border:1.5px solid ${col.border}"></span>`).join('');}).join('');
                     return dots+`<span class="slabel" style="font-size:0.63rem">${desc}</span>`;
                   }
                 }
                 return`<span class="slabel" style="font-size:0.63rem">${desc}</span>`;
               }
               const springs=effectiveSprings(m);
-              const dots=springs.length?springs.map(s=>`<span class="sdot" style="width:10px;height:10px;background:${SPRING_COLORS[s.color]?.hex||'#fff'};border-color:${SPRING_COLORS[s.color]?.border||'#999'};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`).join(""):"";
+              const colorMap2=getMachineSpringColorMap();
+              const dots=springs.length?springs.map(s=>{const col=colorMap2[s.color?.toUpperCase()]||{hex:SPRING_COLORS[s.color]?.hex||'#aaa',border:SPRING_COLORS[s.color]?.border||'#888'};return`<span class="sdot" style="width:10px;height:10px;background:${col.hex};border:1.5px solid ${col.border}"></span>`;}).join(""):"";
               return dots+(springs.length?`<span class="slabel">${springLabel(springs)}</span>`:"");
             })()}${base&&base.cables&&base.cables!=="none"?`<span class="badge" style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:${base.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff;margin-left:2px">${base.cables==="red"?"🔴 red":"⚫ black"}</span>`:""}</div>
           </div>
@@ -3067,7 +3072,7 @@ function renderOpts(){
   const cat=document.getElementById("mCat").value;
   const block=S.blocks[S.activeIdx];
   const last=block&&block.moves.length>0?block.moves[block.moves.length-1]:null;
-  let ms=allMoves().filter(m=>sbIsApproved(m.id));
+  let ms=allMoves().filter(m=>sbIsApproved(m.id)&&adminGetMachAvail(m.id,S.machine));
   if(search)ms=ms.filter(m=>m.name.toLowerCase().includes(search));
   if(cat)ms=ms.filter(m=>m.cat===cat);
   // If block name implies a side (Left Legs/Right Legs), filter to matching side moves
@@ -3121,7 +3126,7 @@ function renderSheetOpts(){
   const cat=document.getElementById("sheetCat").value;
   const block=S.blocks[S.activeIdx];
   const last=block&&block.moves.length?block.moves[block.moves.length-1]:null;
-  let ms=allMoves().filter(m=>sbIsApproved(m.id));
+  let ms=allMoves().filter(m=>sbIsApproved(m.id)&&adminGetMachAvail(m.id,S.machine));
   if(search)ms=ms.filter(m=>m.name.toLowerCase().includes(search));
   if(cat)ms=ms.filter(m=>m.cat===cat);
   if(!search&&S._blockSide)ms=ms.filter(m=>m.side===S._blockSide||m.side==="bilateral");
@@ -3883,8 +3888,16 @@ function adminCables(id,key,val){
 // Per-machine spring descriptions
 function adminGetMachSpring(moveId,machId){
   const ms=moveDetails[moveId]?.machSprings||{};
+  // Direct lookup first (keys may be stored by name or by id)
   if(ms[machId]!==undefined) return ms[machId];
-  if(machId==='megaformer'){const m=allMoves().find(m=>m.id===moveId);return m?.springDesc||'';}
+  // Resolve the machine def to check both name and id as keys
+  const def=adminGetMachineDefs().find(d=>d.id===machId||d.name===machId);
+  if(def){
+    if(ms[def.name]!==undefined)return ms[def.name];
+    if(ms[def.id]!==undefined)return ms[def.id];
+    // Megaformer special: fall back to global springDesc
+    if(def.id==='megaformer'){const m=allMoves().find(m=>String(m.id)===String(moveId));return m?.springDesc||'';}
+  }
   return'';
 }
 function adminSaveMachSpring(moveId,machId,inp){
@@ -3910,14 +3923,18 @@ function adminCancelEditMachSpring(moveId,machId){
 function adminGetMachAvail(moveId,machName){
   const av=moveDetails[moveId]?.machAvail;
   if(av&&av[machName]!==undefined)return av[machName];
-  // Default: available if spring data exists for this machine
-  return!!adminGetMachSpring(moveId,machName);
+  // If explicit spring data exists for this machine, it's available
+  if(adminGetMachSpring(moveId,machName))return true;
+  // Default: active machines are available (opt-out); coming-soon/off machines require opt-in
+  const def=adminGetMachineDefs().find(d=>d.name===machName||d.id===machName);
+  return !!(def?.active);
 }
 function adminSaveMachAvail(moveId,machName,avail){
   if(!moveDetails[moveId])moveDetails[moveId]={};
   if(!moveDetails[moveId].machAvail)moveDetails[moveId].machAvail={};
   moveDetails[moveId].machAvail[machName]=avail;
   sv('bb_movedetails',moveDetails);
+  sbUpsertMoveById(moveId);
   // Toggle spring input visibility in the row
   const safeId=machName.replace(/[^a-z0-9]/gi,'_');
   const row=document.getElementById(`mavail-${moveId}-${safeId}`);
@@ -3934,6 +3951,7 @@ function adminSaveMachAvailSpring(moveId,machName,inp){
   if(!moveDetails[moveId].machSprings)moveDetails[moveId].machSprings={};
   moveDetails[moveId].machSprings[machName]=val;
   sv('bb_movedetails',moveDetails);
+  sbUpsertMoveById(moveId);
 }
 
 // Position internal → display
@@ -4028,7 +4046,6 @@ function renderMasterMoves(el){
           ${thSort('name','Name')}
           ${thSort('cat','Category')}
           <th style="min-width:118px">Stance</th>
-          <th style="min-width:120px">Springs</th>
           <th style="min-width:80px">Default<br>Time</th>
           <th style="min-width:130px">Position</th>
           <th style="min-width:110px">Direction Styles</th>
@@ -4054,17 +4071,12 @@ function adminMoveRow(m){
   const posOpts=POS_OPTIONS.map(o=>`<option value="${o.v}"${pos===o.v?' selected':''}>${o.label}</option>`).join('');
   const catOpts=['core','oblique','lower','upper','full'].map(c=>`<option value="${c}"${m.cat===c?' selected':''}>${c}</option>`).join('');
 
-  const springSummary=adminGetMachineDefs()
-    .filter(mach=>{const v=adminGetMachSpring(m.id,mach.name);return v&&v.trim();})
-    .map(mach=>`${esc(mach.shortCode||mach.name.slice(0,2))}: ${esc(adminGetMachSpring(m.id,mach.name))}`)
-    .join(' · ');
-
   const setup   = moveDetails[m.id]?.setup    ?? m.setup    ?? '';
   const cues    = moveDetails[m.id]?.cues     ?? m.cues     ?? '';
   const mistakes= moveDetails[m.id]?.mistakes ?? m.mistakes ?? '';
   const notes   = moveDetails[m.id]?.notes    ?? m.notes    ?? '';
   const defSecs = adminGetDefaultTime(m);
-  const colspan = 13;
+  const colspan = 12;
   // Read directly — don't use adminGetVarList here as that would init adminVarState during render
   const varChips = normalizeVars(m.variations).map((v,i)=>
     `<span class="admin-var-chip"><span class="avc-name">${esc(v)}</span><button class="avc-rm" onclick="adminRemoveVar(${m.id},${i})" type="button">✕</button></span>`
@@ -4081,7 +4093,6 @@ function adminMoveRow(m){
     </td>
     <td><select class="ac" onchange="adminField(${m.id},'cat',this.value)">${catOpts}</select></td>
     <td><select class="ac" onchange="adminField(${m.id},'stance',this.value,true)">${stanceOpts}</select></td>
-    <td style="font-family:monospace;font-size:0.7rem;color:var(--text2);white-space:nowrap">${springSummary||'—'}</td>
     <td><div class="dur-inline"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},-15)">▾</button><input class="dur-num" type="text" value="${secsToTime(defSecs)}" onblur="adminSetDefaultTime(${m.id},this.value)" onkeydown="if(event.key==='Enter')this.blur()" style="width:40px"><button class="dur-arrow" onclick="adminAdjDefaultTime(${m.id},15)">▴</button></div></td>
     <td><select class="ac" onchange="adminField(${m.id},'pos',this.value)">${posOpts}</select></td>
     <td><div class="acb-group">
