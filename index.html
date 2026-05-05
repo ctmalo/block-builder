@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -738,7 +738,6 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 }
 .mmd-item.cta:hover{filter:brightness(1.05);}
 .mmd-divider{height:1px;background:var(--border);margin:6px 4px;}
-.mmd-item-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;}
 .mmd-footer{padding:10px 8px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;}
 .mmd-foot-btn{flex:1;background:var(--card2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--radius-sm);padding:8px 4px;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;text-align:center;}
 .mmd-foot-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -994,35 +993,21 @@ select.ac{cursor:pointer;}
     <button class="mmd-close" onclick="closeMobileMenu()">✕</button>
   </div>
   <div class="mmd-nav">
-    <button class="mmd-item cta" onclick="openWizard();closeMobileMenu()">
-      <span class="mmd-item-icon">🟩</span> New Class
-    </button>
+    <button class="mmd-item cta" onclick="openWizard();closeMobileMenu()">New Class</button>
     <div class="mmd-divider"></div>
-    <button class="mmd-item" onclick="showPage('planner');closeMobileMenu()">
-      <span class="mmd-item-icon">📋</span> Planner
-    </button>
-    <button class="mmd-item" onclick="showPage('routines');closeMobileMenu()">
-      <span class="mmd-item-icon">📁</span> Routines
-    </button>
-    <button class="mmd-item" onclick="showPage('library');closeMobileMenu()">
-      <span class="mmd-item-icon">📚</span> Moves
-    </button>
+    <button class="mmd-item" onclick="showPage('planner');closeMobileMenu()">Planner</button>
+    <button class="mmd-item" onclick="showPage('routines');closeMobileMenu()">Routines</button>
+    <button class="mmd-item" onclick="showPage('library');closeMobileMenu()">Moves</button>
     <div class="mmd-divider"></div>
-    <button class="mmd-item" onclick="openStudentsSheet();closeMobileMenu()">
-      <span class="mmd-item-icon">👥</span> Students in Class
-    </button>
-    <button class="mmd-item" onclick="showPage('routines');closeMobileMenu()">
-      <span class="mmd-item-icon">🕐</span> History
-    </button>
-    <button class="mmd-item" onclick="openNotes();closeMobileMenu()">
-      <span class="mmd-item-icon">📋</span> Notes
-    </button>
+    <button class="mmd-item" onclick="openStudentsSheet();closeMobileMenu()">Students in Class</button>
+    <button class="mmd-item" onclick="showPage('routines');closeMobileMenu()">History</button>
+    <button class="mmd-item" onclick="openNotes();closeMobileMenu()">Notes</button>
   </div>
   <div class="mmd-footer">
-    <button class="mmd-foot-btn" onclick="openStudio();closeMobileMenu()">⚙️ Studio</button>
-    <button class="mmd-foot-btn" onclick="toggleTheme()">☀️ Theme</button>
-    <button class="mmd-foot-btn" onclick="doPrint();closeMobileMenu()">🖨 Print</button>
-    <button class="mmd-foot-btn" onclick="openOnboarding();closeMobileMenu()">❓ Help</button>
+    <button class="mmd-foot-btn" onclick="openStudio();closeMobileMenu()">Studio</button>
+    <button class="mmd-foot-btn" id="themeBtnMobile" onclick="toggleTheme()">🌙</button>
+    <button class="mmd-foot-btn" onclick="doPrint();closeMobileMenu()">Print</button>
+    <button class="mmd-foot-btn" onclick="openOnboarding();closeMobileMenu()">Help</button>
   </div>
 </div>
 
@@ -1148,7 +1133,7 @@ select.ac{cursor:pointer;}
       <div id="sidebarRoutines"><p style="color:var(--text3);font-size:0.71rem">No saved routines yet.</p></div>
     </div>
     <div class="sb" style="border-top:1px solid var(--border);padding-top:12px;margin-top:auto">
-      <button class="btn sec sm" style="width:100%" onclick="openOnboarding()">❓ Help / Tour</button>
+      <button class="btn sec sm" style="width:100%" onclick="openOnboarding()">Help / Tour</button>
     </div>
   </aside>
 
@@ -1422,12 +1407,19 @@ if(window.location.hash === '#ducky-plank'){
 // ════════════════════════════════════════════════
 // THEME
 // ════════════════════════════════════════════════
-function getSystemTheme(){return window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
-function applyTheme(t){document.documentElement.setAttribute('data-theme',t);document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';sv('bb_theme',t);}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  // Desktop nav icon
+  const btn=document.getElementById('themeBtn');
+  if(btn)btn.textContent=t==='dark'?'☀️':'🌙';
+  // Mobile menu footer icon
+  const mBtn=document.getElementById('themeBtnMobile');
+  if(mBtn)mBtn.textContent=t==='dark'?'☀️':'🌙';
+  sv('bb_theme',t);
+}
 function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');applyTheme(c==='dark'?'light':'dark');}
-// init theme
-(()=>{const saved=ld('bb_theme',null);applyTheme(saved||getSystemTheme());})();
-window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{if(!ld('bb_theme',null))applyTheme(e.matches?'dark':'light');});
+// init theme — default light; only use saved pref after first visit
+(()=>{const saved=ld('bb_theme',null);applyTheme(saved||'light');})();
 
 // ════════════════════════════════════════════════
 // WAKE LOCK
