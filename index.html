@@ -454,9 +454,10 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   .mobile-actions{display:none!important;}
   .teach-fab{display:none!important;}
 
-  /* App shell: account for bottom nav (56px) */
+  /* App shell: account for notch at top, bottom nav (56px) at bottom */
   .app-shell{
     height:100dvh;
+    padding-top:env(safe-area-inset-top);
     padding-bottom:calc(56px + env(safe-area-inset-bottom));
   }
 
