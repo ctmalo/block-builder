@@ -66,7 +66,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 /* ── NAV ── */
 .nav{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;position:sticky;top:0;z-index:100;justify-content:space-between;gap:8px;}
 .nav-left{display:flex;align-items:center;gap:0;}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-right:22px;color:var(--text);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-right:22px;color:var(--text);display:flex;align-items:center;gap:8px;}
 .logo span{color:var(--accent);}
 .nav-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0 13px;height:52px;font-family:'DM Sans',sans-serif;font-size:0.79rem;color:var(--text2);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:4px;}
 .nav-tab:hover{color:var(--text);}
@@ -313,7 +313,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 .onboard-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.35s ease;}
 .ob-visual{display:flex;justify-content:center;width:100%;pointer-events:none;user-select:none;}
 .ob-screen{border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.22);border:1px solid var(--border2);width:240px;text-align:left;font-family:'Inter','Helvetica Neue',sans-serif;}
-.onboard-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);line-height:1.25;margin:0;}
+.onboard-title{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','DM Sans',sans-serif;font-weight:700;font-size:1.55rem;color:var(--text);line-height:1.3;margin:0;}
 .onboard-desc{font-size:0.83rem;color:var(--text2);line-height:1.65;margin:0;max-width:380px;text-align:center;}
 .onboard-dots{display:flex;gap:7px;justify-content:center;padding:4px 0 2px;}
 .onboard-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:all 0.2s;cursor:pointer;}
@@ -330,7 +330,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
 @media(max-width:480px){
   .onboard-slide-area{padding:16px 18px 10px;gap:10px;}
   .ob-screen{width:210px;}
-  .onboard-title{font-size:1rem;}
+  .onboard-title{font-size:1.3rem;}
   .onboard-desc{font-size:0.79rem;}
   .onboard-nav{padding:10px 14px 14px;}
 }
@@ -719,7 +719,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   display:flex;align-items:center;justify-content:space-between;
   padding:16px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
 }
-.mmd-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);}
+.mmd-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);display:flex;align-items:center;gap:7px;}
 .mmd-logo span{color:var(--accent);}
 .mmd-close{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:5px 11px;font-size:0.8rem;cursor:pointer;min-height:36px;}
 .mmd-close:hover{border-color:var(--accent3);color:var(--accent3);}
@@ -881,16 +881,25 @@ select.ac{cursor:pointer;}
 .admin-settings-scroll{flex:1;overflow:auto;padding:20px 24px;}
 .machine-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:12px;}
 .machine-card-header{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
-.mch-row{display:flex;align-items:center;gap:8px;}
-.machine-name-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 11px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);}
+.mch-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.machine-name-input{flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 11px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);}
 .machine-name-input:focus{outline:none;border-color:var(--accent);}
-.machine-code-input{width:72px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 9px;font-family:monospace;font-size:0.82rem;color:var(--accent);font-weight:700;}
+.machine-code-input{width:64px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:7px 9px;font-family:monospace;font-size:0.82rem;color:var(--accent);font-weight:700;}
 .machine-code-input:focus{outline:none;border-color:var(--accent);}
-.machine-style-select{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:6px 8px;font-family:inherit;font-size:0.78rem;color:var(--text2);cursor:pointer;flex-shrink:0;}
+.machine-style-select{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:6px 8px;font-family:inherit;font-size:0.78rem;color:var(--text2);cursor:pointer;flex:1;min-width:120px;}
 .machine-style-select:focus{outline:none;border-color:var(--accent);}
-.mach-state-group{display:flex;gap:10px;flex-shrink:0;align-items:center;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;}
-.mach-state-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.mach-state-label{font-size:0.6rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);white-space:nowrap;}
+.mach-state-group{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;flex-shrink:0;}
+.mach-state-item{display:flex;flex-direction:row;align-items:center;gap:6px;}
+.mach-state-label{font-size:0.67rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--text2);white-space:nowrap;}
+/* Machine Availability (admin detail row) */
+.mach-avail-section{margin-top:10px;}
+.mach-avail-title{font-size:0.62rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:7px;}
+.mach-avail-grid{display:flex;flex-direction:column;gap:4px;}
+.mach-avail-row{display:flex;align-items:center;gap:8px;padding:5px 9px;background:var(--card2);border-radius:6px;border:1px solid var(--border);}
+.mach-avail-name{font-size:0.72rem;color:var(--text);font-weight:500;min-width:110px;flex-shrink:0;}
+.mach-avail-status{font-size:0.62rem;color:var(--text3);margin-left:2px;}
+.mach-spring-in{background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:3px 7px;font-family:monospace;font-size:0.72rem;color:var(--text);width:80px;margin-left:4px;}
+.mach-spring-in:focus{outline:none;border-color:var(--accent);}
 .machine-springs-label{font-size:0.68rem;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:7px;}
 .spring-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
 .spring-item{display:flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;}
@@ -945,7 +954,7 @@ select.ac{cursor:pointer;}
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-left">
-    <div class="logo">block<span>builder</span></div>
+    <div class="logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block"><rect width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="4.5" y="4.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#111" text-anchor="middle" dominant-baseline="central">B</text><rect x="11" y="0" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="0" y="11" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="11" y="11" width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="15.5" y="15.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#F5F4F0" text-anchor="middle" dominant-baseline="central">B</text></svg>block<span>builder</span></div>
     <button class="nav-tab active" id="tab-planner" onclick="showPage('planner')">📋 Planner</button>
     <button class="nav-tab" id="tab-teach" onclick="openTeachMode()" style="display:none">▶ Teach</button>
     <button class="nav-tab" id="tab-routines" onclick="showPage('routines')">📁 Routines</button>
@@ -989,7 +998,7 @@ select.ac{cursor:pointer;}
 <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" onclick="closeMobileMenu()"></div>
 <div class="mobile-menu-drawer" id="mobileMenuDrawer">
   <div class="mmd-header">
-    <div class="mmd-logo">block<span>builder</span></div>
+    <div class="mmd-logo"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block"><rect width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="4.5" y="4.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#111" text-anchor="middle" dominant-baseline="central">B</text><rect x="11" y="0" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="0" y="11" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="11" y="11" width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="15.5" y="15.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#F5F4F0" text-anchor="middle" dominant-baseline="central">B</text></svg>block<span>builder</span></div>
     <button class="mmd-close" onclick="closeMobileMenu()">✕</button>
   </div>
   <div class="mmd-nav">
@@ -1270,7 +1279,7 @@ select.ac{cursor:pointer;}
 <div class="wizard-overlay" id="wizardOv">
   <div class="wizard">
     <h2>New Class</h2>
-    <p class="sub">Choose your workout style to load the right defaults.</p>
+    <p class="sub">Choose a fitness style to get started.</p>
     <div class="style-grid" id="styleGrid"></div>
     <div id="machineSection" style="display:none">
       <div style="font-family:'Syne',sans-serif;font-size:0.57rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Machine Type</div>
@@ -1492,8 +1501,8 @@ function springDisplay(springs,sz=11){
 // Canonical spring comparison key — uses springDesc when available so "Min 3W" ≠ "1W" even if both sp:"medium"
 function springKey(m){
   if(m.springs)return springLabel(m.springs);
-  const base=getMoveById(m.id);
-  if(base&&base.springDesc)return base.springDesc;
+  const desc=getMachSpringDesc(m.id);
+  if(desc)return desc;
   return springLabel(effectiveSprings(m));
 }
 // Compute a reasonable dot border colour from a hex background
@@ -1517,6 +1526,12 @@ function getMachineSpringColorMap(){
   if(!map.B)map.B={hex:'#222222',border:'#555'};
   return map;
 }
+// Return the spring description for the current class machine, falling back to global springDesc
+function getMachSpringDesc(moveId){
+  const machSpring=adminGetMachSpring(moveId,S.machine);
+  if(machSpring)return machSpring;
+  return getMoveById(moveId)?.springDesc||'';
+}
 // Parse "1W", "Min 3W", "4W+1G", "Min 1B+2W" → [{code,count}]
 // Takes only the first segment (before OR, ·) to handle complex multi-option descs
 function parseSpringDesc(desc){
@@ -1530,8 +1545,7 @@ function parseSpringDesc(desc){
 // Spring display for teach mode: parse shortcodes into coloured dots + keep label
 function teachSpringDisplay(m){
   if(m.springs)return springDisplay(m.springs,14);
-  const base=getMoveById(m.id);
-  const desc=base?.springDesc;
+  const desc=getMachSpringDesc(m.id);
   if(desc){
     const parsed=parseSpringDesc(desc);
     if(parsed){
@@ -2330,8 +2344,8 @@ function daysSince(dateStr){if(!dateStr)return999;return Math.floor((Date.now()-
 let wizStyle=null,wizMachine=null;
 function openWizard(){
   wizStyle=null;
-  const first=getAppMachines().find(m=>m.active);
-  wizMachine=first?first.id:"Megaformer";
+  wizMachine=null;
+  document.getElementById("wizMachCustom").value='';
   const sg=document.getElementById("styleGrid");
   sg.innerHTML=STYLES.map(s=>{
     if(s.coming) return`<div class="style-card coming" title="Coming soon">
@@ -2340,20 +2354,20 @@ function openWizard(){
       <div class="sc-desc">${s.desc}</div>
       <div style="font-size:0.62rem;color:var(--text3);margin-top:4px;font-family:'Syne',sans-serif;letter-spacing:1px;text-transform:uppercase">Coming soon</div>
     </div>`;
-    return`<div class="style-card${s.id==='lagree'?' sel':''}" onclick="selectWizStyle('${s.id}')">
+    return`<div class="style-card" onclick="selectWizStyle('${s.id}')">
       <div class="sc-icon">${s.icon}</div>
       <div class="sc-name">${s.name}</div>
       <div class="sc-desc">${s.desc}</div>
     </div>`;
   }).join("");
-  wizStyle="lagree";
-  renderWizMachines();
+  document.getElementById("machineSection").style.display="none";
   document.getElementById("wizardOv").classList.add("open");
 }
 function selectWizStyle(id){
   const style=STYLES.find(s=>s.id===id);
   if(!style||style.coming) return;
   wizStyle=id;
+  wizMachine=null; // reset so renderWizMachines auto-picks first active
   document.querySelectorAll(".style-card:not(.coming)").forEach(c=>c.classList.toggle("sel",c.onclick&&c.onclick.toString().includes(`'${id}'`)));
   renderWizMachines();
 }
@@ -2362,7 +2376,10 @@ function renderWizMachines(){
   const ms=document.getElementById("machineSection");
   if(!style||!style.hasMachine){ms.style.display="none";return;}
   ms.style.display="block";
-  document.getElementById("machineRow").innerHTML=getAppMachines().map(m=>{
+  const machines=getAppMachines();
+  // Auto-select first active machine if nothing chosen yet
+  if(!wizMachine){const first=machines.find(m=>m.active);wizMachine=first?first.id:null;}
+  document.getElementById("machineRow").innerHTML=machines.map(m=>{
     if(m.comingSoon) return`<button class="mach-btn cs" disabled title="Coming soon">${m.label}<span class="cs-tag">Coming Soon</span></button>`;
     return`<button class="mach-btn${wizMachine===m.id?" sel":""}" onclick="wizMachine='${m.id}';renderWizMachines()">${m.label}</button>`;
   }).join("");
@@ -2914,10 +2931,22 @@ function renderMoves(){
           <div class="move-info">
             <div class="move-name-row">${moveName(m)}${posBadge}${facingBadge}</div>
             <div class="move-meta">${tags}${(()=>{
+              const desc=getMachSpringDesc(m.id);
+              if(desc){
+                const parsed=parseSpringDesc(desc);
+                if(parsed){
+                  const colorMap=getMachineSpringColorMap();
+                  const known=parsed.filter(({code})=>colorMap[code]);
+                  if(known.length){
+                    const dots=known.map(({code,count})=>{const col=colorMap[code];return Array(Math.min(count,4)).fill(0).map(()=>`<span class="sdot" style="width:10px;height:10px;background:${col.hex};border-color:${col.border};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`).join('');}).join('');
+                    return dots+`<span class="slabel" style="font-size:0.63rem">${desc}</span>`;
+                  }
+                }
+                return`<span class="slabel" style="font-size:0.63rem">${desc}</span>`;
+              }
               const springs=effectiveSprings(m);
               const dots=springs.length?springs.map(s=>`<span class="sdot" style="width:10px;height:10px;background:${SPRING_COLORS[s.color]?.hex||'#fff'};border-color:${SPRING_COLORS[s.color]?.border||'#999'};display:inline-block;border-radius:50%;border:1.5px solid;vertical-align:middle"></span>`).join(""):"";
-              const txt=base&&base.springDesc?`<span class="slabel" style="font-size:0.63rem">${base.springDesc}</span>`:(springs.length?`<span class="slabel">${springLabel(springs)}</span>`:"");
-              return dots+txt;
+              return dots+(springs.length?`<span class="slabel">${springLabel(springs)}</span>`:"");
             })()}${base&&base.cables&&base.cables!=="none"?`<span class="badge" style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:${base.cables==="red"?"#c0392b":"#1a1a1a"};color:#fff;margin-left:2px">${base.cables==="red"?"🔴 red":"⚫ black"}</span>`:""}</div>
           </div>
           <div class="dur-inline"><button class="dur-arrow" onclick="adjMoveSecs(${S.activeIdx},${i},-15)">▾</button><input class="dur-num" type="text" value="${secsToTime(moveSecs(m))}" onblur="setMoveSecs(${S.activeIdx},${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="dur-arrow" onclick="adjMoveSecs(${S.activeIdx},${i},15)">▴</button></div>
@@ -3857,6 +3886,35 @@ function adminCancelEditMachSpring(moveId,machId){
   document.getElementById(`mspring-${machId}-i-${moveId}`).style.display='none';
   document.getElementById(`mspring-${machId}-d-${moveId}`).style.display='block';
 }
+// Per-machine availability (detail row — covers ALL machines, active or not)
+function adminGetMachAvail(moveId,machName){
+  const av=moveDetails[moveId]?.machAvail;
+  if(av&&av[machName]!==undefined)return av[machName];
+  // Default: available if spring data exists for this machine
+  return!!adminGetMachSpring(moveId,machName);
+}
+function adminSaveMachAvail(moveId,machName,avail){
+  if(!moveDetails[moveId])moveDetails[moveId]={};
+  if(!moveDetails[moveId].machAvail)moveDetails[moveId].machAvail={};
+  moveDetails[moveId].machAvail[machName]=avail;
+  sv('bb_movedetails',moveDetails);
+  // Toggle spring input visibility in the row
+  const safeId=machName.replace(/[^a-z0-9]/gi,'_');
+  const row=document.getElementById(`mavail-${moveId}-${safeId}`);
+  if(row){
+    const inp=row.querySelector('.mach-spring-in');
+    const na=row.querySelector('.mach-avail-na');
+    if(inp){inp.disabled=!avail;inp.style.display=avail?'':'none';}
+    if(na)na.style.display=avail?'none':'';
+  }
+}
+function adminSaveMachAvailSpring(moveId,machName,inp){
+  const val=inp.value.trim();
+  if(!moveDetails[moveId])moveDetails[moveId]={};
+  if(!moveDetails[moveId].machSprings)moveDetails[moveId].machSprings={};
+  moveDetails[moveId].machSprings[machName]=val;
+  sv('bb_movedetails',moveDetails);
+}
 
 // Position internal → display
 const POS_OPTIONS=[
@@ -4039,6 +4097,7 @@ function adminMoveRow(m,activeMachines){
         <div><div class="adf-label">Common Mistakes</div><textarea onblur="adminField(${m.id},'mistakes',this.value)">${esc(mistakes)}</textarea></div>
         <div><div class="adf-label">Notes</div><textarea onblur="adminField(${m.id},'notes',this.value)">${esc(notes)}</textarea></div>
         <div style="grid-column:1/-1"><div class="adf-label">Variations</div><div class="admin-var-section"><div id="avars-chips-${m.id}" style="display:contents">${varChips}</div><div style="display:inline-flex;align-items:center;gap:4px"><input class="admin-var-add" id="avars-inp-${m.id}" placeholder="Type name…" onkeydown="if(event.key==='Enter'||event.key==='Tab'){event.preventDefault();adminAddVar(${m.id},this.value,this);}"><button type="button" class="admin-var-addbtn" onclick="adminAddVar(${m.id},document.getElementById('avars-inp-${m.id}').value,document.getElementById('avars-inp-${m.id}'))">Add</button></div></div></div>
+        <div style="grid-column:1/-1"><div class="adf-label">Machine Availability</div><div class="mach-avail-grid">${adminGetMachineDefs().map(mach=>{const avail=adminGetMachAvail(m.id,mach.name);const spring=adminGetMachSpring(m.id,mach.name);const safeId=mach.name.replace(/[^a-z0-9]/gi,'_');const stateBadge=mach.active?'<span style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:var(--accent-light);color:var(--accent-text);font-weight:700">Active</span>':mach.comingSoon?'<span style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:var(--card2);color:var(--text3)">Soon</span>':'<span style="font-size:0.58rem;padding:1px 5px;border-radius:4px;background:var(--card2);color:var(--text3)">Off</span>';return`<div class="mach-avail-row" id="mavail-${m.id}-${safeId}"><span class="mach-avail-name">${esc(mach.name)}</span>${stateBadge}<label class="admin-toggle" title="Available for this machine"><input type="checkbox" ${avail?'checked':''} onchange="adminSaveMachAvail(${m.id},'${mach.name}',this.checked)"><span class="at-slider"></span></label><input class="mach-spring-in" value="${esc(spring)}" placeholder="e.g. 1W+1G" ${avail?'':'disabled'} style="display:${avail?'':'none'}" onblur="adminSaveMachAvailSpring(${m.id},'${mach.name}',this)" onkeydown="if(event.key==='Enter')this.blur();"><span class="mach-avail-na" style="display:${avail?'none':''};font-size:0.65rem;color:var(--text3)">—</span></div>`;}).join('')}</div></div>
       </div>
     </td>
   </tr>`;
@@ -4381,7 +4440,7 @@ const _ob={
   row(items){return `<div style="display:flex;gap:4px;flex-wrap:wrap">${items}</div>`;},
   chip(t,active){return `<span style="font-size:0.6rem;padding:3px 8px;border-radius:5px;${active?'background:var(--accent);color:#fff;font-weight:700':'background:var(--surface);border:1px solid var(--border);color:var(--text2)'}">${t}</span>`;},
   move(name,time,hl){return `<div style="background:${hl?'var(--accent-light)':'var(--surface)'};border:1px solid ${hl?'var(--accent)':'var(--border)'};border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:0.61rem;color:${hl?'var(--accent-text)':'var(--text)'};font-weight:${hl?'600':'400'}">${name}</span><span style="font-size:0.57rem;color:${hl?'var(--accent)':'var(--text3)'};font-family:monospace">${time}</span></div>`;},
-  bar(label){return `<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 10px;display:flex;align-items:center;gap:7px"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.75rem;color:var(--text)">block<span style="color:var(--accent)">builder</span></span><span style="margin-left:auto;font-size:0.55rem;padding:2px 6px;border-radius:8px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-weight:700">${label}</span></div>`;},
+  bar(label){return `<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 10px;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block"><rect width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="4.5" y="4.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#111" text-anchor="middle" dominant-baseline="central">B</text><rect x="11" y="0" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="0" y="11" width="9" height="9" rx="1.5" fill="#1a1a1a"/><rect x="11" y="11" width="9" height="9" rx="1.5" fill="#2d8a2d"/><text x="15.5" y="15.5" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="6.5" fill="#F5F4F0" text-anchor="middle" dominant-baseline="central">B</text></svg><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.75rem;color:var(--text)">block<span style="color:var(--accent)">builder</span></span><span style="margin-left:auto;font-size:0.55rem;padding:2px 6px;border-radius:8px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-weight:700">${label}</span></div>`;},
   screen(content){return `<div class="ob-screen" style="background:var(--card)">${content}</div>`;}
 };
 
