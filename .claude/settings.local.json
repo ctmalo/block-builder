@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(node -e ' *)",
-      "Bash(grep -n \"avars-\\\\${m.id}\\\\|admin-var-list\\\\|varChips\\\\|Add variation\" \"/Users/alicejenkins/Dropbox/My Mac \\(Alices-MacBook-Pro.local\\)/Desktop/BlockBuilder/index.html\")"
+      "Bash(grep -n \"avars-\\\\${m.id}\\\\|admin-var-list\\\\|varChips\\\\|Add variation\" \"/Users/alicejenkins/Dropbox/My Mac \\(Alices-MacBook-Pro.local\\)/Desktop/BlockBuilder/index.html\")",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(python3 -c \"import struct,zlib; print\\('stdlib ok'\\)\")",
+      "Bash(convert --version)"
     ]
   }
 }
