@@ -335,6 +335,26 @@ input[type="number"]::-webkit-inner-spin-button{opacity:1;}
   .onboard-nav{padding:10px 14px 14px;}
 }
 
+/* ── INSTALL BANNER ── */
+#installBanner{
+  display:none;width:100%;background:var(--surface);border-bottom:1px solid var(--border2);
+  padding:10px 14px 10px 16px;
+  flex-direction:column;gap:6px;
+  position:relative;z-index:99;
+  animation:bannerDrop 0.22s ease;
+}
+@keyframes bannerDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+#installBanner.visible{display:flex;}
+.install-banner-text{font-size:0.77rem;color:var(--text2);line-height:1.5;flex:1;}
+.install-banner-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.install-banner-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 13px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.71rem;cursor:pointer;white-space:nowrap;transition:filter 0.15s;}
+[data-theme="dark"] .install-banner-btn{color:#0e1a07;}
+.install-banner-btn:hover{filter:brightness(1.1);}
+.install-banner-dismiss{background:none;border:1px solid var(--border2);color:var(--text3);border-radius:6px;padding:5px 11px;font-family:inherit;font-size:0.71rem;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.install-banner-dismiss:hover{border-color:var(--text2);color:var(--text2);}
+/* Onboarding — last-slide home screen note */
+.ob-hs-note{margin-top:4px;padding:10px 13px;border-radius:9px;background:var(--accent-light);border:1px solid var(--accent);font-size:0.74rem;color:var(--accent-text);line-height:1.55;text-align:left;width:100%;max-width:380px;}
+
 /* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.18s;}
 .overlay.open{opacity:1;pointer-events:all;}
@@ -1082,6 +1102,16 @@ select.ac{cursor:pointer;}
 </div>
 
 <div class="app-shell">
+
+<!-- ══ INSTALL BANNER ══ -->
+<div id="installBanner">
+  <p class="install-banner-text">Block Builder is currently a web app — we're working on getting to the App Store! In the meantime, add it to your home screen for the best experience. 📱</p>
+  <div class="install-banner-row">
+    <span id="installBannerSub" style="font-size:0.72rem;color:var(--text3);flex:1">In Safari tap <strong style="color:var(--text2)">Share → Add to Home Screen</strong></span>
+    <button class="install-banner-btn" id="installBannerBtn" onclick="installBannerAction()" style="display:none">Install App</button>
+    <button class="install-banner-dismiss" onclick="dismissInstallBanner()">Got it</button>
+  </div>
+</div>
 
 <!-- ══ PLANNER ══ -->
 <div id="page-planner" class="page active">
@@ -4528,11 +4558,21 @@ function onboardRender(){
   const isFirst=onboardIdx===0;
   const isLast=onboardIdx===total-1;
 
+  // On the last slide, append the home-screen tip (unless already dismissed or installed)
+  const showHsNote=isLast
+    &&!ld('bb_hs_dismissed',false)
+    &&window.navigator.standalone!==true
+    &&!window.matchMedia('(display-mode: standalone)').matches;
+  const hsNoteHtml=showHsNote
+    ?`<div class="ob-hs-note">📱 <strong>Add to your home screen</strong> for the best experience.<br>Block Builder is a web app — we're working on the App Store!${_deferredInstall?'<br><button onclick="installBannerAction()" style="margin-top:8px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-family:\'Syne\',sans-serif;font-weight:700;font-size:0.72rem;cursor:pointer">Install App</button>':'<br><span style="color:var(--accent-text)">In Safari tap <strong>Share → Add to Home Screen</strong></span>'}</div>`
+    :'';
+
   document.getElementById('onboardSlide').innerHTML=`
     <div class="onboard-progress"><div class="onboard-progress-fill" style="width:${pct}%"></div></div>
     <div class="ob-visual">${s.visual}</div>
     <h2 class="onboard-title">${s.title}</h2>
-    <p class="onboard-desc">${s.desc}</p>`;
+    <p class="onboard-desc">${s.desc}</p>
+    ${hsNoteHtml}`;
 
   document.getElementById('onboardDots').innerHTML=ONBOARD_SLIDES.map((_,i)=>
     `<span class="onboard-dot${i===onboardIdx?' active':''}" onclick="onboardGo(${i})"></span>`).join('');
@@ -4557,6 +4597,60 @@ document.addEventListener('DOMContentLoaded',()=>{
     setTimeout(openOnboarding,600);
   }
 });
+
+// ════════════════════════════════════════════════
+// INSTALL / HOME SCREEN PROMPT
+// ════════════════════════════════════════════════
+const HS_MSG='Block Builder is currently a web app — we\'re working on getting to the App Store! In the meantime, add it to your home screen for the best experience. In Safari tap Share → Add to Home Screen. 📱';
+
+let _deferredInstall=null; // Android BeforeInstallPromptEvent
+
+// Capture Android native install prompt
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  _deferredInstall=e;
+  // Show the Install App button instead of the Safari instruction
+  const sub=document.getElementById('installBannerSub');
+  const btn=document.getElementById('installBannerBtn');
+  if(sub)sub.style.display='none';
+  if(btn)btn.style.display='';
+});
+
+// Android: fire native install dialog
+function installBannerAction(){
+  if(!_deferredInstall)return;
+  _deferredInstall.prompt();
+  _deferredInstall.userChoice.then(r=>{
+    if(r.outcome==='accepted')dismissInstallBanner();
+    _deferredInstall=null;
+  });
+}
+
+// Dismiss + persist
+function dismissInstallBanner(){
+  sv('bb_hs_dismissed',true);
+  const b=document.getElementById('installBanner');
+  if(b)b.classList.remove('visible');
+}
+
+// Increment visit counter + maybe show banner
+(function(){
+  // Don't show if: already dismissed, already a standalone PWA
+  if(ld('bb_hs_dismissed',false))return;
+  if(window.navigator.standalone===true)return; // iOS installed
+  if(window.matchMedia('(display-mode: standalone)').matches)return; // Android installed
+
+  const visits=ld('bb_visit_count',0)+1;
+  sv('bb_visit_count',visits);
+
+  if(visits>=3){
+    // Show after a beat so layout settles
+    setTimeout(()=>{
+      const b=document.getElementById('installBanner');
+      if(b)b.classList.add('visible');
+    },800);
+  }
+})();
 
 sbInit();
 initAdmin();
